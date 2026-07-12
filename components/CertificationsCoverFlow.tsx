@@ -118,7 +118,7 @@ export default function CertificationsCoverFlow() {
 
                 return (
                   <motion.button
-                    key={cert.certImgUrl}
+                    key={cert.CertImgUrl}
                     type="button"
                     onClick={() => handleCertClick(index)}
                     onMouseEnter={isActive ? pauseAutoPlay : undefined}
@@ -140,7 +140,7 @@ export default function CertificationsCoverFlow() {
                     className="absolute cursor-pointer max-w-[calc(100%-2rem)]"
                   >
                     <img
-                      src={cert.certImgUrl}
+                      src={cert.CertImgUrl}
                       alt={cert.name}
                       draggable={false}
                       className={CERT_IMAGE_CLASS}
@@ -160,7 +160,7 @@ export default function CertificationsCoverFlow() {
         <div className="mt-4 md:mt-5 space-y-1.5 text-center">
           <AnimatePresence mode="wait">
             <motion.div
-              key={activeCert.certImgUrl}
+              key={activeCert.CertImgUrl}
               initial={{ opacity: 0, y: 6 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -6 }}
