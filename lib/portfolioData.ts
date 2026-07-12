@@ -62,14 +62,14 @@ export const portfolioData = {
     }
   ],
   certifications: [
-    { id: 1, name: "Programming Foundations with Python", issuer: "NxtWave", certImgUrl: "https://res.cloudinary.com/doyiqcna9/image/upload/v1783666765/Python_dtzvco.png" },
-    { id: 2, name: "ScanZy Rewards MVP Architecture", issuer: "NxtWave", certImgUrl: "https://res.cloudinary.com/doyiqcna9/image/upload/v1783666876/mvp_certification_k5sedb.png" },
-    { id: 3, name: "Generative AI for All", issuer: "Microsoft x PW", certImgUrl: "https://res.cloudinary.com/doyiqcna9/image/upload/v1783666902/genrative_ai_shqice.png" },
-    { id: 4, name: "Agentblazer Workshop", issuer: "AWS", certImgUrl: "https://res.cloudinary.com/doyiqcna9/image/upload/v1783667496/Salesforce_nqv0z9.png" },
-    { id: 5, name: "XPM 4.0 Fundamentals", issuer: "NxtWave", certImgUrl: "https://res.cloudinary.com/doyiqcna9/image/upload/v1783667223/XPM_4.0_emxpxe.jpg" },
-    { id: 6, name: "SQL & Relational Databases", issuer: "NxtWave", certImgUrl: "https://res.cloudinary.com/doyiqcna9/image/upload/v1783667271/sql_nwfd8x.jpg" },
-    { id: 7, name: "Advanced Frontend Development", issuer: "NxtWave", certImgUrl: "https://res.cloudinary.com/doyiqcna9/image/upload/v1783667286/boostrap_flexbox_nimhpn.png" },
-    { id: 8, name: "Frontend Foundations", issuer: "NxtWave", certImgUrl: "https://res.cloudinary.com/doyiqcna9/image/upload/v1783667306/html_css_amcncs.png" }
+    { id: 1, name: "Programming Foundations with Python", issuer: "NxtWave", CertImgUrl: "https://res.cloudinary.com/doyiqcna9/image/upload/v1783666765/Python_dtzvco.png" },
+    { id: 2, name: "ScanZy Rewards MVP Architecture", issuer: "NxtWave", CertImgUrl: "https://res.cloudinary.com/doyiqcna9/image/upload/v1783666876/mvp_certification_k5sedb.png" },
+    { id: 3, name: "Generative AI for All", issuer: "Microsoft x PW", CertImgUrl: "https://res.cloudinary.com/doyiqcna9/image/upload/v1783666902/genrative_ai_shqice.png" },
+    { id: 4, name: "Agentblazer Workshop", issuer: "AWS", CertImgUrl: "https://res.cloudinary.com/doyiqcna9/image/upload/v1783667496/Salesforce_nqv0z9.png" },
+    { id: 5, name: "XPM 4.0 Fundamentals", issuer: "NxtWave", CertImgUrl: "https://res.cloudinary.com/doyiqcna9/image/upload/v1783667223/XPM_4.0_emxpxe.jpg" },
+    { id: 6, name: "SQL & Relational Databases", issuer: "NxtWave", CertImgUrl: "https://res.cloudinary.com/doyiqcna9/image/upload/v1783667271/sql_nwfd8x.jpg" },
+    { id: 7, name: "Advanced Frontend Development", issuer: "NxtWave", CertImgUrl: "https://res.cloudinary.com/doyiqcna9/image/upload/v1783667286/boostrap_flexbox_nimhpn.png" },
+    { id: 8, name: "Frontend Foundations", issuer: "NxtWave", CertImgUrl: "https://res.cloudinary.com/doyiqcna9/image/upload/v1783667306/html_css_amcncs.png" }
   ],
   honors: [
     {
