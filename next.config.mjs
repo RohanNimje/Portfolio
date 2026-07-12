@@ -13,7 +13,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   output: 'export',
-  basePath: '/portfolio',
+  basePath: '/Portfolio',
   typescript: {
     ignoreBuildErrors: true,
   },
