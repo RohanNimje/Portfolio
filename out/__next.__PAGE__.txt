@@ -1,0 +1,13 @@
+1:"$Sreact.fragment"
+2:I[72776,["/Portfolio/_next/static/chunks/0v90e52bsza-c.js","/Portfolio/_next/static/chunks/0dbhjjzl8qfwv.js","/Portfolio/_next/static/chunks/07c6pq2vgp.-v.js"],"default"]
+3:I[92349,["/Portfolio/_next/static/chunks/0v90e52bsza-c.js","/Portfolio/_next/static/chunks/0dbhjjzl8qfwv.js","/Portfolio/_next/static/chunks/07c6pq2vgp.-v.js"],"default"]
+4:I[82494,["/Portfolio/_next/static/chunks/0v90e52bsza-c.js","/Portfolio/_next/static/chunks/0dbhjjzl8qfwv.js","/Portfolio/_next/static/chunks/07c6pq2vgp.-v.js"],"default"]
+5:I[3038,["/Portfolio/_next/static/chunks/0v90e52bsza-c.js","/Portfolio/_next/static/chunks/0dbhjjzl8qfwv.js","/Portfolio/_next/static/chunks/07c6pq2vgp.-v.js"],"default"]
+6:I[47346,["/Portfolio/_next/static/chunks/0v90e52bsza-c.js","/Portfolio/_next/static/chunks/0dbhjjzl8qfwv.js","/Portfolio/_next/static/chunks/07c6pq2vgp.-v.js"],"default"]
+7:I[59367,["/Portfolio/_next/static/chunks/0v90e52bsza-c.js","/Portfolio/_next/static/chunks/0dbhjjzl8qfwv.js","/Portfolio/_next/static/chunks/07c6pq2vgp.-v.js"],"default"]
+8:I[3347,["/Portfolio/_next/static/chunks/0v90e52bsza-c.js","/Portfolio/_next/static/chunks/0dbhjjzl8qfwv.js","/Portfolio/_next/static/chunks/07c6pq2vgp.-v.js"],"default"]
+9:I[98590,["/Portfolio/_next/static/chunks/0v90e52bsza-c.js","/Portfolio/_next/static/chunks/0dbhjjzl8qfwv.js","/Portfolio/_next/static/chunks/07c6pq2vgp.-v.js"],"default"]
+a:I[97367,["/Portfolio/_next/static/chunks/0v90e52bsza-c.js","/Portfolio/_next/static/chunks/0dbhjjzl8qfwv.js"],"OutletBoundary"]
+b:"$Sreact.suspense"
+0:{"rsc":["$","$1","c",{"children":[["$","main",null,{"className":"min-h-screen bg-[#F7F9FC] text-slate-800","children":[["$","$L2",null,{}],["$","section",null,{"id":"hero","className":"scroll-mt-20","children":["$","$L3",null,{}]}],["$","section",null,{"id":"projects","className":"scroll-mt-20","children":["$","$L4",null,{}]}],["$","section",null,{"id":"experience","className":"scroll-mt-20","children":["$","$L5",null,{}]}],["$","section",null,{"id":"honors","className":"scroll-mt-20","children":["$","$L6",null,{}]}],["$","section",null,{"id":"certifications","className":"scroll-mt-20","children":["$","$L7",null,{}]}],["$","section",null,{"id":"education","className":"scroll-mt-20","children":["$","$L8",null,{}]}],["$","$L9",null,{}]]}],[["$","script","script-0",{"src":"/Portfolio/_next/static/chunks/07c6pq2vgp.-v.js","async":true}]],["$","$La",null,{"children":["$","$b",null,{"name":"Next.MetadataOutlet","children":"$@c"}]}]]}],"isPartial":false,"staleTime":300,"varyParams":null,"buildId":"b4DURVf-2tpcR-SkmIyXr"}
+c:null

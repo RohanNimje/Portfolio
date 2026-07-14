@@ -118,7 +118,7 @@ export default function CertificationsCoverFlow() {
 
                 return (
                   <motion.button
-                    key={cert.CertImgUrl}
+                    key={cert.id}
                     type="button"
                     onClick={() => handleCertClick(index)}
                     onMouseEnter={isActive ? pauseAutoPlay : undefined}
@@ -160,7 +160,7 @@ export default function CertificationsCoverFlow() {
         <div className="mt-4 md:mt-5 space-y-1.5 text-center">
           <AnimatePresence mode="wait">
             <motion.div
-              key={activeCert.CertImgUrl}
+              key={activeCert.id}
               initial={{ opacity: 0, y: 6 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -6 }}
