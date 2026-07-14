@@ -9,9 +9,6 @@ import { useState, useEffect, useCallback } from 'react'
 const SWIPE_THRESHOLD = 60
 const AUTO_PLAY_INTERVAL = 5000
 
-const CERT_IMAGE_CLASS =
-  'w-full h-full rounded-xl border border-slate-200 object-contain bg-white shadow-sm'
-
 function getRelativePosition(index: number, activeIndex: number, total: number) {
   let diff = index - activeIndex
   if (diff > total / 2) diff -= total
@@ -38,7 +35,7 @@ export default function CertificationsCoverFlow() {
   const pauseAutoPlay = useCallback(() => setAutoPlay(false), [])
   const resumeAutoPlay = useCallback(() => setAutoPlay(true), [])
 
-  // Hydration boundary
+  // Hydration boundary - CRITICAL for preventing render mismatch
   useEffect(() => {
     setIsHydrated(true)
   }, [])
@@ -60,7 +57,7 @@ export default function CertificationsCoverFlow() {
   }
 
   return (
-    <section className="py-14 md:py-16 px-4 sm:px-6 lg:px-8 bg-[#F7F9FC] relative overflow-hidden">
+    <section className="py-14 md:py-16 px-4 sm:px-6 lg:px-8 bg-[#F7F9FC] relative">
       <div className="max-w-7xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -73,25 +70,25 @@ export default function CertificationsCoverFlow() {
           <p className="text-sm sm:text-base text-slate-600">Apple-style Cover Flow carousel showcasing professional credentials.</p>
         </motion.div>
 
+        {/* OUTER CAROUSEL CONTAINER - NO OVERFLOW CLIPPING */}
         <div className="group/carousel relative w-full max-w-4xl mx-auto" onMouseLeave={resumeAutoPlay}>
+          
+          {/* MOTION DRAGGABLE WRAPPER - Pure animation, no sizing constraints */}
           <motion.div
             drag="x"
             dragConstraints={{ left: 0, right: 0 }}
             dragElastic={0.15}
             onDragStart={pauseAutoPlay}
             onDragEnd={handleSwipeEnd}
-            className="relative w-full flex items-center justify-center perspective touch-pan-y cursor-grab active:cursor-grabbing"
+            className="relative w-full flex items-center justify-center touch-pan-y cursor-grab active:cursor-grabbing"
             style={{
-              minHeight: 'clamp(13rem, 50vh, 18rem)',
+              height: '320px',
+              perspective: '1000px',
+              WebkitPerspective: '1000px',
+              willChange: 'transform',
             }}
           >
-            {/* Left gradient fade overlay */}
-            <div className="absolute left-0 top-0 bottom-0 w-1/5 bg-gradient-to-r from-[#F7F9FC] via-[#F7F9FC]/0 to-transparent z-20 pointer-events-none" />
-            
-            {/* Right gradient fade overlay */}
-            <div className="absolute right-0 top-0 bottom-0 w-1/5 bg-gradient-to-l from-[#F7F9FC] via-[#F7F9FC]/0 to-transparent z-20 pointer-events-none" />
-
-            {/* Left navigation button */}
+            {/* Left navigation button - overlay, not clipping */}
             <button
               type="button"
               aria-label="Previous certification"
@@ -99,14 +96,14 @@ export default function CertificationsCoverFlow() {
                 pauseAutoPlay()
                 goPrev()
               }}
-              className="absolute left-0 top-1/2 -translate-y-1/2 w-12 sm:w-16 md:w-20 h-full z-30 flex items-center justify-start pl-2 sm:pl-3 opacity-0 hover:opacity-100 group-hover/carousel:opacity-60 transition-opacity duration-300"
+              className="absolute left-0 top-1/2 z-40 -translate-y-1/2 w-12 sm:w-16 md:w-20 flex items-center justify-start pl-2 sm:pl-3 opacity-0 hover:opacity-100 group-hover/carousel:opacity-60 transition-opacity duration-300"
             >
               <span className="flex items-center justify-center w-9 h-9 rounded-full bg-white/70 border border-slate-200/50 backdrop-blur-sm text-slate-600 hover:text-indigo-600 hover:border-indigo-300 transition-all duration-200 shadow-sm">
                 <ChevronLeft className="w-5 h-5" />
               </span>
             </button>
 
-            {/* Right navigation button */}
+            {/* Right navigation button - overlay, not clipping */}
             <button
               type="button"
               aria-label="Next certification"
@@ -114,81 +111,113 @@ export default function CertificationsCoverFlow() {
                 pauseAutoPlay()
                 goNext()
               }}
-              className="absolute right-0 top-1/2 -translate-y-1/2 w-12 sm:w-16 md:w-20 h-full z-30 flex items-center justify-end pr-2 sm:pr-3 opacity-0 hover:opacity-100 group-hover/carousel:opacity-60 transition-opacity duration-300"
+              className="absolute right-0 top-1/2 z-40 -translate-y-1/2 w-12 sm:w-16 md:w-20 flex items-center justify-end pr-2 sm:pr-3 opacity-0 hover:opacity-100 group-hover/carousel:opacity-60 transition-opacity duration-300"
             >
               <span className="flex items-center justify-center w-9 h-9 rounded-full bg-white/70 border border-slate-200/50 backdrop-blur-sm text-slate-600 hover:text-indigo-600 hover:border-indigo-300 transition-all duration-200 shadow-sm">
                 <ChevronRight className="w-5 h-5" />
               </span>
             </button>
 
-            {/* Carousel container with guaranteed sizing */}
-            <div className="relative w-full h-full flex items-center justify-center overflow-hidden px-4 sm:px-6 md:px-8">
-              {isHydrated &&
-                certifications.map((cert, index) => {
-                  const position = getRelativePosition(index, activeIndex, certifications.length)
-                  if (Math.abs(position) > 1) return null
+            {/* LEFT FADE OVERLAY - No overflow-hidden parent, positioned absolutely at top level */}
+            <div className="absolute left-0 top-0 bottom-0 w-20 sm:w-24 md:w-32 bg-gradient-to-r from-[#F7F9FC] via-[#F7F9FC]/50 to-transparent z-20 pointer-events-none" />
+            
+            {/* RIGHT FADE OVERLAY - No overflow-hidden parent, positioned absolutely at top level */}
+            <div className="absolute right-0 top-0 bottom-0 w-20 sm:w-24 md:w-32 bg-gradient-to-l from-[#F7F9FC] via-[#F7F9FC]/50 to-transparent z-20 pointer-events-none" />
 
-                  const isActive = position === 0
-                  const isLeft = position < 0
-                  const isRight = position > 0
+            {/* CERTIFICATE CARDS CONTAINER - NO OVERFLOW, PURE POSITIONING */}
+            {isHydrated &&
+              certifications.map((cert, index) => {
+                const position = getRelativePosition(index, activeIndex, certifications.length)
+                if (Math.abs(position) > 1) return null
 
-                  return (
-                    <motion.button
-                      key={cert.id}
-                      type="button"
-                      onClick={() => handleCertClick(index)}
-                      onMouseEnter={isActive ? pauseAutoPlay : undefined}
-                      onMouseMove={isActive ? pauseAutoPlay : undefined}
-                      initial={false}
-                      animate={{
-                        x: isLeft ? -220 : isRight ? 220 : 0,
-                        scale: isActive ? 0.95 : 0.68,
-                        opacity: isActive ? 1 : 0.35,
-                        zIndex: isActive ? 50 : 20,
-                        rotateY: isLeft ? 42 : isRight ? -42 : 0,
-                      }}
-                      transition={{
-                        type: 'spring',
-                        stiffness: 120,
-                        damping: 22,
-                      }}
+                const isActive = position === 0
+                const isLeft = position < 0
+                const isRight = position > 0
+
+                return (
+                  <motion.div
+                    key={cert.id}
+                    onClick={() => handleCertClick(index)}
+                    onMouseEnter={isActive ? pauseAutoPlay : undefined}
+                    onMouseMove={isActive ? pauseAutoPlay : undefined}
+                    initial={false}
+                    animate={{
+                      x: isLeft ? -220 : isRight ? 220 : 0,
+                      scale: isActive ? 0.95 : 0.68,
+                      opacity: isActive ? 1 : 0.35,
+                      zIndex: isActive ? 50 : 20,
+                      rotateY: isLeft ? 42 : isRight ? -42 : 0,
+                    }}
+                    transition={{
+                      type: 'spring',
+                      stiffness: 120,
+                      damping: 22,
+                    }}
+                    style={{
+                      transformStyle: 'preserve-3d',
+                      perspective: '1000px',
+                      WebkitTransformStyle: 'preserve-3d',
+                      WebkitPerspective: '1000px',
+                      willChange: 'transform, opacity',
+                    }}
+                    className="absolute cursor-pointer"
+                  >
+                    {/* 
+                      STATIC LAYOUT SIZING WRAPPER
+                      - Fixed dimensions (no calc/percentage dependencies)
+                      - Block display for proper layout
+                      - Aspect ratio locked to prevent collapse
+                      - No flex, no centering (that breaks height: auto)
+                    */}
+                    <div
+                      className="block bg-white rounded-xl border border-slate-200"
                       style={{
-                        transformStyle: 'preserve-3d',
-                        perspective: '1000px',
+                        width: 'clamp(240px, 76vw, 440px)',
+                        aspectRatio: '1.41',
+                        display: 'block',
+                        position: 'relative',
+                        overflow: 'visible',
                       }}
-                      className="absolute cursor-pointer will-change-transform"
                     >
-                      {/* Explicit sizing wrapper for the image */}
-                      <div
-                        className="w-[min(240px,76vw)] sm:w-[min(300px,68vw)] md:w-[min(380px,58vw)] lg:w-[min(440px,52vw)] aspect-[1.41/1] relative flex items-center justify-center"
+                      {/* 
+                        IMAGE - FORCED BLOCK RENDERING
+                        - w-full h-full for maximum fill
+                        - object-contain preserves aspect and centers
+                        - block display = no inline spacing
+                        - visibility: visible OVERRIDE on post-hydration
+                      */}
+                      <img
+                        src={cert.CertImgUrl}
+                        alt={cert.name}
+                        draggable={false}
+                        loading="lazy"
+                        decoding="async"
+                        className="block w-full h-full object-contain bg-white rounded-[10px]"
                         style={{
-                          height: 'auto',
+                          display: 'block',
+                          width: '100%',
+                          height: '100%',
+                          objectFit: 'contain',
+                          visibility: 'visible',
+                          opacity: 1,
+                          backgroundColor: '#ffffff',
+                          borderRadius: '10px',
+                          boxShadow: isActive
+                            ? '0 12px 40px rgba(67, 56, 202, 0.14)'
+                            : '0 4px 16px rgba(15, 23, 42, 0.06)',
+                          willChange: 'box-shadow',
+                          transition: 'box-shadow 0.3s ease',
                         }}
-                      >
-                        <img
-                          src={cert.CertImgUrl}
-                          alt={cert.name}
-                          draggable={false}
-                          loading="lazy"
-                          decoding="async"
-                          className={CERT_IMAGE_CLASS}
-                          style={{
-                            boxShadow: isActive
-                              ? '0 12px 40px rgba(67, 56, 202, 0.14)'
-                              : '0 4px 16px rgba(15, 23, 42, 0.06)',
-                            willChange: 'box-shadow',
-                          }}
-                        />
-                      </div>
-                    </motion.button>
-                  )
-                })}
-            </div>
+                      />
+                    </div>
+                  </motion.div>
+                )
+              })}
           </motion.div>
         </div>
 
-        {/* Info section */}
-        <div className="mt-6 md:mt-8 space-y-3 text-center">
+        {/* INFO SECTION - Active certification name and issuer */}
+        <div className="mt-8 md:mt-10 space-y-3 text-center">
           <AnimatePresence mode="wait">
             {isHydrated && (
               <motion.div
@@ -201,12 +230,14 @@ export default function CertificationsCoverFlow() {
                 <p className="text-sm sm:text-base md:text-lg font-semibold text-foreground">
                   {activeCert?.name || 'Certifications'}
                 </p>
-                <p className="text-xs sm:text-sm text-muted-foreground">{activeCert?.issuer || ''}</p>
+                <p className="text-xs sm:text-sm text-muted-foreground">
+                  {activeCert?.issuer || ''}
+                </p>
               </motion.div>
             )}
           </AnimatePresence>
 
-          {/* Indicators */}
+          {/* Progress indicators */}
           <div className="flex justify-center items-center gap-3 pt-2">
             <motion.div
               className="w-2 h-2 rounded-full bg-accent"
