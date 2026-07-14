@@ -10,7 +10,7 @@ const SWIPE_THRESHOLD = 60
 const AUTO_PLAY_INTERVAL = 5000
 
 const CERT_IMAGE_CLASS =
-  'w-[min(240px,76vw)] sm:w-[min(300px,68vw)] md:w-[min(380px,58vw)] lg:w-[min(440px,52vw)] max-h-[min(200px,30vh)] md:max-h-[min(230px,32vh)] lg:max-h-[min(250px,34vh)] rounded-xl border border-slate-200 aspect-[1.41/1] object-contain bg-white shadow-sm'
+  'w-full h-full rounded-xl border border-slate-200 object-contain bg-white shadow-sm'
 
 function getRelativePosition(index: number, activeIndex: number, total: number) {
   let diff = index - activeIndex
@@ -23,6 +23,7 @@ export default function CertificationsCoverFlow() {
   const { certifications } = portfolioData
   const [activeIndex, setActiveIndex] = useState(0)
   const [autoPlay, setAutoPlay] = useState(true)
+  const [isHydrated, setIsHydrated] = useState(false)
 
   const activeCert = certifications[activeIndex]
 
@@ -37,11 +38,16 @@ export default function CertificationsCoverFlow() {
   const pauseAutoPlay = useCallback(() => setAutoPlay(false), [])
   const resumeAutoPlay = useCallback(() => setAutoPlay(true), [])
 
+  // Hydration boundary
   useEffect(() => {
-    if (!autoPlay) return
+    setIsHydrated(true)
+  }, [])
+
+  useEffect(() => {
+    if (!autoPlay || !isHydrated) return
     const interval = setInterval(goNext, AUTO_PLAY_INTERVAL)
     return () => clearInterval(interval)
-  }, [autoPlay, goNext])
+  }, [autoPlay, goNext, isHydrated])
 
   const handleSwipeEnd = (_: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
     if (info.offset.x <= -SWIPE_THRESHOLD) goNext()
@@ -74,11 +80,18 @@ export default function CertificationsCoverFlow() {
             dragElastic={0.15}
             onDragStart={pauseAutoPlay}
             onDragEnd={handleSwipeEnd}
-            className="relative min-h-[13rem] sm:min-h-[15rem] md:min-h-[16rem] lg:min-h-[17rem] flex items-center justify-center perspective touch-pan-y cursor-grab active:cursor-grabbing"
+            className="relative w-full flex items-center justify-center perspective touch-pan-y cursor-grab active:cursor-grabbing"
+            style={{
+              minHeight: 'clamp(13rem, 50vh, 18rem)',
+            }}
           >
-            <div className="absolute left-0 top-0 bottom-0 w-1/5 bg-gradient-to-r from-background via-background/0 to-transparent z-20 pointer-events-none" />
-            <div className="absolute right-0 top-0 bottom-0 w-1/5 bg-gradient-to-l from-background via-background/0 to-transparent z-20 pointer-events-none" />
+            {/* Left gradient fade overlay */}
+            <div className="absolute left-0 top-0 bottom-0 w-1/5 bg-gradient-to-r from-[#F7F9FC] via-[#F7F9FC]/0 to-transparent z-20 pointer-events-none" />
+            
+            {/* Right gradient fade overlay */}
+            <div className="absolute right-0 top-0 bottom-0 w-1/5 bg-gradient-to-l from-[#F7F9FC] via-[#F7F9FC]/0 to-transparent z-20 pointer-events-none" />
 
+            {/* Left navigation button */}
             <button
               type="button"
               aria-label="Previous certification"
@@ -86,13 +99,14 @@ export default function CertificationsCoverFlow() {
                 pauseAutoPlay()
                 goPrev()
               }}
-              className="absolute left-0 top-0 bottom-0 w-12 sm:w-16 md:w-20 z-30 flex items-center justify-start pl-2 sm:pl-3 opacity-0 hover:opacity-100 group-hover/carousel:opacity-60 transition-opacity duration-300"
+              className="absolute left-0 top-1/2 -translate-y-1/2 w-12 sm:w-16 md:w-20 h-full z-30 flex items-center justify-start pl-2 sm:pl-3 opacity-0 hover:opacity-100 group-hover/carousel:opacity-60 transition-opacity duration-300"
             >
-              <span className="flex items-center justify-center w-9 h-9 rounded-full bg-background/70 border border-white/10 backdrop-blur-sm text-foreground/70 hover:text-accent hover:border-accent/40 transition-colors">
+              <span className="flex items-center justify-center w-9 h-9 rounded-full bg-white/70 border border-slate-200/50 backdrop-blur-sm text-slate-600 hover:text-indigo-600 hover:border-indigo-300 transition-all duration-200 shadow-sm">
                 <ChevronLeft className="w-5 h-5" />
               </span>
             </button>
 
+            {/* Right navigation button */}
             <button
               type="button"
               aria-label="Next certification"
@@ -100,78 +114,100 @@ export default function CertificationsCoverFlow() {
                 pauseAutoPlay()
                 goNext()
               }}
-              className="absolute right-0 top-0 bottom-0 w-12 sm:w-16 md:w-20 z-30 flex items-center justify-end pr-2 sm:pr-3 opacity-0 hover:opacity-100 group-hover/carousel:opacity-60 transition-opacity duration-300"
+              className="absolute right-0 top-1/2 -translate-y-1/2 w-12 sm:w-16 md:w-20 h-full z-30 flex items-center justify-end pr-2 sm:pr-3 opacity-0 hover:opacity-100 group-hover/carousel:opacity-60 transition-opacity duration-300"
             >
-              <span className="flex items-center justify-center w-9 h-9 rounded-full bg-background/70 border border-white/10 backdrop-blur-sm text-foreground/70 hover:text-accent hover:border-accent/40 transition-colors">
+              <span className="flex items-center justify-center w-9 h-9 rounded-full bg-white/70 border border-slate-200/50 backdrop-blur-sm text-slate-600 hover:text-indigo-600 hover:border-indigo-300 transition-all duration-200 shadow-sm">
                 <ChevronRight className="w-5 h-5" />
               </span>
             </button>
 
+            {/* Carousel container with guaranteed sizing */}
             <div className="relative w-full h-full flex items-center justify-center overflow-hidden px-4 sm:px-6 md:px-8">
-              {certifications.map((cert, index) => {
-                const position = getRelativePosition(index, activeIndex, certifications.length)
-                if (Math.abs(position) > 1) return null
+              {isHydrated &&
+                certifications.map((cert, index) => {
+                  const position = getRelativePosition(index, activeIndex, certifications.length)
+                  if (Math.abs(position) > 1) return null
 
-                const isActive = position === 0
-                const isLeft = position < 0
-                const isRight = position > 0
+                  const isActive = position === 0
+                  const isLeft = position < 0
+                  const isRight = position > 0
 
-                return (
-                  <motion.button
-                    key={cert.id}
-                    type="button"
-                    onClick={() => handleCertClick(index)}
-                    onMouseEnter={isActive ? pauseAutoPlay : undefined}
-                    onMouseMove={isActive ? pauseAutoPlay : undefined}
-                    initial={false}
-                    animate={{
-                      x: isLeft ? -220 : isRight ? 220 : 0,
-                      scale: isActive ? 0.95 : 0.68,
-                      opacity: isActive ? 1 : 0.35,
-                      zIndex: isActive ? 50 : 20,
-                      rotateY: isLeft ? 42 : isRight ? -42 : 0,
-                    }}
-                    transition={{
-                      type: 'spring',
-                      stiffness: 120,
-                      damping: 22,
-                    }}
-                    style={{ transformStyle: 'preserve-3d' }}
-                    className="absolute cursor-pointer max-w-[calc(100%-2rem)]"
-                  >
-                    <img
-                      src={cert.CertImgUrl}
-                      alt={cert.name}
-                      draggable={false}
-                      className={CERT_IMAGE_CLASS}
-                      style={{
-                        boxShadow: isActive
-                          ? '0 12px 40px rgba(67, 56, 202, 0.14)'
-                          : '0 4px 16px rgba(15, 23, 42, 0.06)',
+                  return (
+                    <motion.button
+                      key={cert.id}
+                      type="button"
+                      onClick={() => handleCertClick(index)}
+                      onMouseEnter={isActive ? pauseAutoPlay : undefined}
+                      onMouseMove={isActive ? pauseAutoPlay : undefined}
+                      initial={false}
+                      animate={{
+                        x: isLeft ? -220 : isRight ? 220 : 0,
+                        scale: isActive ? 0.95 : 0.68,
+                        opacity: isActive ? 1 : 0.35,
+                        zIndex: isActive ? 50 : 20,
+                        rotateY: isLeft ? 42 : isRight ? -42 : 0,
                       }}
-                    />
-                  </motion.button>
-                )
-              })}
+                      transition={{
+                        type: 'spring',
+                        stiffness: 120,
+                        damping: 22,
+                      }}
+                      style={{
+                        transformStyle: 'preserve-3d',
+                        perspective: '1000px',
+                      }}
+                      className="absolute cursor-pointer will-change-transform"
+                    >
+                      {/* Explicit sizing wrapper for the image */}
+                      <div
+                        className="w-[min(240px,76vw)] sm:w-[min(300px,68vw)] md:w-[min(380px,58vw)] lg:w-[min(440px,52vw)] aspect-[1.41/1] relative flex items-center justify-center"
+                        style={{
+                          height: 'auto',
+                        }}
+                      >
+                        <img
+                          src={cert.CertImgUrl}
+                          alt={cert.name}
+                          draggable={false}
+                          loading="lazy"
+                          decoding="async"
+                          className={CERT_IMAGE_CLASS}
+                          style={{
+                            boxShadow: isActive
+                              ? '0 12px 40px rgba(67, 56, 202, 0.14)'
+                              : '0 4px 16px rgba(15, 23, 42, 0.06)',
+                            willChange: 'box-shadow',
+                          }}
+                        />
+                      </div>
+                    </motion.button>
+                  )
+                })}
             </div>
           </motion.div>
         </div>
 
-        <div className="mt-4 md:mt-5 space-y-1.5 text-center">
+        {/* Info section */}
+        <div className="mt-6 md:mt-8 space-y-3 text-center">
           <AnimatePresence mode="wait">
-            <motion.div
-              key={activeCert.id}
-              initial={{ opacity: 0, y: 6 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -6 }}
-              transition={{ duration: 0.3 }}
-            >
-              <p className="text-sm sm:text-base md:text-lg font-semibold text-foreground">{activeCert.name}</p>
-              <p className="text-xs sm:text-sm text-muted-foreground">{activeCert.issuer}</p>
-            </motion.div>
+            {isHydrated && (
+              <motion.div
+                key={activeCert?.id || 'empty'}
+                initial={{ opacity: 0, y: 6 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -6 }}
+                transition={{ duration: 0.3 }}
+              >
+                <p className="text-sm sm:text-base md:text-lg font-semibold text-foreground">
+                  {activeCert?.name || 'Certifications'}
+                </p>
+                <p className="text-xs sm:text-sm text-muted-foreground">{activeCert?.issuer || ''}</p>
+              </motion.div>
+            )}
           </AnimatePresence>
 
-          <div className="flex justify-center items-center gap-3 pt-1">
+          {/* Indicators */}
+          <div className="flex justify-center items-center gap-3 pt-2">
             <motion.div
               className="w-2 h-2 rounded-full bg-accent"
               animate={{ scale: [1, 1.2, 1] }}
