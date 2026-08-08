@@ -1,11 +1,11 @@
-export const portfolioData = {
+const portfolioData = {
   personalInfo: {
     name: "Rohan Nimje",
-    tagline: "Vision into Reality — LOGIC :: CODE :: AUTOMATION :: IMPACT",
+    tagline: "Vision into Reality - LOGIC :: CODE :: AUTOMATION :: IMPACT",
     summary: "Technical Founder & AI Automation Architect. Bridging the gap between core software engineering and rapid MVP deployment. Specializing in AI agents, full-stack cloud architecture, and autonomous workflows. BCA '27 (AI/ML) Student.",
     profileImages: [
       "https://res.cloudinary.com/doyiqcna9/image/upload/v1783672197/rohan_nimje_profile_zkmb5q.jpg",
-      "https://res.cloudinary.com/doyiqcna9/image/upload/v1783672140/rohan_qfsija.jpg",
+      "https://res.cloudinary.com/doyiqcna9/image/upload/v1783672140/rohan_qfsija.jpg"
     ]
   },
   projects: [
@@ -16,6 +16,7 @@ export const portfolioData = {
       description: "A QR-based gamified loyalty platform designed for offline retailers. Built to drive genuine customer retention and repeat business through interactive gamification, moving far beyond basic paper coupons.",
       videoUrlmvp: "https://res.cloudinary.com/doyiqcna9/video/upload/v1783673286/Ai_Daily_Coach_automation_qzojiw.mp4",
       videourlproduct: "https://res.cloudinary.com/doyiqcna9/video/upload/v1783673286/Ai_Daily_Coach_automation_qzojiw.mp4",
+      productDemoUrl: "https://res.cloudinary.com/doyiqcna9/video/upload/v1783677832/Untitled_design_exdmtc.mp4",
       projectCertImgUrl: "https://res.cloudinary.com/doyiqcna9/image/upload/v1783666876/mvp_certification_k5sedb.png",
       isFeatured: true
     },
@@ -57,7 +58,7 @@ export const portfolioData = {
       role: "Full-Stack Developer Trainee",
       company: "NxtWave",
       duration: "Sep 2024 - Present",
-      location: "Maharashtra, India · Remote",
+      location: "Maharashtra, India - Remote",
       description: "Undergoing intensive software engineering training through NxtWave's CCBP 4.0 program. Focusing on full-stack architecture, AI agents, automation, and modern developer workflows."
     }
   ],
@@ -105,7 +106,7 @@ export const portfolioData = {
       institution: "Shri Shivaji Science College (SGBAU)",
       degree: "Bachelor of Computer Application (BCA)",
       specialization: "Artificial Intelligence & Machine Learning",
-      duration: "Sep 2024 – Sep 2027",
+      duration: "Sep 2024 - Sep 2027",
       grade: "8.38 CGPA",
       description: "Mastering core computer science fundamentals, Data Structures, and AI/ML principles while actively applying them in national-level hackathons and full-stack development."
     }
