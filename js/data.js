@@ -1,49 +1,13 @@
-window.portfolioData = {
+const portfolioData = {
   personalInfo: {
     name: "Rohan Nimje",
     tagline: "Vision into Reality - LOGIC :: CODE :: AUTOMATION :: IMPACT",
-    summary: "AI Systems Architect & Full-Stack Engineer who loves turning complex tech ideas into fast, real-world solutions. Currently pursuing BCA in AI & Machine Learning (8.38 CGPA) while sharpening full-stack skills through NxtWave's CCBP 4.0 program. Driven by building low-latency cloud systems, smart AI agentic workflows, and clean full-stack apps. Combines solid problem-solving (Global Rank 27 in DSA CodeVerse) with dedicated consistency (365-day coding streak). Big on clean architecture, rapid execution, and building tech with real impact."
+    summary: "Hey! I'm an AI Systems Architect & Full-Stack Engineer who loves turning complex tech ideas into fast, real-world solutions. Right now, I'm pursuing my BCA in AI & Machine Learning (holding an 8.38 CGPA) while sharpening my full-stack skills with NxtWave's CCBP 4.0 program. I thrive on building things that run fast and smooth—whether that's low-latency cloud systems, smart AI agents, or clean full-stack apps. I bring solid problem-solving skills to the table (Global Rank 27 in DSA CodeVerse) and a strong work ethic backed by a 365-day unbroken coding streak. Big on clean code, rapid execution, and building tech that actually makes an impact!",
     profileImages: [
       "https://res.cloudinary.com/doyiqcna9/image/upload/v1783672197/rohan_nimje_profile_zkmb5q.jpg",
       "https://res.cloudinary.com/doyiqcna9/image/upload/v1783672140/rohan_qfsija.jpg"
     ]
   },
-
-  // Role-Targeted Capabilities for AI Chatbot Pitching
-  roleCapabilities: {
-    associateProductManager: {
-      title: "Associate Product Manager / Product Engineer",
-      highlights: [
-        "0-to-1 Product Execution: Built and launched ScanZy Rewards MVP for offline retailers to drive gamified customer retention.",
-        "Data-Driven Iteration: Transitioned from paper coupons to digital QR mechanics for real-time customer tracking.",
-        "Rapid Prototyping: End-to-end full-stack MVPs combining seamless UI with automated backend systems."
-      ]
-    },
-    softwareEngineer: {
-      title: "Software Engineer / Full-Stack Developer",
-      highlights: [
-        "Core Algorithmic Competency: Global Rank 27 in DSA CodeVerse Bi-Weekly Contest #25.",
-        "Full-Stack Mastery: Hands-on expertise in Python, SQL, MongoDB, Supabase, Node.js, and REST APIs.",
-        "365-Day Consistency: Unbroken daily coding streak on NxtWave Academy."
-      ]
-    },
-    solutionsArchitect: {
-      title: "AI & Solutions Systems Architect",
-      highlights: [
-        "Low-Latency AI Engineering: Sub-2s inference time on computer vision and AI models.",
-        "Agentic Automation: Custom Model Context Protocol (MCP) servers, Pipedream, and n8n workflows.",
-        "Fraud Prevention Infrastructure: Architected 'Trinity X' live binary validation system for national hackathons."
-      ]
-    }
-  },
-
-  metrics: [
-    { label: "Execution Streak", value: "365 Days", description: "Unbroken daily execution on NxtWave Academy" },
-    { label: "DSA Global Rank", value: "Rank 27", description: "CodeVerse Bi-Weekly Contest #25" },
-    { label: "CV Model Latency", value: "< 2s", description: "Sub-2-second Computer Vision inference" },
-    { label: "Cloud Sync Optimization", value: "35%", description: "Database sync latency reduction" }
-  ],
-
   projects: [
     {
       id: 1,
@@ -86,17 +50,15 @@ window.portfolioData = {
       description: "An intelligent RPA bot utilizing Automation Anywhere A360 with dynamic DOMXPath scraping to extract and compile real-time hackathon data from Google's AI Overview.",
       videoUrl: "https://res.cloudinary.com/doyiqcna9/video/upload/v1783668274/Automation_Anywhere_Project_-_Hackathon_Finder_1_ez6s0w.mp4",
       projectCertImgUrl: "https://res.cloudinary.com/doyiqcna9/image/upload/v1783667845/Automation_Anywhere_complete_jowcjy.png"
-    },
+    }, 
     {
       id: 6,
       title: "Cosmolyze",
       techStack: ["React", "Node.js", "Python", "Tailwind CSS", "Vercel"],
       description: "An advanced space data analysis and visualization engine designed to process complex astronomical datasets with sub-2s response latency and interactive real-time visual insights.",
-      videoUrl: "https://res.cloudinary.com/doyiqcna9/video/upload/v1783668274/Automation_Anywhere_Project_-_Hackathon_Finder_1_ez6s0w.mp4",
-      projectCertImgUrl: "https://res.cloudinary.com/doyiqcna9/image/upload/v1783667845/Automation_Anywhere_complete_jowcjy.png"
+      isFeatured: true
     }
   ],
-
   experience: [
     {
       id: 1,
@@ -107,7 +69,6 @@ window.portfolioData = {
       description: "Undergoing intensive software engineering training through NxtWave's CCBP 4.0 program. Focusing on full-stack architecture, AI agents, automation, and modern developer workflows."
     }
   ],
-
   certifications: [
     { id: 1, name: "Programming Foundations with Python", issuer: "NxtWave", CertImgUrl: "https://res.cloudinary.com/doyiqcna9/image/upload/v1783666765/Python_dtzvco.png" },
     { id: 2, name: "ScanZy Rewards MVP Architecture", issuer: "NxtWave", CertImgUrl: "https://res.cloudinary.com/doyiqcna9/image/upload/v1783666876/mvp_certification_k5sedb.png" },
@@ -118,7 +79,6 @@ window.portfolioData = {
     { id: 7, name: "Advanced Frontend Development", issuer: "NxtWave", CertImgUrl: "https://res.cloudinary.com/doyiqcna9/image/upload/v1783667286/boostrap_flexbox_nimhpn.png" },
     { id: 8, name: "Frontend Foundations", issuer: "NxtWave", CertImgUrl: "https://res.cloudinary.com/doyiqcna9/image/upload/v1783667306/html_css_amcncs.png" }
   ],
-
   honors: [
     {
       id: 1,
@@ -142,13 +102,11 @@ window.portfolioData = {
       description: "Proved core logical thinking and algorithmic problem-solving capabilities using Python Data Structures & Algorithms."
     }
   ],
-
   streak: {
     days: "365",
     title: "Day Nxtwave-Academy Streak",
     description: "Unbroken daily execution on NxtWave. Pure dedication to daily logical execution and coding consistency."
   },
-
   education: [
     {
       id: 1,
@@ -160,7 +118,6 @@ window.portfolioData = {
       description: "Mastering core computer science fundamentals, Data Structures, and AI/ML principles while actively applying them in national-level hackathons and full-stack development."
     }
   ],
-
   contact: {
     email: "rohannimje53@gmail.com",
     linkedin: "https://www.linkedin.com/in/rohannimje/",
