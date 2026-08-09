@@ -19,8 +19,29 @@
 "use strict";
 
 /* ── Constants ─────────────────────────────────────────────── */
-var GEMINI_BASE = "https://generativelanguage.googleapis.com/v1beta/models/";
-var GROQ_BASE   = "https://api.groq.com/openai/v1/chat/completions";
+var GEMINI_BASE      = "https://generativelanguage.googleapis.com/v1beta/models/";
+var GROQ_BASE        = "https://api.groq.com/openai/v1/chat/completions";
+var FETCH_TIMEOUT_MS = 4000;   // Per-provider attempt timeout (ms)
+var TOTAL_TIMEOUT_MS = 12000;  // Outer hard deadline for the whole request (ms)
+
+/* ── Timeout-aware Fetch ────────────────────────────────────── */
+/**
+ * Wraps native fetch() with an AbortController timeout.
+ * Throws an AbortError if the upstream doesn't respond within timeoutMs.
+ */
+async function fetchWithTimeout(url, options, timeoutMs) {
+  var controller = new AbortController();
+  var timer = setTimeout(function () {
+    controller.abort();
+  }, timeoutMs || FETCH_TIMEOUT_MS);
+
+  try {
+    var res = await fetch(url, Object.assign({}, options, { signal: controller.signal }));
+    return res;
+  } finally {
+    clearTimeout(timer);
+  }
+}
 
 /* ── Provider Discovery ─────────────────────────────────────── */
 var ORDINAL_MAP = {
@@ -112,13 +133,13 @@ async function callGemini(target, messages, systemPrompt) {
     ]
   };
 
-  var res = await fetch(url, {
+  var res = await fetchWithTimeout(url, {
     method:  "POST",
     headers: { "Content-Type": "application/json" },
     body:    JSON.stringify(body)
-  });
+  }, FETCH_TIMEOUT_MS);
 
-  if (!res.ok) throw new Error("Gemini HTTP " + res.status);
+  if (!res.ok) throw new Error("Gemini HTTP " + res.status + " (" + target.model + ")");
 
   var data = await res.json();
   if (data.promptFeedback && data.promptFeedback.blockReason) {
@@ -148,16 +169,16 @@ async function callGroq(target, messages, systemPrompt) {
     max_tokens:  2048
   };
 
-  var res = await fetch(GROQ_BASE, {
+  var res = await fetchWithTimeout(GROQ_BASE, {
     method:  "POST",
     headers: {
       "Content-Type":  "application/json",
       "Authorization": "Bearer " + target.key
     },
     body: JSON.stringify(body)
-  });
+  }, FETCH_TIMEOUT_MS);
 
-  if (!res.ok) throw new Error("Groq HTTP " + res.status);
+  if (!res.ok) throw new Error("Groq HTTP " + res.status + " (" + target.model + ")");
 
   var data   = await res.json();
   var choice = data.choices && data.choices[0];
@@ -184,7 +205,8 @@ async function callWithFailover(messages, systemPrompt) {
         : await callGemini(t, messages, systemPrompt);
       return reply;
     } catch (err) {
-      console.warn("[api/chat] Target failed (" + t.group + "): " + err.message + ". Rotating...");
+      var reason = err.name === "AbortError" ? "timeout (" + FETCH_TIMEOUT_MS + "ms)" : err.message;
+      console.warn("[api/chat] Target failed (" + t.group + "): " + reason + ". Rotating...");
       failed[t.key] = true;
     }
   }
@@ -234,18 +256,26 @@ async function handler(req, res) {
   }
 
   try {
-    var body        = await parseBody(req);
-    var messages    = body.messages    || [];
+    var body         = await parseBody(req);
+    var messages     = body.messages     || [];
     var systemPrompt = body.systemPrompt || "You are a helpful assistant.";
 
-    var reply = await callWithFailover(messages, systemPrompt);
+    // Outer deadline: if all failovers together exceed TOTAL_TIMEOUT_MS, give up cleanly
+    var timeoutPromise = new Promise(function (_, reject) {
+      setTimeout(function () {
+        reject(new Error("TOTAL_TIMEOUT_EXCEEDED"));
+      }, TOTAL_TIMEOUT_MS);
+    });
+
+    var reply = await Promise.race([callWithFailover(messages, systemPrompt), timeoutPromise]);
 
     res.statusCode = 200;
     res.setHeader("Content-Type", "application/json");
     res.end(JSON.stringify({ reply: reply }));
   } catch (err) {
     console.error("[api/chat] Fatal error:", err.message);
-    res.statusCode = 500;
+    var statusCode = err.message === "TOTAL_TIMEOUT_EXCEEDED" ? 503 : 500;
+    res.statusCode = statusCode;
     res.setHeader("Content-Type", "application/json");
     res.end(JSON.stringify({ error: err.message || "Internal server error" }));
   }

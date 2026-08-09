@@ -314,10 +314,10 @@
 
     var str = text.trim();
 
-    // Headers (### Header -> bold text block)
+    // ── Step 1: Headers (### → styled paragraph) ───────────
     str = str.replace(/^#{1,6}\s+(.*?)$/gm, '<p class="font-bold text-slate-800 mt-2 mb-1">$1</p>');
 
-    // Convert Markdown links [label](url) to HTML links
+    // ── Step 2: Markdown links [label](url) → HTML anchors ──
     str = str.replace(/\[([^\]]+)\]\((https?:\/\/[^)]+)\)/g, function (match, label, url) {
       if (/watch demo|demo video|product demo|video/i.test(label)) {
         return '<a href="' + url + '" target="_blank" rel="noopener" class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-indigo-50 border border-indigo-200 text-indigo-700 font-semibold text-sm hover:bg-indigo-100 transition-colors">🎬 ' + label + '</a>';
@@ -325,58 +325,72 @@
       return '<a href="' + url + '" target="_blank" rel="noopener" class="text-indigo-600 font-semibold underline">' + label + '</a>';
     });
 
-    // Bold text (**bold**)
+    // ── Step 3: Inline bold (**text** → <strong>) ───────────
     str = str.replace(/\*\*(.*?)\*\*/g, '<strong class="font-semibold text-indigo-700">$1</strong>');
 
-    // Bullet lists (* item, - item, • item) and numbered lists (1. item)
+    // ── Step 4: Inline code (`code`) ────────────────────────
+    str = str.replace(/`([^`]+)`/g, '<code class="ai-code">$1</code>');
+
+    // ── Step 5: Parse bullet/numbered lists line-by-line ────
+    //    Groq/Llama often emits blank lines BETWEEN list items.
+    //    We skip blank lines when inside a list so they don't
+    //    create empty <li> elements or orphaned bullet markers.
     var lines = str.split(/\r?\n/);
-    var inList = false;
+    var inList   = false;
     var listType = null;
-    var processedLines = [];
+    var out      = [];
 
     for (var i = 0; i < lines.length; i++) {
       var line = lines[i];
-      var bulletMatch = line.match(/^\s*[\*•\-]\s+(.*)$/);
-      var numMatch = line.match(/^\s*\d+[\.\)]\s+(.*)$/);
+
+      // Skip blank lines inside a list (Groq inter-item padding)
+      if (inList && line.trim() === "") continue;
+
+      var bulletMatch = line.match(/^\s*[-*\u2022]\s+(.+)$/);
+      var numMatch    = line.match(/^\s*\d+[.)]\s+(.+)$/);
 
       if (bulletMatch) {
-        if (!inList || listType !== 'ul') {
-          if (inList) processedLines.push(listType === 'ul' ? '</ul>' : '</ol>');
-          processedLines.push('<ul class="list-disc pl-4 space-y-1 my-1 text-sm">');
-          inList = true;
-          listType = 'ul';
+        if (!inList || listType !== "ul") {
+          if (inList) out.push(listType === "ul" ? "</ul>" : "</ol>");
+          out.push('<ul class="ai-list">');
+          inList   = true;
+          listType = "ul";
         }
-        processedLines.push('<li>' + bulletMatch[1] + '</li>');
+        out.push("<li>" + bulletMatch[1].trim() + "</li>");
+
       } else if (numMatch) {
-        if (!inList || listType !== 'ol') {
-          if (inList) processedLines.push(listType === 'ul' ? '</ul>' : '</ol>');
-          processedLines.push('<ol class="list-decimal pl-4 space-y-1 my-1 text-sm">');
-          inList = true;
-          listType = 'ol';
+        if (!inList || listType !== "ol") {
+          if (inList) out.push(listType === "ul" ? "</ul>" : "</ol>");
+          out.push('<ol class="ai-list ai-list-decimal">');
+          inList   = true;
+          listType = "ol";
         }
-        processedLines.push('<li>' + numMatch[1] + '</li>');
+        out.push("<li>" + numMatch[1].trim() + "</li>");
+
       } else {
         if (inList) {
-          processedLines.push(listType === 'ul' ? '</ul>' : '</ol>');
-          inList = false;
+          out.push(listType === "ul" ? "</ul>" : "</ol>");
+          inList   = false;
           listType = null;
         }
-        processedLines.push(line);
+        out.push(line);
       }
     }
-    if (inList) {
-      processedLines.push(listType === 'ul' ? '</ul>' : '</ol>');
-    }
+    if (inList) out.push(listType === "ul" ? "</ul>" : "</ol>");
 
-    str = processedLines.join('\n');
+    str = out.join("\n");
 
-    // Clean up line break bloat and empty paragraphs
+    // ── Step 6: Clean stray newlines around block tags ───────
     str = str
-      .replace(/<\/(ul|ol|li|div|p|button)>\n+/gi, '</$1>')
-      .replace(/\n+<(ul|ol|li|div|p|button)/gi, '<$1')
-      .replace(/(<br\s*\/?>\s*){2,}/gi, '<br>')
-      .replace(/<p>\s*<\/p>/gi, '')
-      .replace(/\n/g, '<br>');
+      .replace(/<\/(ul|ol|li|div|p|button)>\n+/gi, "</$1>")
+      .replace(/\n+<(ul|ol|li|div|p|button)/gi, "<$1")
+      .replace(/<p>\s*<\/p>/gi, "");
+
+    // ── Step 7: Remaining \n → <br> (non-list prose) ────────
+    str = str.replace(/\n/g, "<br>");
+
+    // ── Step 8: Collapse multiple consecutive <br> ───────────
+    str = str.replace(/(<br\s*\/?>\s*){2,}/gi, "<br>");
 
     return str.trim();
   }

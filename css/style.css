@@ -293,7 +293,6 @@ body {
   border-radius: 1rem;
   font-size: 0.875rem;
   line-height: 1.55;
-  white-space: pre-line;
   animation: messageIn 220ms ease both;
 }
 
@@ -340,19 +339,37 @@ body {
 }
 
 .assistant-message.bot ul,
-.assistant-message.bot ol {
-  margin-top: 0.25rem;
-  margin-bottom: 0.4rem;
-  padding-left: 1.1rem;
+.assistant-message.bot ol,
+.ai-list {
+  margin-top: 0.3rem;
+  margin-bottom: 0.45rem;
+  padding-left: 1.25rem;
+  list-style-type: disc;
 }
 
-.assistant-message.bot li {
-  margin-bottom: 0.18rem;
-  line-height: 1.45;
+.ai-list.ai-list-decimal {
+  list-style-type: decimal;
 }
 
-.assistant-message.bot br+br {
-  display: none;
+.assistant-message.bot li,
+.ai-list li {
+  display: list-item;
+  margin-bottom: 0.22rem;
+  line-height: 1.5;
+  padding-left: 0.1rem;
+}
+
+/* Inline code from AI responses */
+.ai-code {
+  display: inline;
+  padding: 0.1em 0.35em;
+  border-radius: 0.3rem;
+  background: #eef2ff;
+  color: #3730a3;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.82em;
+  font-weight: 500;
+  border: 1px solid #c7d2fe;
 }
 
 .assistant-message.user {
