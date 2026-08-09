@@ -1,18 +1,16 @@
 /**
- * ai-service.js — Multi-Provider (Gemini + Groq) AI Engine with Professional Standby UI
+ * ai-service.js — AI Chat Engine (Server-Proxy Mode)
  * -----------------------------------------------------------------------------
- * 1. Multi-Provider Router: Routes requests dynamically to Gemini or Groq endpoints.
- * 2. Zero-Code Model Merging: Hot-reloads target model strings from window.ENV_CONFIG.
- * 3. Multi-Key Failover: Seamlessly rotates from target 1 -> target 2 -> target 3...
- * 4. Executive Standby Card: Displays an elegant standby card on total pool exhaustion.
- * 5. Universal Auto-Scroll Buttons & Compact Sanitizer: Preserved for rich portfolio UX.
+ * 1. Local FAQ & Navigation Bridge: Handles common questions instantly (0 tokens).
+ * 2. Dynamic Context Builder: Slices AI_CONTEXT into a rich system prompt.
+ * 3. Server Proxy: POSTs to /api/chat — API keys stay server-side, never in browser.
+ * 4. Multi-Key Failover: Managed server-side in api/chat.js (Gemini → Groq → ...).
+ * 5. Executive Standby Card: Displays an elegant standby card on total pool exhaustion.
+ * 6. Universal Auto-Scroll Buttons & Compact Sanitizer: Preserved for rich portfolio UX.
  */
 
 (function () {
   "use strict";
-
-  var GEMINI_API_BASE = "https://generativelanguage.googleapis.com/v1beta/models/";
-  var GROQ_API_BASE = "https://api.groq.com/openai/v1/chat/completions";
 
   /* ── Universal Auto-Scroll Buttons ─────────────────────── */
 
@@ -264,132 +262,35 @@
     return promptParts.join("\n\n");
   }
 
-  /* ── 3. Multi-Provider API Handlers (Gemini + Groq) ─────── */
-
-  /**
-   * Gemini API Endpoint Call
+  /* ── 3. Server Proxy Call ───────────────────────────────────
+   * POSTs conversation history and system prompt to /api/chat.
+   * The server handles provider selection, API keys, and failover.
+   * API keys are NEVER sent to or stored in the browser.
    */
-  function callGeminiAPI(target, conversationHistory, systemInstruction) {
-    var url = GEMINI_API_BASE + target.model + ":generateContent?key=" + target.key;
-    var body = {
-      system_instruction: {
-        parts: [{ text: systemInstruction }]
-      },
-      contents: conversationHistory,
-      generationConfig: {
-        temperature: 0.7,
-        topK: 40,
-        topP: 0.95,
-        maxOutputTokens: 2048,
-        responseMimeType: "text/plain"
-      },
-      safetySettings: [
-        { category: "HARM_CATEGORY_HARASSMENT", threshold: "BLOCK_ONLY_HIGH" },
-        { category: "HARM_CATEGORY_HATE_SPEECH", threshold: "BLOCK_ONLY_HIGH" },
-        { category: "HARM_CATEGORY_SEXUALLY_EXPLICIT", threshold: "BLOCK_ONLY_HIGH" },
-        { category: "HARM_CATEGORY_DANGEROUS_CONTENT", threshold: "BLOCK_ONLY_HIGH" }
-      ]
-    };
 
-    return fetch(url, {
+  function callProxyAPI(conversationHistory, systemInstruction) {
+    console.info("[AI Service] Sending request to /api/chat (server-proxy mode).");
+
+    return fetch("/api/chat", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(body)
+      body: JSON.stringify({
+        messages:     conversationHistory,
+        systemPrompt: systemInstruction
+      })
     })
       .then(function (res) {
         if (!res.ok) {
-          throw new Error("Gemini HTTP Error " + res.status);
+          throw new Error("Proxy HTTP Error " + res.status);
         }
         return res.json();
       })
       .then(function (data) {
-        if (!data || typeof data !== "object") throw new Error("Invalid Gemini response.");
-        if (data.promptFeedback && data.promptFeedback.blockReason) {
-          throw new Error("Gemini Blocked: " + data.promptFeedback.blockReason);
-        }
-        var candidate = data.candidates && data.candidates[0];
-        if (!candidate || !candidate.content || !candidate.content.parts || !candidate.content.parts[0]) {
-          throw new Error("Empty Gemini response candidate.");
-        }
-        return candidate.content.parts[0].text || "";
+        if (!data || typeof data !== "object") throw new Error("Invalid proxy response.");
+        if (data.error) throw new Error(data.error);
+        if (typeof data.reply !== "string") throw new Error("No reply field in proxy response.");
+        return data.reply;
       });
-  }
-
-  /**
-   * Groq OpenAI-Compatible Chat Completions API Call
-   */
-  function callGroqAPI(target, conversationHistory, systemInstruction) {
-    var messages = [
-      { role: "system", content: systemInstruction }
-    ];
-
-    for (var i = 0; i < conversationHistory.length; i++) {
-      var turn = conversationHistory[i];
-      var role = turn.role === "user" ? "user" : "assistant";
-      var text = (turn.parts && turn.parts[0] && turn.parts[0].text) || "";
-      if (text) {
-        messages.push({ role: role, content: text });
-      }
-    }
-
-    var body = {
-      model: target.model || "llama-3.3-70b-versatile",
-      messages: messages,
-      temperature: 0.7,
-      max_tokens: 2048
-    };
-
-    return fetch(GROQ_API_BASE, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": "Bearer " + target.key
-      },
-      body: JSON.stringify(body)
-    })
-      .then(function (res) {
-        if (!res.ok) {
-          throw new Error("Groq HTTP Error " + res.status);
-        }
-        return res.json();
-      })
-      .then(function (data) {
-        if (!data || typeof data !== "object") throw new Error("Invalid Groq response.");
-        var choice = data.choices && data.choices[0];
-        if (!choice || !choice.message || !choice.message.content) {
-          throw new Error("Empty Groq response content.");
-        }
-        return choice.message.content || "";
-      });
-  }
-
-  /**
-   * Multi-Provider Failover Dispatcher (Gemini -> Groq -> Target N)
-   */
-  function callAIWithFailover(conversationHistory, systemInstruction, attempt) {
-    attempt = attempt || 0;
-    var totalTargets = window.AI_CONFIG.targetCount() || 1;
-
-    if (attempt >= totalTargets + 1) {
-      return Promise.reject(new Error("ALL_TARGETS_EXHAUSTED"));
-    }
-
-    var target = window.AI_CONFIG.getActiveTarget();
-    if (!target || !target.key) {
-      return Promise.reject(new Error("NO_TARGETS_AVAILABLE"));
-    }
-
-    console.info("[AI Service] Executing request via Provider: " + target.provider + " | Model: " + target.model + " (Group: " + target.group + ")");
-
-    var apiPromise = (target.provider === "groq")
-      ? callGroqAPI(target, conversationHistory, systemInstruction)
-      : callGeminiAPI(target, conversationHistory, systemInstruction);
-
-    return apiPromise.catch(function (err) {
-      console.warn("[AI Service] Target failed (Group: " + target.group + ", Provider: " + target.provider + "). Error: " + err.message + ". Triggering failover...");
-      window.AI_CONFIG.markTargetFailed(target);
-      return callAIWithFailover(conversationHistory, systemInstruction, attempt + 1);
-    });
   }
 
   /* ── Conversation History ─────────────────────────────── */
@@ -502,10 +403,7 @@
     var systemPrompt = buildDynamicSystemPrompt(text);
     var contents = _conversationHistory.slice();
 
-    // Reset failed targets list if fresh message
-    window.AI_CONFIG.resetFailedTargets();
-
-    return callAIWithFailover(contents, systemPrompt, 0)
+    return callProxyAPI(contents, systemPrompt)
       .then(function (rawResponse) {
         var html = sanitiseResponse(rawResponse);
         addToHistory("model", rawResponse);
