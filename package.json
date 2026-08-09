@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start": "npx serve .",
-    "build": "node -e \"const fs=require('fs'); fs.mkdirSync('js/ai', {recursive: true}); fs.writeFileSync('js/ai/env-config.js', `window.ENV_CONFIG = { first_KEY: '${process.env.first_KEY}', first_MODEL: '${process.env.first_MODEL}', first_PROVIDER: '${process.env.first_PROVIDER}', second_KEY: '${process.env.second_KEY}', second_MODEL: '${process.env.second_MODEL}', second_PROVIDER: '${process.env.second_PROVIDER}', third_KEY: '${process.env.third_KEY}', third_MODEL: '${process.env.third_MODEL}', third_PROVIDER: '${process.env.third_PROVIDER}' };`);\""
+    "build": "node -e \"const fs=require('fs'); fs.mkdirSync('js/ai', {recursive: true}); fs.writeFileSync('js/ai/env-config.js', 'window.ENV_CONFIG = { first_KEY: \\\"' + (process.env.first_KEY || '') + '\\\", first_MODEL: \\\"' + (process.env.first_MODEL || '') + '\\\", first_PROVIDER: \\\"' + (process.env.first_PROVIDER || '') + '\\\", second_KEY: \\\"' + (process.env.second_KEY || '') + '\\\", second_MODEL: \\\"' + (process.env.second_MODEL || '') + '\\\", second_PROVIDER: \\\"' + (process.env.second_PROVIDER || '') + '\\\", third_KEY: \\\"' + (process.env.third_KEY || '') + '\\\", third_MODEL: \\\"' + (process.env.third_MODEL || '') + '\\\", third_PROVIDER: \\\"' + (process.env.third_PROVIDER || '') + '\\\" };');\""
   },
   "dependencies": {},
   "devDependencies": {}
