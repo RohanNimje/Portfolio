@@ -86,6 +86,14 @@ window.portfolioData = {
       description: "An intelligent RPA bot utilizing Automation Anywhere A360 with dynamic DOMXPath scraping to extract and compile real-time hackathon data from Google's AI Overview.",
       videoUrl: "https://res.cloudinary.com/doyiqcna9/video/upload/v1783668274/Automation_Anywhere_Project_-_Hackathon_Finder_1_ez6s0w.mp4",
       projectCertImgUrl: "https://res.cloudinary.com/doyiqcna9/image/upload/v1783667845/Automation_Anywhere_complete_jowcjy.png"
+    },
+    {
+      id: 6,
+      title: "Cosmolyze",
+      techStack: ["React", "Node.js", "Python", "Tailwind CSS", "Vercel"],
+      description: "An advanced space data analysis and visualization engine designed to process complex astronomical datasets with sub-2s response latency and interactive real-time visual insights.",
+      videoUrl: "https://res.cloudinary.com/doyiqcna9/video/upload/v1783668274/Automation_Anywhere_Project_-_Hackathon_Finder_1_ez6s0w.mp4",
+      projectCertImgUrl: "https://res.cloudinary.com/doyiqcna9/image/upload/v1783667845/Automation_Anywhere_complete_jowcjy.png"
     }
   ],
 
