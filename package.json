@@ -7,5 +7,7 @@
     "build": "node -e \"const fs=require('fs'); fs.mkdirSync('js/ai', {recursive: true}); const cfg = { first_KEY: process.env.first_KEY || '', first_MODEL: process.env.first_MODEL || 'gemini-2.5-flash', first_PROVIDER: process.env.first_PROVIDER || 'gemini', second_KEY: process.env.second_KEY || '', second_MODEL: process.env.second_MODEL || 'llama-3.3-70b-versatile', second_PROVIDER: process.env.second_PROVIDER || 'groq', third_KEY: process.env.third_KEY || '', third_MODEL: process.env.third_MODEL || '', third_PROVIDER: process.env.third_PROVIDER || '' }; fs.writeFileSync('js/ai/env-config.js', 'window.ENV_CONFIG = ' + JSON.stringify(cfg) + ';');\""
   },
   "dependencies": {},
-  "devDependencies": {}
+  "devDependencies": {
+    "@types/node": "^20.0.0"
+  }
 }
