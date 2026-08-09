@@ -8,6 +8,9 @@ __v0_jsx-dev-runtime.ts
 
 # Environment variables
 .env*.local
+.env
+js/ai/env-config.js
+js/ai/env*.js
 
 # Common ignores
 node_modules

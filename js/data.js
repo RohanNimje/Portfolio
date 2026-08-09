@@ -8,6 +8,42 @@ const portfolioData = {
       "https://res.cloudinary.com/doyiqcna9/image/upload/v1783672140/rohan_qfsija.jpg"
     ]
   },
+
+  // Role-Targeted Capabilities for AI Chatbot Pitching
+  roleCapabilities: {
+    associateProductManager: {
+      title: "Associate Product Manager / Product Engineer",
+      highlights: [
+        "0-to-1 Product Execution: Built and launched ScanZy Rewards MVP for offline retailers to drive gamified customer retention.",
+        "Data-Driven Iteration: Transitioned from paper coupons to digital QR mechanics for real-time customer tracking.",
+        "Rapid Prototyping: End-to-end full-stack MVPs combining seamless UI with automated backend systems."
+      ]
+    },
+    softwareEngineer: {
+      title: "Software Engineer / Full-Stack Developer",
+      highlights: [
+        "Core Algorithmic Competency: Global Rank 27 in DSA CodeVerse Bi-Weekly Contest #25.",
+        "Full-Stack Mastery: Hands-on expertise in Python, SQL, MongoDB, Supabase, Node.js, and REST APIs.",
+        "365-Day Consistency: Unbroken daily coding streak on NxtWave Academy."
+      ]
+    },
+    solutionsArchitect: {
+      title: "AI & Solutions Systems Architect",
+      highlights: [
+        "Low-Latency AI Engineering: Sub-2s inference time on computer vision and AI models.",
+        "Agentic Automation: Custom Model Context Protocol (MCP) servers, Pipedream, and n8n workflows.",
+        "Fraud Prevention Infrastructure: Architected 'Trinity X' live binary validation system for national hackathons."
+      ]
+    }
+  },
+
+  metrics: [
+    { label: "Execution Streak", value: "365 Days", description: "Unbroken daily execution on NxtWave Academy" },
+    { label: "DSA Global Rank", value: "Rank 27", description: "CodeVerse Bi-Weekly Contest #25" },
+    { label: "CV Model Latency", value: "< 2s", description: "Sub-2-second Computer Vision inference" },
+    { label: "Cloud Sync Optimization", value: "35%", description: "Database sync latency reduction" }
+  ],
+
   projects: [
     {
       id: 1,
@@ -50,7 +86,7 @@ const portfolioData = {
       description: "An intelligent RPA bot utilizing Automation Anywhere A360 with dynamic DOMXPath scraping to extract and compile real-time hackathon data from Google's AI Overview.",
       videoUrl: "https://res.cloudinary.com/doyiqcna9/video/upload/v1783668274/Automation_Anywhere_Project_-_Hackathon_Finder_1_ez6s0w.mp4",
       projectCertImgUrl: "https://res.cloudinary.com/doyiqcna9/image/upload/v1783667845/Automation_Anywhere_complete_jowcjy.png"
-    }, 
+    },
     {
       id: 6,
       title: "Cosmolyze",
