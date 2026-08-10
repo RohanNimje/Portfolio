@@ -7,28 +7,29 @@
  *
  * Reads API keys from process.env (never exposed to the browser).
  * Handles multi-provider failover: Gemini → Groq → next target.
+ * Supports:
+ *   - Real-Time Token Streaming via Server-Sent Events (SSE)
+ *   - Non-streaming JSON fallback
  *
  * Expected request body:
- *   { messages: [...], systemPrompt: "..." }
+ *   { messages: [...], systemPrompt: "...", stream: true }
  *
- * Response:
- *   { reply: "..." }  on success
- *   { error: "..." }  on failure
+ * SSE Response:
+ *   data: {"chunk":"..."}
+ *   ...
+ *   data: [DONE]
  */
 
 "use strict";
 
 /* ── Constants ─────────────────────────────────────────────── */
-var GEMINI_BASE      = "https://generativelanguage.googleapis.com/v1beta/models/";
-var GROQ_BASE        = "https://api.groq.com/openai/v1/chat/completions";
-var FETCH_TIMEOUT_MS = 4000;   // Per-provider attempt timeout (ms)
-var TOTAL_TIMEOUT_MS = 12000;  // Outer hard deadline for the whole request (ms)
+var GEMINI_STREAM_BASE = "https://generativelanguage.googleapis.com/v1beta/models/";
+var GEMINI_BASE        = "https://generativelanguage.googleapis.com/v1beta/models/";
+var GROQ_BASE          = "https://api.groq.com/openai/v1/chat/completions";
+var FETCH_TIMEOUT_MS   = 5000;   // Per-provider attempt timeout (ms)
+var TOTAL_TIMEOUT_MS   = 15000;  // Outer hard deadline for the whole request (ms)
 
 /* ── Timeout-aware Fetch ────────────────────────────────────── */
-/**
- * Wraps native fetch() with an AbortController timeout.
- * Throws an AbortError if the upstream doesn't respond within timeoutMs.
- */
 async function fetchWithTimeout(url, options, timeoutMs) {
   var controller = new AbortController();
   var timer = setTimeout(function () {
@@ -62,10 +63,6 @@ function defaultModel(provider) {
   return provider === "groq" ? "llama-3.3-70b-versatile" : "gemini-2.5-flash";
 }
 
-/**
- * Reads process.env for keys named first_KEY / first_MODEL / first_PROVIDER
- * (second_*, third_*, …) and returns sorted target array.
- */
 function discoverTargets() {
   var env = process.env;
   var groups = {};
@@ -79,7 +76,6 @@ function discoverTargets() {
     var prefix = k.substring(0, idx).toLowerCase();
     var suffix = k.substring(idx + 1).toUpperCase();
 
-    // Only handle known ordinal prefixes
     if (ORDINAL_MAP[prefix] === undefined) return;
 
     if (!groups[prefix]) groups[prefix] = { prefix: prefix };
@@ -112,9 +108,46 @@ function discoverTargets() {
   return targets;
 }
 
-/* ── Gemini API Call ────────────────────────────────────────── */
-async function callGemini(target, messages, systemPrompt) {
-  var url  = GEMINI_BASE + target.model + ":generateContent?key=" + target.key;
+/* ── Stream Line Parser Helper ──────────────────────────────── */
+async function processSSEStream(response, onChunk) {
+  if (!response.body) throw new Error("No response body to stream.");
+
+  var reader = response.body.getReader();
+  var decoder = new TextDecoder("utf-8");
+  var buffer = "";
+
+  while (true) {
+    var { value, done } = await reader.read();
+    if (done) break;
+
+    buffer += decoder.decode(value, { stream: true });
+    var lines = buffer.split(/\r?\n/);
+    buffer = lines.pop() || "";
+
+    for (var i = 0; i < lines.length; i++) {
+      var line = lines[i].trim();
+      if (!line || !line.startsWith("data:")) continue;
+      var dataStr = line.replace(/^data:\s*/, "");
+      if (dataStr === "[DONE]") return;
+
+      try {
+        var parsed = JSON.parse(dataStr);
+        onChunk(parsed);
+      } catch (e) {}
+    }
+  }
+
+  if (buffer.trim().startsWith("data:")) {
+    var trailingData = buffer.trim().replace(/^data:\s*/, "");
+    if (trailingData !== "[DONE]") {
+      try { onChunk(JSON.parse(trailingData)); } catch (e) {}
+    }
+  }
+}
+
+/* ── Gemini Streaming API ───────────────────────────────────── */
+async function streamGemini(target, messages, systemPrompt, onToken) {
+  var url = GEMINI_STREAM_BASE + target.model + ":streamGenerateContent?alt=sse&key=" + target.key;
   var body = {
     system_instruction: { parts: [{ text: systemPrompt }] },
     contents: messages,
@@ -122,8 +155,7 @@ async function callGemini(target, messages, systemPrompt) {
       temperature: 0.7,
       topK: 40,
       topP: 0.95,
-      maxOutputTokens: 2048,
-      responseMimeType: "text/plain"
+      maxOutputTokens: 2048
     },
     safetySettings: [
       { category: "HARM_CATEGORY_HARASSMENT",        threshold: "BLOCK_ONLY_HIGH" },
@@ -141,20 +173,20 @@ async function callGemini(target, messages, systemPrompt) {
 
   if (!res.ok) throw new Error("Gemini HTTP " + res.status + " (" + target.model + ")");
 
-  var data = await res.json();
-  if (data.promptFeedback && data.promptFeedback.blockReason) {
-    throw new Error("Gemini blocked: " + data.promptFeedback.blockReason);
-  }
-  var candidate = data.candidates && data.candidates[0];
-  if (!candidate || !candidate.content || !candidate.content.parts || !candidate.content.parts[0]) {
-    throw new Error("Empty Gemini candidate.");
-  }
-  return candidate.content.parts[0].text || "";
+  await processSSEStream(res, function (data) {
+    if (data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts) {
+      var parts = data.candidates[0].content.parts;
+      for (var p = 0; p < parts.length; p++) {
+        if (parts[p].text) {
+          onToken(parts[p].text);
+        }
+      }
+    }
+  });
 }
 
-/* ── Groq API Call ──────────────────────────────────────────── */
-async function callGroq(target, messages, systemPrompt) {
-  // Convert Gemini-style {role, parts:[{text}]} to OpenAI-style {role, content}
+/* ── Groq Streaming API ─────────────────────────────────────── */
+async function streamGroq(target, messages, systemPrompt, onToken) {
   var oaiMessages = [{ role: "system", content: systemPrompt }];
   messages.forEach(function (turn) {
     var role    = turn.role === "user" ? "user" : "assistant";
@@ -165,6 +197,7 @@ async function callGroq(target, messages, systemPrompt) {
   var body = {
     model:       target.model || "llama-3.3-70b-versatile",
     messages:    oaiMessages,
+    stream:      true,
     temperature: 0.7,
     max_tokens:  2048
   };
@@ -180,16 +213,15 @@ async function callGroq(target, messages, systemPrompt) {
 
   if (!res.ok) throw new Error("Groq HTTP " + res.status + " (" + target.model + ")");
 
-  var data   = await res.json();
-  var choice = data.choices && data.choices[0];
-  if (!choice || !choice.message || !choice.message.content) {
-    throw new Error("Empty Groq response.");
-  }
-  return choice.message.content || "";
+  await processSSEStream(res, function (data) {
+    if (data.choices && data.choices[0] && data.choices[0].delta && data.choices[0].delta.content) {
+      onToken(data.choices[0].delta.content);
+    }
+  });
 }
 
-/* ── Failover Dispatcher ────────────────────────────────────── */
-async function callWithFailover(messages, systemPrompt) {
+/* ── Streaming Failover Dispatcher ──────────────────────────── */
+async function callWithFailoverStream(messages, systemPrompt, onToken) {
   var targets = discoverTargets();
   if (targets.length === 0) throw new Error("NO_TARGETS_CONFIGURED");
 
@@ -199,15 +231,28 @@ async function callWithFailover(messages, systemPrompt) {
     if (failed[t.key]) continue;
 
     console.log("[api/chat] Trying " + t.provider + " | " + t.model + " (group: " + t.group + ")");
+    var hasYielded = false;
+
     try {
-      var reply = t.provider === "groq"
-        ? await callGroq(t, messages, systemPrompt)
-        : await callGemini(t, messages, systemPrompt);
-      return reply;
+      var tokenWrapper = function (token) {
+        hasYielded = true;
+        onToken(token);
+      };
+
+      if (t.provider === "groq") {
+        await streamGroq(t, messages, systemPrompt, tokenWrapper);
+      } else {
+        await streamGemini(t, messages, systemPrompt, tokenWrapper);
+      }
+      return;
     } catch (err) {
       var reason = err.name === "AbortError" ? "timeout (" + FETCH_TIMEOUT_MS + "ms)" : err.message;
       console.warn("[api/chat] Target failed (" + t.group + "): " + reason + ". Rotating...");
       failed[t.key] = true;
+
+      if (hasYielded) {
+        throw new Error("STREAM_INTERRUPTED: " + reason);
+      }
     }
   }
 
@@ -224,7 +269,6 @@ function setCORSHeaders(res) {
 /* ── Request Body Parser ────────────────────────────────────── */
 function parseBody(req) {
   return new Promise(function (resolve, reject) {
-    // If body is already parsed (Express with bodyParser), use it directly
     if (req.body) return resolve(req.body);
 
     var raw = "";
@@ -241,7 +285,6 @@ function parseBody(req) {
 async function handler(req, res) {
   setCORSHeaders(res);
 
-  // Handle CORS preflight
   if (req.method === "OPTIONS") {
     res.statusCode = 204;
     res.end();
@@ -259,19 +302,54 @@ async function handler(req, res) {
     var body         = await parseBody(req);
     var messages     = body.messages     || [];
     var systemPrompt = body.systemPrompt || "You are a helpful assistant.";
+    var isStream     = body.stream !== false; // Default to streaming
 
-    // Outer deadline: if all failovers together exceed TOTAL_TIMEOUT_MS, give up cleanly
-    var timeoutPromise = new Promise(function (_, reject) {
-      setTimeout(function () {
-        reject(new Error("TOTAL_TIMEOUT_EXCEEDED"));
+    if (isStream) {
+      res.writeHead(200, {
+        "Content-Type":  "text/event-stream; charset=utf-8",
+        "Cache-Control": "no-cache, no-transform",
+        "Connection":    "keep-alive",
+        "X-Accel-Buffering": "no"
+      });
+
+      var streamDone = false;
+
+      var timeoutTimer = setTimeout(function () {
+        if (!streamDone) {
+          try {
+            res.write("data: " + JSON.stringify({ error: "TOTAL_TIMEOUT_EXCEEDED" }) + "\n\n");
+            res.end();
+          } catch (e) {}
+        }
       }, TOTAL_TIMEOUT_MS);
-    });
 
-    var reply = await Promise.race([callWithFailover(messages, systemPrompt), timeoutPromise]);
+      try {
+        await callWithFailoverStream(messages, systemPrompt, function (token) {
+          if (!streamDone) {
+            res.write("data: " + JSON.stringify({ chunk: token }) + "\n\n");
+          }
+        });
+        streamDone = true;
+        clearTimeout(timeoutTimer);
+        res.write("data: [DONE]\n\n");
+        res.end();
+      } catch (err) {
+        streamDone = true;
+        clearTimeout(timeoutTimer);
+        res.write("data: " + JSON.stringify({ error: err.message || "Failed to generate reply" }) + "\n\n");
+        res.end();
+      }
 
-    res.statusCode = 200;
-    res.setHeader("Content-Type", "application/json");
-    res.end(JSON.stringify({ reply: reply }));
+    } else {
+      var fullText = "";
+      await callWithFailoverStream(messages, systemPrompt, function (token) {
+        fullText += token;
+      });
+      res.statusCode = 200;
+      res.setHeader("Content-Type", "application/json");
+      res.end(JSON.stringify({ reply: fullText }));
+    }
+
   } catch (err) {
     console.error("[api/chat] Fatal error:", err.message);
     var statusCode = err.message === "TOTAL_TIMEOUT_EXCEEDED" ? 503 : 500;
@@ -282,6 +360,5 @@ async function handler(req, res) {
 }
 
 /* ── Exports ────────────────────────────────────────────────── */
-// Vercel expects a default export
 module.exports = handler;
 module.exports.default = handler;

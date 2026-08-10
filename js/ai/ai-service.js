@@ -3,10 +3,11 @@
  * -----------------------------------------------------------------------------
  * 1. Local FAQ & Navigation Bridge: Handles common questions instantly (0 tokens).
  * 2. Dynamic Context Builder: Slices AI_CONTEXT into a rich system prompt.
- * 3. Server Proxy: POSTs to /api/chat — API keys stay server-side, never in browser.
- * 4. Multi-Key Failover: Managed server-side in api/chat.js (Gemini → Groq → ...).
- * 5. Executive Standby Card: Displays an elegant standby card on total pool exhaustion.
- * 6. Universal Auto-Scroll Buttons & Compact Sanitizer: Preserved for rich portfolio UX.
+ * 3. Server Proxy (SSE Streaming): Streams tokens live from /api/chat.
+ * 4. Action Calling: Automatically launches project modals (window.openProjectModal).
+ * 5. Multi-Key Failover: Managed server-side in api/chat.js (Gemini → Groq → ...).
+ * 6. Executive Standby Card: Displays an elegant standby card on total pool exhaustion.
+ * 7. Universal Auto-Scroll Buttons & Compact Sanitizer: Preserved for rich portfolio UX.
  */
 
 (function () {
@@ -55,7 +56,6 @@
     var raw = String(text || "").trim();
     var lower = raw.toLowerCase().replace(/[^a-z0-9\s]/g, "");
     var ctx = window.AI_CONTEXT || {};
-    var p = ctx.personal || {};
     var contact = ctx.contact || {};
 
     // Direct Scroll Navigation Intent Triggers
@@ -115,7 +115,7 @@
         "<ul class=\"list-disc pl-4 space-y-1 text-sm my-1\">" +
         "<li><strong class=\"font-semibold text-indigo-700\">365-Day Streak:</strong> Unbroken daily coding streak on NxtWave Academy</li>" +
         "<li><strong class=\"font-semibold text-indigo-700\">Global Rank 27:</strong> DSA CodeVerse Bi-Weekly Contest #25</li>" +
-        "<li><strong class=\"font-semibold text-indigo-700\">Key Builds:</strong> ScanZy Rewards MVP, Trinity X Fraud Detector, AI Agent Ecosystem</li>" +
+        "<li><strong class=\"font-semibold text-indigo-700\">Key Builds:</strong> Cosmolyze AI Skincare Analyzer, ScanZy Rewards, Trinity X Fraud Detector</li>" +
         "</ul>" +
         SCROLL_BUTTONS.projects
       );
@@ -181,6 +181,8 @@
       "  <a href=\"[URL]\" target=\"_blank\" rel=\"noopener\" class=\"inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-indigo-50 border border-indigo-200 text-indigo-700 font-semibold text-sm hover:bg-indigo-100 transition-colors\">🎬 Watch Demo Video</a>\n" +
       "- When asked for certificates, output image cards:\n" +
       "  <div class=\"mt-2\"><img src=\"[CertImgUrl]\" alt=\"[name]\" class=\"w-full max-w-xs rounded-xl border border-slate-200 shadow-sm\" loading=\"lazy\" /><p class=\"text-xs text-slate-500 mt-1\">[name] — [issuer]</p></div>\n" +
+      "- PROJECT MODAL ACTION TRIGGER:\n" +
+      "  When the user asks to see, view, open, or watch project demos/videos/modals (e.g. ScanZy Rewards, Cosmolyze, Trinity X, Sparky, etc.), append [[ACTION:openProjectModal:ID]] with the matching project ID (e.g. [[ACTION:openProjectModal:1]] for Cosmolyze, [[ACTION:openProjectModal:2]] for ScanZy, [[ACTION:openProjectModal:3]] for Trinity X, [[ACTION:openProjectModal:4]] for Sparky, [[ACTION:openProjectModal:5]] for Automation Engine, [[ACTION:openProjectModal:6]] for Hackathon Bot).\n" +
       "- AUTO-SCROLL BUTTON INSTRUCTIONS:\n" +
       "  When answering inquiries about projects, append: " + SCROLL_BUTTONS.projects + "\n" +
       "  When answering inquiries about certifications, append: " + SCROLL_BUTTONS.certifications + "\n" +
@@ -199,6 +201,7 @@
     if (wantsProjects || isGeneral) {
       var projectsList = (ctx.projects || []).map(function (proj) {
         var details = [];
+        details.push("ID: " + proj.id);
         details.push("Title: " + proj.title);
         details.push("Tech Stack: " + (proj.techStack || []).join(", "));
         details.push("Description: " + proj.description);
@@ -262,35 +265,67 @@
     return promptParts.join("\n\n");
   }
 
-  /* ── 3. Server Proxy Call ───────────────────────────────────
+  /* ── 3. Server Proxy Call (SSE Streaming) ──────────────────
    * POSTs conversation history and system prompt to /api/chat.
-   * The server handles provider selection, API keys, and failover.
-   * API keys are NEVER sent to or stored in the browser.
+   * Streams tokens via SSE and triggers project modal actions.
    */
 
-  function callProxyAPI(conversationHistory, systemInstruction) {
-    console.info("[AI Service] Sending request to /api/chat (server-proxy mode).");
+  async function callProxyAPIStream(conversationHistory, systemInstruction, onChunk) {
+    console.info("[AI Service] Sending streaming request to /api/chat.");
 
-    return fetch("/api/chat", {
+    var res = await fetch("/api/chat", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         messages:     conversationHistory,
-        systemPrompt: systemInstruction
+        systemPrompt: systemInstruction,
+        stream:       true
       })
-    })
-      .then(function (res) {
-        if (!res.ok) {
-          throw new Error("Proxy HTTP Error " + res.status);
+    });
+
+    if (!res.ok) {
+      throw new Error("Proxy HTTP Error " + res.status);
+    }
+
+    if (!res.body) {
+      throw new Error("Streaming not supported.");
+    }
+
+    var reader = res.body.getReader();
+    var decoder = new TextDecoder("utf-8");
+    var buffer = "";
+    var fullRawText = "";
+
+    while (true) {
+      var { value, done } = await reader.read();
+      if (done) break;
+
+      buffer += decoder.decode(value, { stream: true });
+      var lines = buffer.split(/\r?\n/);
+      buffer = lines.pop() || "";
+
+      for (var i = 0; i < lines.length; i++) {
+        var line = lines[i].trim();
+        if (!line || !line.startsWith("data:")) continue;
+        var dataStr = line.replace(/^data:\s*/, "");
+        if (dataStr === "[DONE]") return fullRawText;
+
+        try {
+          var payload = JSON.parse(dataStr);
+          if (payload.error) throw new Error(payload.error);
+          if (payload.chunk) {
+            fullRawText += payload.chunk;
+            if (typeof onChunk === "function") {
+              onChunk(fullRawText, payload.chunk);
+            }
+          }
+        } catch (e) {
+          if (e.message && e.message.indexOf("JSON") === -1) throw e;
         }
-        return res.json();
-      })
-      .then(function (data) {
-        if (!data || typeof data !== "object") throw new Error("Invalid proxy response.");
-        if (data.error) throw new Error(data.error);
-        if (typeof data.reply !== "string") throw new Error("No reply field in proxy response.");
-        return data.reply;
-      });
+      }
+    }
+
+    return fullRawText;
   }
 
   /* ── Conversation History ─────────────────────────────── */
@@ -298,9 +333,11 @@
   var MAX_HISTORY_TURNS = 6;
 
   function addToHistory(role, text) {
+    // Strip internal action tags before storing in conversational history
+    var cleanText = String(text || "").replace(/\[\[ACTION:openProjectModal:\d+\]\]/g, "").trim();
     _conversationHistory.push({
       role: role,
-      parts: [{ text: text }]
+      parts: [{ text: cleanText }]
     });
     if (_conversationHistory.length > MAX_HISTORY_TURNS * 2) {
       _conversationHistory = _conversationHistory.slice(-MAX_HISTORY_TURNS * 2);
@@ -312,7 +349,8 @@
   function sanitiseResponse(text) {
     if (!text || typeof text !== "string") return "";
 
-    var str = text.trim();
+    // Strip action tags from visible HTML
+    var str = text.replace(/\[\[ACTION:openProjectModal:\d+\]\]/g, "").trim();
 
     // ── Step 1: Headers (### → styled paragraph) ───────────
     str = str.replace(/^#{1,6}\s+(.*?)$/gm, '<p class="font-bold text-slate-800 mt-2 mb-1">$1</p>');
@@ -332,9 +370,6 @@
     str = str.replace(/`([^`]+)`/g, '<code class="ai-code">$1</code>');
 
     // ── Step 5: Parse bullet/numbered lists line-by-line ────
-    //    Groq/Llama often emits blank lines BETWEEN list items.
-    //    We skip blank lines when inside a list so they don't
-    //    create empty <li> elements or orphaned bullet markers.
     var lines = str.split(/\r?\n/);
     var inList   = false;
     var listType = null;
@@ -395,40 +430,71 @@
     return str.trim();
   }
 
-  /* ── Main Public Function ─────────────────────────────── */
+  /* ── Main Public Function (Streaming & Action Aware) ───── */
 
-  function sendAIMessage(userText) {
+  function sendAIMessage(userText, onChunk) {
     var text = String(userText || "").trim();
-    if (!text) return Promise.resolve("Please type a message.");
+    if (!text) {
+      if (typeof onChunk === "function") onChunk("Please type a message.", true);
+      return Promise.resolve("Please type a message.");
+    }
 
     // 1. Check Local FAQ & Navigation Bridge (0 Tokens, instant reply)
     var localResponse = tryLocalFAQ(text);
     if (localResponse) {
+      if (typeof onChunk === "function") onChunk(localResponse, true);
       return Promise.resolve(localResponse);
     }
 
     // 2. Multi-Provider Pool Availability Check
     if (!window.AI_CONFIG.hasTargets()) {
-      return Promise.resolve(getStandbyErrorCard());
+      var standby = getStandbyErrorCard();
+      if (typeof onChunk === "function") onChunk(standby, true);
+      return Promise.resolve(standby);
     }
 
     addToHistory("user", text);
 
     var systemPrompt = buildDynamicSystemPrompt(text);
     var contents = _conversationHistory.slice();
+    var openedModals = {};
 
-    return callProxyAPI(contents, systemPrompt)
+    return callProxyAPIStream(contents, systemPrompt, function (fullRawText) {
+      // Check for project modal action tag in the live stream
+      var modalMatches = fullRawText.matchAll(/\[\[ACTION:openProjectModal:(\d+)\]\]/g);
+      for (var match of modalMatches) {
+        var projectId = match[1];
+        if (!openedModals[projectId]) {
+          openedModals[projectId] = true;
+          if (typeof window.openProjectModal === "function") {
+            window.openProjectModal(Number(projectId));
+          }
+        }
+      }
+
+      // Live partial HTML formatting
+      var partialHtml = sanitiseResponse(fullRawText);
+      if (typeof onChunk === "function") {
+        onChunk(partialHtml, false);
+      }
+    })
       .then(function (rawResponse) {
         var html = sanitiseResponse(rawResponse);
         addToHistory("model", rawResponse);
+        if (typeof onChunk === "function") {
+          onChunk(html, true);
+        }
         return html;
       })
       .catch(function (err) {
         if (_conversationHistory.length > 0) _conversationHistory.pop();
-        console.error("[AI Service] All provider targets failed:", err);
+        console.error("[AI Service] Streaming failed:", err);
 
-        // Always display executive standby card on failure (NO raw technical errors!)
-        return getStandbyErrorCard();
+        var standbyCard = getStandbyErrorCard();
+        if (typeof onChunk === "function") {
+          onChunk(standbyCard, true);
+        }
+        return standbyCard;
       });
   }
 

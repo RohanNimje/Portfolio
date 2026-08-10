@@ -411,30 +411,55 @@ function sendAssistantMessage(text) {
   var cleanText = String(text || "").trim();
   if (!cleanText) return;
 
-  // Add user message
+  // Add user message to UI
   addAssistantMessage("user", cleanText);
 
-  // Show typing indicator
+  // Show typing indicator until first token streams
   showAssistantTyping();
 
-  // Delegate to Gemini AI service
-  window.sendAIMessage(cleanText)
-    .then(function (htmlResponse) {
+  var botBubble = null;
+  var hasStartedStreaming = false;
+
+  // Delegate to Streaming AI Agent
+  window.sendAIMessage(cleanText, function (partialHtml, isDone) {
+    if (!hasStartedStreaming) {
+      hasStartedStreaming = true;
       removeAssistantTyping();
-      addAssistantMessage("bot", htmlResponse);
-    })
+
+      // Create live bot bubble container
+      var container = document.getElementById("assistant-messages");
+      if (container) {
+        botBubble = document.createElement("div");
+        botBubble.className = "assistant-message bot";
+        container.appendChild(botBubble);
+      }
+      assistantMessages.push({ sender: "bot", html: partialHtml });
+    }
+
+    if (botBubble) {
+      botBubble.innerHTML = partialHtml;
+      var container = document.getElementById("assistant-messages");
+      if (container) container.scrollTop = container.scrollHeight;
+    }
+
+    if (isDone && assistantMessages.length > 0) {
+      assistantMessages[assistantMessages.length - 1].html = partialHtml;
+    }
+  })
     .catch(function (err) {
       removeAssistantTyping();
-      addAssistantMessage(
-        "bot",
-        "Sorry, I ran into a temporary issue. You can reach Rohan directly at " +
-        '<a href="mailto:rohannimje53@gmail.com" class="text-indigo-600 underline font-semibold">rohannimje53@gmail.com</a>.'
-      );
+      if (!botBubble) {
+        addAssistantMessage(
+          "bot",
+          "Sorry, I ran into a temporary issue. You can reach Rohan directly at " +
+          '<a href="mailto:rohannimje53@gmail.com" class="text-indigo-600 underline font-semibold">rohannimje53@gmail.com</a>.'
+        );
+      }
     });
 }
 
 /* ══════════════════════════════════════════════════════════
-   PROJECT MODAL DATA LOOKUP
+   PROJECT MODAL DATA LOOKUP & ACTION CALLING
 ══════════════════════════════════════════════════════════ */
 function getProjectById(id) {
   var projects = (window.AI_CONTEXT && window.AI_CONTEXT.projects) || [];
@@ -443,6 +468,14 @@ function getProjectById(id) {
   }
   return null;
 }
+
+// Global UI Tool for AI Agent Modal Calling
+window.openProjectModal = function (id) {
+  var project = getProjectById(Number(id));
+  if (project) {
+    renderProjectModal(project);
+  }
+};
 
 /* ══════════════════════════════════════════════════════════
    EVENTS
