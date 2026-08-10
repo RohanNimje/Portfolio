@@ -409,10 +409,37 @@ function renderProjects() {
 }
 
 /* ══════════════════════════════════════════════════════════
+   SCROLL LOCK & MODAL CONTROLLERS
+══════════════════════════════════════════════════════════ */
+function lockBodyScroll() {
+  document.body.classList.add("overflow-hidden");
+}
+
+function unlockBodyScroll() {
+  var modalOpen = document.getElementById("project-modal");
+  if (!modalOpen && !assistantIsOpen) {
+    document.body.classList.remove("overflow-hidden");
+  }
+}
+
+function closeProjectModal() {
+  var modalRoot = document.getElementById("project-modal-root");
+  if (modalRoot) modalRoot.innerHTML = "";
+  var toggle = document.getElementById("assistant-toggle");
+  if (toggle && !assistantIsOpen) toggle.classList.remove("is-hidden");
+  unlockBodyScroll();
+}
+
+/* ══════════════════════════════════════════════════════════
    PROJECT MODAL
 ══════════════════════════════════════════════════════════ */
 function renderProjectModal(project) {
   if (!project) return;
+  lockBodyScroll();
+
+  var toggle = document.getElementById("assistant-toggle");
+  if (toggle) toggle.classList.add("is-hidden");
+
   var media = "";
   var demoUrl = project.mobileVideoUrl || project.laptopVideoUrl || project.productDemoUrl || project.videourlproduct || project.videoUrlmvp || project.videoUrl;
   if (demoUrl) {
@@ -437,8 +464,8 @@ function renderProjectModal(project) {
   }
 
   document.getElementById("project-modal-root").innerHTML =
-    '<div id="project-modal" class="modal-backdrop fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">' +
-    '<div class="modal-panel relative w-full max-w-2xl max-h-[90vh] bg-white border border-border rounded-2xl shadow-xl overflow-hidden">' +
+    '<div id="project-modal" class="modal-backdrop fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-[70] flex items-center justify-center p-4">' +
+    '<div class="modal-panel relative w-full max-w-2xl max-h-[90vh] bg-white border border-border rounded-2xl shadow-2xl overflow-hidden z-[71]">' +
     '<button type="button" id="close-modal" aria-label="Close modal" class="absolute top-4 right-4 z-10 p-2 rounded-lg bg-white border border-border hover:border-indigo-200 hover:bg-slate-50 transition-all shadow-sm cursor-pointer">' + icon("close", "w-6 h-6 text-foreground") + "</button>" +
     '<div class="overflow-y-auto max-h-[90vh] p-8 space-y-6">' +
     '<div><h2 class="text-3xl sm:text-4xl font-bold mb-2 ' + GRADIENT_HEADING + '">' + project.title + '</h2><p class="text-muted-foreground">' + project.description + "</p></div>" +
@@ -451,7 +478,7 @@ function renderProjectModal(project) {
 }
 
 /* ══════════════════════════════════════════════════════════
-   AI ASSISTANT WIDGET
+   AI ASSISTANT WIDGET & DRAGGABLE CONTROLLER
 ══════════════════════════════════════════════════════════ */
 function renderAssistant() {
   var existing = document.getElementById("portfolio-assistant");
@@ -471,7 +498,7 @@ function renderAssistant() {
     '<div class="mt-1 flex items-center gap-2 text-xs text-white/80"><span class="assistant-status-dot"></span><span>Personal representative</span></div>' +
     "</div>" +
     "</div>" +
-    '<button type="button" id="assistant-close" aria-label="Close assistant" class="w-9 h-9 rounded-xl bg-white/10 hover:bg-white/20 border border-white/15 flex items-center justify-center transition-colors">' + icon("close", "w-5 h-5") + "</button>" +
+    '<button type="button" id="assistant-close" aria-label="Close assistant" class="w-9 h-9 rounded-xl bg-white/10 hover:bg-white/20 border border-white/15 flex items-center justify-center transition-colors cursor-pointer">' + icon("close", "w-5 h-5") + "</button>" +
     "</div>" +
     "</div>" +
     '<div id="assistant-messages" class="assistant-messages"></div>' +
@@ -481,7 +508,18 @@ function renderAssistant() {
     '<button type="submit" class="assistant-send" aria-label="Send message">' + icon("arrowRight", "w-5 h-5") + "</button>" +
     "</form>" +
     "</section>" +
-    '<button type="button" id="assistant-toggle" class="assistant-toggle" aria-label="Open Rohan\'s AI assistant">' + icon("mail", "w-7 h-7") + "</button>";
+    '<button type="button" id="assistant-toggle" class="assistant-toggle" aria-label="Ask Rohan — AI Assistant">' +
+    '<span class="assistant-glow-ring"></span>' +
+    '<div class="flex items-center gap-2 relative z-10">' +
+    '<div class="w-8 h-8 rounded-full bg-white/15 border border-white/25 flex items-center justify-center shadow-inner flex-shrink-0">' +
+    '<svg class="w-4 h-4 text-indigo-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>' +
+    "</div>" +
+    '<div class="flex items-center gap-1.5 pr-1.5">' +
+    '<span class="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_8px_#34d399] tiny-pulse"></span>' +
+    '<span class="text-xs sm:text-sm font-bold tracking-wide text-white whitespace-nowrap">Ask Rohan</span>' +
+    "</div>" +
+    "</div>" +
+    "</button>";
 
   document.body.appendChild(shell);
 
@@ -494,6 +532,184 @@ function renderAssistant() {
 
   renderAssistantMessages();
   renderAssistantQuickActions();
+  initDraggableAssistant();
+}
+
+function initDraggableAssistant() {
+  var toggle = document.getElementById("assistant-toggle");
+  var panel = document.getElementById("assistant-panel");
+  if (!toggle) return;
+
+  var isDragging = false;
+  var hasMoved = false;
+  var dragStartX = 0;
+  var dragStartY = 0;
+  var initialLeft = 0;
+  var initialTop = 0;
+  var currentLeft = 0;
+  var currentTop = 0;
+  var isDockedOnLeft = false;
+  var dragThreshold = 6;
+
+  // Compute initial position (bottom right)
+  var margin = 20;
+  var bottomMargin = window.innerWidth < 768 ? 85 : 24;
+  var toggleRect = toggle.getBoundingClientRect();
+  var btnW = toggleRect.width || 135;
+  var btnH = toggleRect.height || 46;
+
+  currentLeft = window.innerWidth - btnW - margin;
+  currentTop = window.innerHeight - btnH - bottomMargin;
+  applyPosition(currentLeft, currentTop, false);
+
+  toggle.addEventListener("pointerdown", function (e) {
+    if (e.button !== 0 && e.pointerType === "mouse") return;
+    isDragging = true;
+    hasMoved = false;
+    dragStartX = e.clientX;
+    dragStartY = e.clientY;
+
+    var rect = toggle.getBoundingClientRect();
+    initialLeft = rect.left;
+    initialTop = rect.top;
+
+    toggle.classList.add("is-dragging");
+    toggle.style.transition = "none";
+    try {
+      toggle.setPointerCapture(e.pointerId);
+    } catch (_) { }
+
+    function onPointerMove(moveEvent) {
+      if (!isDragging) return;
+      var deltaX = moveEvent.clientX - dragStartX;
+      var deltaY = moveEvent.clientY - dragStartY;
+
+      if (!hasMoved && Math.hypot(deltaX, deltaY) > dragThreshold) {
+        hasMoved = true;
+      }
+
+      if (hasMoved) {
+        moveEvent.preventDefault();
+        var newLeft = initialLeft + deltaX;
+        var newTop = initialTop + deltaY;
+
+        var r = toggle.getBoundingClientRect();
+        var maxL = window.innerWidth - r.width - 8;
+        var maxT = window.innerHeight - r.height - 8;
+
+        newLeft = Math.max(8, Math.min(newLeft, maxL));
+        newTop = Math.max(8, Math.min(newTop, maxT));
+
+        currentLeft = newLeft;
+        currentTop = newTop;
+        applyPosition(newLeft, newTop, false);
+      }
+    }
+
+    function onPointerUp(upEvent) {
+      if (!isDragging) return;
+      isDragging = false;
+      toggle.classList.remove("is-dragging");
+
+      window.removeEventListener("pointermove", onPointerMove);
+      window.removeEventListener("pointerup", onPointerUp);
+      window.removeEventListener("pointercancel", onPointerUp);
+
+      try {
+        toggle.releasePointerCapture(upEvent.pointerId);
+      } catch (_) { }
+
+      if (!hasMoved) {
+        // Tap/Click -> Toggle Assistant Panel
+        if (assistantIsOpen) closeAssistant();
+        else openAssistant();
+        return;
+      }
+
+      // Edge snapping on drag release
+      snapToEdge();
+    }
+
+    window.addEventListener("pointermove", onPointerMove);
+    window.addEventListener("pointerup", onPointerUp);
+    window.addEventListener("pointercancel", onPointerUp);
+  });
+
+  function snapToEdge() {
+    var rect = toggle.getBoundingClientRect();
+    var btnW = rect.width || 135;
+    var btnH = rect.height || 46;
+    var sideMargin = 18;
+    var minTop = 60;
+    var maxBottom = window.innerWidth < 768 ? 85 : 24;
+    var maxTop = window.innerHeight - btnH - maxBottom;
+
+    currentTop = Math.max(minTop, Math.min(currentTop, maxTop));
+    var midX = currentLeft + btnW / 2;
+
+    if (midX < window.innerWidth / 2) {
+      currentLeft = sideMargin;
+      isDockedOnLeft = true;
+    } else {
+      currentLeft = window.innerWidth - btnW - sideMargin;
+      isDockedOnLeft = false;
+    }
+
+    applyPosition(currentLeft, currentTop, true);
+  }
+
+  function applyPosition(left, top, animate) {
+    toggle.style.transition = animate ? "left 0.32s cubic-bezier(0.2, 0.8, 0.2, 1), top 0.32s cubic-bezier(0.2, 0.8, 0.2, 1), transform 0.2s ease" : "none";
+    toggle.style.left = left + "px";
+    toggle.style.top = top + "px";
+    toggle.style.right = "auto";
+    toggle.style.bottom = "auto";
+    alignPanelAnchor();
+  }
+
+  function alignPanelAnchor() {
+    if (!panel) return;
+    var isMobile = window.innerWidth < 640;
+    if (isMobile) {
+      panel.style.left = "0.75rem";
+      panel.style.right = "0.75rem";
+      panel.style.bottom = "5.5rem";
+      panel.style.top = "auto";
+      return;
+    }
+
+    var toggleRect = toggle.getBoundingClientRect();
+    var panelW = 380;
+    var panelH = Math.min(620, window.innerHeight - 100);
+
+    // Horizontal Anchor: Left dock vs Right dock
+    if (isDockedOnLeft || toggleRect.left < window.innerWidth / 2) {
+      var panelLeft = Math.max(16, toggleRect.left);
+      if (panelLeft + panelW > window.innerWidth - 16) {
+        panelLeft = window.innerWidth - panelW - 16;
+      }
+      panel.style.left = panelLeft + "px";
+      panel.style.right = "auto";
+      panel.style.transformOrigin = "bottom left";
+    } else {
+      var panelRight = window.innerWidth - toggleRect.right;
+      panel.style.right = Math.max(16, panelRight) + "px";
+      panel.style.left = "auto";
+      panel.style.transformOrigin = "bottom right";
+    }
+
+    // Vertical Anchor: position above toggle or clamped inside viewport
+    var panelBottom = window.innerHeight - toggleRect.top + 10;
+    if (panelBottom + panelH > window.innerHeight - 20) {
+      panelBottom = Math.max(20, window.innerHeight - panelH - 20);
+    }
+    panel.style.bottom = panelBottom + "px";
+    panel.style.top = "auto";
+  }
+
+  window.addEventListener("resize", function () {
+    snapToEdge();
+  });
 }
 
 function renderAssistantMessages() {
@@ -543,15 +759,22 @@ function renderAssistantQuickActions() {
 function openAssistant() {
   assistantIsOpen = true;
   var panel = document.getElementById("assistant-panel");
+  var toggle = document.getElementById("assistant-toggle");
   var input = document.getElementById("assistant-input");
   if (panel) panel.classList.remove("is-hidden");
+  if (toggle) toggle.classList.add("is-hidden");
+  lockBodyScroll();
   if (input) setTimeout(function () { input.focus(); }, 120);
 }
 
 function closeAssistant() {
   assistantIsOpen = false;
   var panel = document.getElementById("assistant-panel");
+  var toggle = document.getElementById("assistant-toggle");
+  var modalOpen = document.getElementById("project-modal");
   if (panel) panel.classList.add("is-hidden");
+  if (toggle && !modalOpen) toggle.classList.remove("is-hidden");
+  unlockBodyScroll();
 }
 
 function addAssistantMessage(sender, htmlOrText) {
@@ -670,8 +893,7 @@ function attachEvents() {
 
     // Project modal close
     if (event.target.id === "project-modal" || event.target.closest("#close-modal")) {
-      var modalRoot = document.getElementById("project-modal-root");
-      if (modalRoot) modalRoot.innerHTML = "";
+      closeProjectModal();
     }
 
     // Honors carousel
@@ -730,11 +952,7 @@ function attachEvents() {
       renderCertifications();
     }
 
-    // AI Assistant toggle
-    if (event.target.closest("#assistant-toggle")) {
-      if (assistantIsOpen) closeAssistant();
-      else openAssistant();
-    }
+    // AI Assistant close button
     if (event.target.closest("#assistant-close")) {
       closeAssistant();
     }
@@ -853,6 +1071,17 @@ function attachEvents() {
 
   // Scroll nav update
   window.addEventListener("scroll", updateActiveNavigation);
+
+  // Escape key listener to close modal or assistant
+  document.addEventListener("keydown", function (event) {
+    if (event.key === "Escape" || event.key === "Esc") {
+      if (document.getElementById("project-modal")) {
+        closeProjectModal();
+      } else if (assistantIsOpen) {
+        closeAssistant();
+      }
+    }
+  });
 }
 
 /* ══════════════════════════════════════════════════════════
