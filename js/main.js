@@ -24,6 +24,8 @@ var SECONDARY_BUTTON = "inline-flex items-center justify-center gap-2 px-6 py-3 
 /* ── State ─────────────────────────────────────────────── */
 var activeNavId = "hero";
 var honorsIndex = window.innerWidth >= 768 ? 1 : 0;
+var honorsTimer = null;
+var honorsResumeTimeout = null;
 var certificationsIndex = 0;
 var certificationTimer;
 var assistantIsOpen = false;
@@ -124,15 +126,15 @@ function renderNavigation() {
 
   document.getElementById("navigation").innerHTML =
     '<nav class="hidden md:flex fixed top-0 left-0 right-0 z-40 justify-center pt-5 px-4 w-full nav-enter-top">' +
-      '<div class="border border-slate-200/60 rounded-full px-6 py-3 bg-white shadow-lg shadow-slate-200/40 flex items-center gap-4 max-w-5xl w-full">' +
-        desktopButtons +
-        '<button type="button" data-scroll="contact" class="ml-auto ' + PRIMARY_BUTTON + ' !px-5 !py-2 text-sm">' + icon("mail", "w-4 h-4") + "Get In Touch</button>" +
-      "</div>" +
+    '<div class="border border-slate-200/60 rounded-full px-6 py-3 bg-white shadow-lg shadow-slate-200/40 flex items-center gap-4 max-w-5xl w-full">' +
+    desktopButtons +
+    '<button type="button" data-scroll="contact" class="ml-auto ' + PRIMARY_BUTTON + ' !px-5 !py-2 text-sm">' + icon("mail", "w-4 h-4") + "Get In Touch</button>" +
+    "</div>" +
     "</nav>" +
     '<div class="md:hidden fixed bottom-0 left-0 right-0 z-40 flex justify-center px-4 pb-5 pt-3 w-full bg-white border-t border-slate-200/60 shadow-[0_-8px_32px_rgba(15,23,42,0.08)] nav-enter-bottom">' +
-      '<div class="rounded-full px-3 py-2.5 bg-white border border-border flex items-center gap-1.5 max-w-lg w-full justify-center shadow-sm">' +
-        mobileButtons +
-      "</div>" +
+    '<div class="rounded-full px-3 py-2.5 bg-white border border-border flex items-center gap-1.5 max-w-lg w-full justify-center shadow-sm">' +
+    mobileButtons +
+    "</div>" +
     "</div>";
 }
 
@@ -152,30 +154,27 @@ function renderHonors() {
     var active = i === honorsIndex ? "active" : "";
     cards +=
       '<div class="flex-shrink-0 flex flex-col items-center" style="width:288px">' +
-        '<button type="button" data-honor-index="' + i + '" class="honor-card-button ' + active + ' w-72 h-80 cursor-pointer perspective">' +
-          '<div class="flip-inner w-full h-full relative">' +
-            '<div class="flip-side absolute inset-0 group"><img src="' + certSrc + '" alt="' + honor.title + '" class="w-full h-full rounded-2xl border border-slate-200 object-contain group-hover:border-indigo-200 transition-all shadow-sm" loading="' + (i === honorsIndex ? "eager" : "lazy") + '" decoding="async" draggable="false" /><div class="absolute bottom-4 right-4 z-10 px-3 py-1.5 bg-indigo-50 border border-indigo-100 rounded-full flex items-center gap-1.5 text-xs font-semibold text-indigo-700 group-hover:bg-indigo-100 transition-all"><span>Click to Flip</span>' + icon("flip", "w-3 h-3") + "</div></div>" +
-            '<div class="flip-side flip-back absolute inset-0"><div class="w-full h-full rounded-2xl border border-slate-200 bg-gradient-to-br from-indigo-50/80 to-white p-6 flex flex-col justify-between hover:border-indigo-200 transition-all shadow-sm"><div class="space-y-3"><p class="text-xs text-muted-foreground font-semibold uppercase tracking-wide">' + honor.event + '</p><div class="w-1 h-5 bg-gradient-to-b from-accent to-foreground rounded-full"></div><p class="text-xs text-foreground leading-relaxed">' + honor.description + '</p></div><div class="flex items-center gap-1.5 text-xs font-semibold text-accent">' + icon("flip", "w-3 h-3") + "<span>Click to flip</span></div></div></div>" +
-          "</div>" +
-        "</button>" +
+      '<button type="button" data-honor-index="' + i + '" class="honor-card-button ' + active + ' w-72 h-80 cursor-pointer perspective">' +
+      '<div class="flip-inner w-full h-full relative">' +
+      '<div class="flip-side absolute inset-0 group"><img src="' + certSrc + '" alt="' + honor.title + '" class="w-full h-full rounded-2xl border border-slate-200 object-contain group-hover:border-indigo-200 transition-all shadow-sm" loading="' + (i === honorsIndex ? "eager" : "lazy") + '" decoding="async" draggable="false" /><div class="absolute bottom-4 right-4 z-10 px-3 py-1.5 bg-indigo-50 border border-indigo-100 rounded-full flex items-center gap-1.5 text-xs font-semibold text-indigo-700 group-hover:bg-indigo-100 transition-all"><span>Click to Flip</span>' + icon("flip", "w-3 h-3") + "</div></div>" +
+      '<div class="flip-side flip-back absolute inset-0"><div class="w-full h-full rounded-2xl border border-slate-200 bg-gradient-to-br from-indigo-50/80 to-white p-6 flex flex-col justify-between hover:border-indigo-200 transition-all shadow-sm"><div class="space-y-3"><p class="text-xs text-muted-foreground font-semibold uppercase tracking-wide">' + honor.event + '</p><div class="w-1 h-5 bg-gradient-to-b from-accent to-foreground rounded-full"></div><p class="text-xs text-foreground leading-relaxed">' + honor.description + '</p></div><div class="flex items-center gap-1.5 text-xs font-semibold text-accent">' + icon("flip", "w-3 h-3") + "<span>Click to flip</span></div></div></div>" +
+      "</div>" +
+      "</button>" +
       "</div>";
     dots += '<button type="button" aria-label="Go to honor ' + (i + 1) + '" data-honor-dot="' + i + '" class="h-2 rounded-full transition-all duration-300 ' + (i === honorsIndex ? "w-6 bg-accent" : "w-2 bg-muted-foreground/30 hover:bg-muted-foreground/50") + '"></button>';
   }
 
-  document.getElementById("honors").innerHTML =
-    '<div class="fluid-section px-4 sm:px-6 lg:px-8 bg-white relative">' +
-      '<div class="absolute inset-0 overflow-hidden pointer-events-none"><div class="absolute top-20 right-10 w-64 h-64 bg-indigo-100/40 rounded-full blur-3xl"></div></div>' +
-      '<div class="max-w-6xl mx-auto relative z-10">' +
-        '<div class="text-center reveal fluid-heading-mb"><h2 class="text-4xl sm:text-5xl font-bold mb-4 ' + GRADIENT_HEADING + '">Honors &amp; Achievements</h2><p class="text-slate-600">Recognitions from national-level competitions.</p></div>' +
-        '<div class="group/carousel relative overflow-hidden transition-opacity duration-200">' +
-          '<div class="absolute left-0 top-0 bottom-0 w-16 sm:w-24 bg-gradient-to-r from-background to-transparent z-20 pointer-events-none"></div><div class="absolute right-0 top-0 bottom-0 w-16 sm:w-24 bg-gradient-to-l from-background to-transparent z-20 pointer-events-none"></div>' +
-          '<button type="button" aria-label="Previous honor" id="honor-prev" class="absolute left-0 top-1/2 -translate-y-1/2 w-12 sm:w-16 h-40 z-30 flex items-center justify-start pl-1 sm:pl-2 opacity-0 hover:opacity-100 group-hover/carousel:opacity-60 transition-opacity duration-300"><span class="flex items-center justify-center w-9 h-9 rounded-full bg-background/70 border border-white/10 backdrop-blur-sm text-foreground/70 hover:text-accent hover:border-accent/40 transition-colors">' + icon("chevronLeft", "w-5 h-5") + "</span></button>" +
-          '<button type="button" aria-label="Next honor" id="honor-next" class="absolute right-0 top-1/2 -translate-y-1/2 w-12 sm:w-16 h-40 z-30 flex items-center justify-end pr-1 sm:pr-2 opacity-0 hover:opacity-100 group-hover/carousel:opacity-60 transition-opacity duration-300"><span class="flex items-center justify-center w-9 h-9 rounded-full bg-background/70 border border-white/10 backdrop-blur-sm text-foreground/70 hover:text-accent hover:border-accent/40 transition-colors">' + icon("chevronRight", "w-5 h-5") + "</span></button>" +
-          '<div id="honor-track" class="honor-track flex gap-8 cursor-grab active:cursor-grabbing touch-pan-y py-2 w-max">' + cards + "</div>" +
-        "</div>" +
-        '<div class="mt-5 space-y-3 text-center"><h3 class="text-base sm:text-lg font-bold text-foreground px-4">' + (honors[honorsIndex] ? honors[honorsIndex].title : "") + '</h3><div class="flex justify-center items-center gap-2">' + dots + "</div></div>" +
-      "</div>" +
-    "</div>";
+  var container = document.getElementById("honors-carousel-container") || document.getElementById("honors");
+  if (!container) return;
+
+  container.innerHTML =
+    '<div class="group/carousel relative overflow-hidden transition-opacity duration-200">' +
+    '<div class="absolute left-0 top-0 bottom-0 w-16 sm:w-24 bg-gradient-to-r from-background to-transparent z-20 pointer-events-none"></div><div class="absolute right-0 top-0 bottom-0 w-16 sm:w-24 bg-gradient-to-l from-background to-transparent z-20 pointer-events-none"></div>' +
+    '<button type="button" aria-label="Previous honor" id="honor-prev" class="absolute left-0 top-1/2 -translate-y-1/2 w-12 sm:w-16 h-40 z-30 flex items-center justify-start pl-1 sm:pl-2 opacity-0 hover:opacity-100 group-hover/carousel:opacity-60 transition-opacity duration-300"><span class="flex items-center justify-center w-9 h-9 rounded-full bg-background/70 border border-white/10 backdrop-blur-sm text-foreground/70 hover:text-accent hover:border-accent/40 transition-colors">' + icon("chevronLeft", "w-5 h-5") + "</span></button>" +
+    '<button type="button" aria-label="Next honor" id="honor-next" class="absolute right-0 top-1/2 -translate-y-1/2 w-12 sm:w-16 h-40 z-30 flex items-center justify-end pr-1 sm:pr-2 opacity-0 hover:opacity-100 group-hover/carousel:opacity-60 transition-opacity duration-300"><span class="flex items-center justify-center w-9 h-9 rounded-full bg-background/70 border border-white/10 backdrop-blur-sm text-foreground/70 hover:text-accent hover:border-accent/40 transition-colors">' + icon("chevronRight", "w-5 h-5") + "</span></button>" +
+    '<div id="honor-track" class="honor-track flex gap-8 cursor-grab active:cursor-grabbing touch-pan-y py-2 w-max">' + cards + "</div>" +
+    "</div>" +
+    '<div class="mt-5 space-y-3 text-center"><h3 class="text-base sm:text-lg font-bold text-foreground px-4">' + (honors[honorsIndex] ? honors[honorsIndex].title : "") + '</h3><div class="flex justify-center items-center gap-2">' + dots + "</div></div>";
 
   updateHonorTrack();
 }
@@ -214,7 +213,7 @@ function renderCertifications() {
       var rotate = position < 0 ? 42 : position > 0 ? -42 : 0;
       cards +=
         '<div data-cert-index="' + i + '" class="coverflow-card absolute cursor-pointer" style="z-index:' + zIndex + ";opacity:" + opacity + ";transform:translateX(" + x + "px) scale(" + scale + ") rotateY(" + rotate + 'deg);">' +
-          '<div class="block bg-white rounded-xl border border-slate-200 w-full h-full relative overflow-visible"><img src="' + certSrc + '" alt="' + cert.name + '" draggable="false" loading="lazy" decoding="async" class="block w-full h-full object-contain bg-white rounded-[10px]" style="box-shadow:' + (position === 0 ? "0 12px 40px rgba(67, 56, 202, 0.14)" : "0 4px 16px rgba(15, 23, 42, 0.06)") + ';" /></div>' +
+        '<div class="block bg-white rounded-xl border border-slate-200 w-full h-full relative overflow-visible"><img src="' + certSrc + '" alt="' + cert.name + '" draggable="false" loading="lazy" decoding="async" class="block w-full h-full object-contain bg-white rounded-[10px]" style="box-shadow:' + (position === 0 ? "0 12px 40px rgba(67, 56, 202, 0.14)" : "0 4px 16px rgba(15, 23, 42, 0.06)") + ';" /></div>' +
         "</div>";
     }
   }
@@ -224,12 +223,12 @@ function renderCertifications() {
 
   container.innerHTML =
     '<div class="group/carousel relative w-full max-w-4xl mx-auto">' +
-      '<div class="coverflow-stage relative w-full flex items-center justify-center touch-pan-y cursor-grab active:cursor-grabbing">' +
-        '<button type="button" aria-label="Previous certification" id="cert-prev" class="absolute left-0 top-1/2 z-40 -translate-y-1/2 w-12 sm:w-16 md:w-20 flex items-center justify-start pl-2 sm:pl-3 opacity-0 hover:opacity-100 group-hover/carousel:opacity-60 transition-opacity duration-300"><span class="flex items-center justify-center w-9 h-9 rounded-full bg-white/70 border border-slate-200/50 backdrop-blur-sm text-slate-600 hover:text-indigo-600 hover:border-indigo-300 transition-all duration-200 shadow-sm">' + icon("chevronLeft", "w-5 h-5") + "</span></button>" +
-        '<button type="button" aria-label="Next certification" id="cert-next" class="absolute right-0 top-1/2 z-40 -translate-y-1/2 w-12 sm:w-16 md:w-20 flex items-center justify-end pr-2 sm:pr-3 opacity-0 hover:opacity-100 group-hover/carousel:opacity-60 transition-opacity duration-300"><span class="flex items-center justify-center w-9 h-9 rounded-full bg-white/70 border border-slate-200/50 backdrop-blur-sm text-slate-600 hover:text-indigo-600 hover:border-indigo-300 transition-all duration-200 shadow-sm">' + icon("chevronRight", "w-5 h-5") + "</span></button>" +
-        '<div class="absolute left-0 top-0 bottom-0 w-20 sm:w-24 md:w-32 bg-gradient-to-r from-[#F7F9FC] via-[#F7F9FC]/50 to-transparent z-20 pointer-events-none"></div><div class="absolute right-0 top-0 bottom-0 w-20 sm:w-24 md:w-32 bg-gradient-to-l from-[#F7F9FC] via-[#F7F9FC]/50 to-transparent z-20 pointer-events-none"></div>' +
-        cards +
-      "</div>" +
+    '<div class="coverflow-stage relative w-full flex items-center justify-center touch-pan-y cursor-grab active:cursor-grabbing">' +
+    '<button type="button" aria-label="Previous certification" id="cert-prev" class="absolute left-0 top-1/2 z-40 -translate-y-1/2 w-12 sm:w-16 md:w-20 flex items-center justify-start pl-2 sm:pl-3 opacity-0 hover:opacity-100 group-hover/carousel:opacity-60 transition-opacity duration-300"><span class="flex items-center justify-center w-9 h-9 rounded-full bg-white/70 border border-slate-200/50 backdrop-blur-sm text-slate-600 hover:text-indigo-600 hover:border-indigo-300 transition-all duration-200 shadow-sm">' + icon("chevronLeft", "w-5 h-5") + "</span></button>" +
+    '<button type="button" aria-label="Next certification" id="cert-next" class="absolute right-0 top-1/2 z-40 -translate-y-1/2 w-12 sm:w-16 md:w-20 flex items-center justify-end pr-2 sm:pr-3 opacity-0 hover:opacity-100 group-hover/carousel:opacity-60 transition-opacity duration-300"><span class="flex items-center justify-center w-9 h-9 rounded-full bg-white/70 border border-slate-200/50 backdrop-blur-sm text-slate-600 hover:text-indigo-600 hover:border-indigo-300 transition-all duration-200 shadow-sm">' + icon("chevronRight", "w-5 h-5") + "</span></button>" +
+    '<div class="absolute left-0 top-0 bottom-0 w-20 sm:w-24 md:w-32 bg-gradient-to-r from-[#F7F9FC] via-[#F7F9FC]/50 to-transparent z-20 pointer-events-none"></div><div class="absolute right-0 top-0 bottom-0 w-20 sm:w-24 md:w-32 bg-gradient-to-l from-[#F7F9FC] via-[#F7F9FC]/50 to-transparent z-20 pointer-events-none"></div>' +
+    cards +
+    "</div>" +
     "</div>" +
     '<div class="mt-8 md:mt-10 space-y-3 text-center"><div><p class="text-sm sm:text-base md:text-lg font-semibold text-foreground">' + (activeCert ? activeCert.name : "") + '</p><p class="text-xs sm:text-sm text-muted-foreground">' + (activeCert ? activeCert.issuer : "") + '</p></div><div class="flex justify-center items-center gap-3 pt-2"><div class="w-2 h-2 rounded-full bg-accent tiny-pulse"></div><span class="text-xs sm:text-sm font-semibold text-muted-foreground"><span class="text-accent">' + (certificationsIndex + 1) + "</span> / " + certs.length + "</span></div></div>";
 }
@@ -264,17 +263,17 @@ window.openProjectModal = function (id) {
 function renderLaptopFrame(videoUrl, title) {
   return (
     '<div class="space-y-3 reveal">' +
-      '<h4 class="text-sm font-semibold text-slate-800">' + (title || "MVP Architecture") + '</h4>' +
-      '<div class="relative rounded-xl overflow-hidden border border-slate-200 bg-slate-900 shadow-md">' +
-        '<div class="bg-gray-900 px-4 py-3 border-b border-gray-800 flex items-center gap-2">' +
-          '<div class="flex gap-2">' +
-            '<div class="w-2.5 h-2.5 rounded-full bg-red-500"></div>' +
-            '<div class="w-2.5 h-2.5 rounded-full bg-yellow-500"></div>' +
-            '<div class="w-2.5 h-2.5 rounded-full bg-green-500"></div>' +
-          '</div>' +
-        '</div>' +
-        '<video src="' + videoUrl + '" autoplay muted loop playsinline controls preload="auto" class="autoplay-video w-full bg-black aspect-video object-cover"></video>' +
-      '</div>' +
+    '<h4 class="text-sm font-semibold text-slate-800">' + (title || "MVP Architecture") + '</h4>' +
+    '<div class="relative rounded-xl overflow-hidden border border-slate-200 bg-slate-900 shadow-md">' +
+    '<div class="bg-gray-900 px-4 py-3 border-b border-gray-800 flex items-center gap-2">' +
+    '<div class="flex gap-2">' +
+    '<div class="w-2.5 h-2.5 rounded-full bg-red-500"></div>' +
+    '<div class="w-2.5 h-2.5 rounded-full bg-yellow-500"></div>' +
+    '<div class="w-2.5 h-2.5 rounded-full bg-green-500"></div>' +
+    '</div>' +
+    '</div>' +
+    '<video src="' + videoUrl + '" autoplay muted loop playsinline controls preload="auto" class="autoplay-video w-full bg-black aspect-video object-cover"></video>' +
+    '</div>' +
     '</div>'
   );
 }
@@ -282,13 +281,13 @@ function renderLaptopFrame(videoUrl, title) {
 function renderMobileFrame(videoUrl, title) {
   return (
     '<div class="space-y-3 flex flex-col items-center reveal">' +
-      '<h4 class="text-sm font-semibold text-slate-800 self-start">' + (title || "Product Demo") + '</h4>' +
-      '<div class="relative w-full max-w-[280px] aspect-[9/16] mx-auto rounded-[2.5rem] overflow-hidden border-[6px] border-gray-900 bg-black shadow-2xl flex-1">' +
-        '<video src="' + videoUrl + '" autoplay muted loop playsinline controls preload="auto" class="autoplay-video w-full h-full bg-black object-cover"></video>' +
-        '<div class="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-6 bg-gray-900 rounded-b-3xl z-20 flex items-center justify-center pointer-events-none">' +
-          '<div class="w-1 h-1 bg-gray-700 rounded-full"></div>' +
-        '</div>' +
-      '</div>' +
+    '<h4 class="text-sm font-semibold text-slate-800 self-start">' + (title || "Product Demo") + '</h4>' +
+    '<div class="relative w-full max-w-[280px] aspect-[9/16] mx-auto rounded-[2.5rem] overflow-hidden border-[6px] border-gray-900 bg-black shadow-2xl flex-1">' +
+    '<video src="' + videoUrl + '" autoplay muted loop playsinline controls preload="auto" class="autoplay-video w-full h-full bg-black object-cover"></video>' +
+    '<div class="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-6 bg-gray-900 rounded-b-3xl z-20 flex items-center justify-center pointer-events-none">' +
+    '<div class="w-1 h-1 bg-gray-700 rounded-full"></div>' +
+    '</div>' +
+    '</div>' +
     '</div>'
   );
 }
@@ -330,20 +329,20 @@ function renderProjects() {
       // Dual layout: Laptop frame (Left) + Mobile frame (Right)
       videoMockupHtml =
         '<div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 pt-4">' +
-          renderLaptopFrame(laptopVideo, "MVP Architecture") +
-          renderMobileFrame(mobileVideo, "Product Demo") +
+        renderLaptopFrame(laptopVideo, "MVP Architecture") +
+        renderMobileFrame(mobileVideo, "Product Demo") +
         '</div>';
     } else if (laptopVideo) {
       // Single laptop frame
       videoMockupHtml =
         '<div class="grid grid-cols-1 gap-6 pt-4 max-w-3xl mx-auto">' +
-          renderLaptopFrame(laptopVideo, "System Architecture & Demo") +
+        renderLaptopFrame(laptopVideo, "System Architecture & Demo") +
         '</div>';
     } else if (mobileVideo) {
       // Single mobile device frame
       videoMockupHtml =
         '<div class="flex justify-center pt-4">' +
-          renderMobileFrame(mobileVideo, "Product Showcase") +
+        renderMobileFrame(mobileVideo, "Product Showcase") +
         '</div>';
     }
 
@@ -351,33 +350,33 @@ function renderProjects() {
 
     featuredContainer.innerHTML =
       '<div class="group relative rounded-3xl overflow-hidden surface-card surface-card-hover reveal">' +
-        '<div class="p-8 md:p-12 space-y-8">' +
-          '<div class="space-y-4">' +
-            '<div class="inline-block px-4 py-1.5 rounded-full bg-violet-50 border border-violet-200">' +
-              '<span class="text-violet-700 text-xs font-semibold">Featured Project</span>' +
-            '</div>' +
-            '<h3 class="text-3xl sm:text-4xl md:text-5xl font-bold ' + GRADIENT_HEADING + '">' +
-              featuredProject.title +
-            '</h3>' +
-            '<p class="text-base md:text-lg text-slate-600 max-w-3xl">' +
-              featuredProject.description +
-            '</p>' +
-          '</div>' +
-          '<div class="flex flex-wrap gap-2">' +
-            techPills(featuredProject.techStack || [], false) +
-          '</div>' +
-          videoMockupHtml +
-          '<div class="flex flex-col sm:flex-row items-center gap-4 pt-4">' +
-            '<button type="button" id="featured-project-btn" data-project-id="' + featuredProject.id + '" class="' + PRIMARY_BUTTON + '">' +
-              'View Full Project Details ' + icon("arrowRight", "w-4 h-4") +
-            '</button>' +
-            (secondaryProjects.length > 0
-              ? '<button type="button" id="toggle-projects" class="' + SECONDARY_BUTTON + '">' +
-                  toggleBtnText + ' ' + icon("arrowDown", "w-4 h-4") +
-                '</button>'
-              : '') +
-          '</div>' +
-        '</div>' +
+      '<div class="p-8 md:p-12 space-y-8">' +
+      '<div class="space-y-4">' +
+      '<div class="inline-block px-4 py-1.5 rounded-full bg-violet-50 border border-violet-200">' +
+      '<span class="text-violet-700 text-xs font-semibold">Featured Project</span>' +
+      '</div>' +
+      '<h3 class="text-3xl sm:text-4xl md:text-5xl font-bold ' + GRADIENT_HEADING + '">' +
+      featuredProject.title +
+      '</h3>' +
+      '<p class="text-base md:text-lg text-slate-600 max-w-3xl">' +
+      featuredProject.description +
+      '</p>' +
+      '</div>' +
+      '<div class="flex flex-wrap gap-2">' +
+      techPills(featuredProject.techStack || [], false) +
+      '</div>' +
+      videoMockupHtml +
+      '<div class="flex flex-col sm:flex-row items-center gap-4 pt-4">' +
+      '<button type="button" id="featured-project-btn" data-project-id="' + featuredProject.id + '" class="' + PRIMARY_BUTTON + '">' +
+      'View Full Project Details ' + icon("arrowRight", "w-4 h-4") +
+      '</button>' +
+      (secondaryProjects.length > 0
+        ? '<button type="button" id="toggle-projects" class="' + SECONDARY_BUTTON + '">' +
+        toggleBtnText + ' ' + icon("arrowDown", "w-4 h-4") +
+        '</button>'
+        : '') +
+      '</div>' +
+      '</div>' +
       '</div>';
   }
 
@@ -389,20 +388,20 @@ function renderProjects() {
       var proj = secondaryProjects[j];
       gridHtml +=
         '<div class="group relative overflow-hidden text-left h-full reveal">' +
-          '<div class="relative h-64 sm:h-60 p-5 flex flex-col overflow-hidden surface-card surface-card-hover">' +
-            '<div class="relative z-10 space-y-2">' +
-              '<h3 class="text-sm md:text-base font-bold text-slate-800 line-clamp-2">' + proj.title + '</h3>' +
-              '<p class="text-slate-600 text-xs line-clamp-2">' + proj.description + '</p>' +
-              '<div class="flex flex-wrap gap-1 pt-0.5">' +
-                techPills(proj.techStack || [], true) +
-              '</div>' +
-            '</div>' +
-            '<div class="relative z-10 mt-auto pt-3">' +
-              '<button type="button" data-project-id="' + proj.id + '" class="inline-flex items-center justify-center gap-2 px-6 py-2 rounded-xl text-xs font-semibold bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200/80 shadow-sm hover:shadow hover:border-indigo-200 hover:text-indigo-700 transition-all duration-200 w-full cursor-pointer">' +
-                'View Details ' + icon("arrowRight", "w-3 h-3") +
-              '</button>' +
-            '</div>' +
-          '</div>' +
+        '<div class="relative h-64 sm:h-60 p-5 flex flex-col overflow-hidden surface-card surface-card-hover">' +
+        '<div class="relative z-10 space-y-2">' +
+        '<h3 class="text-sm md:text-base font-bold text-slate-800 line-clamp-2">' + proj.title + '</h3>' +
+        '<p class="text-slate-600 text-xs line-clamp-2">' + proj.description + '</p>' +
+        '<div class="flex flex-wrap gap-1 pt-0.5">' +
+        techPills(proj.techStack || [], true) +
+        '</div>' +
+        '</div>' +
+        '<div class="relative z-10 mt-auto pt-3">' +
+        '<button type="button" data-project-id="' + proj.id + '" class="inline-flex items-center justify-center gap-2 px-6 py-2 rounded-xl text-xs font-semibold bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200/80 shadow-sm hover:shadow hover:border-indigo-200 hover:text-indigo-700 transition-all duration-200 w-full cursor-pointer">' +
+        'View Details ' + icon("arrowRight", "w-3 h-3") +
+        '</button>' +
+        '</div>' +
+        '</div>' +
         '</div>';
     }
     gridContainer.innerHTML = gridHtml;
@@ -439,15 +438,15 @@ function renderProjectModal(project) {
 
   document.getElementById("project-modal-root").innerHTML =
     '<div id="project-modal" class="modal-backdrop fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">' +
-      '<div class="modal-panel relative w-full max-w-2xl max-h-[90vh] bg-white border border-border rounded-2xl shadow-xl overflow-hidden">' +
-        '<button type="button" id="close-modal" aria-label="Close modal" class="absolute top-4 right-4 z-10 p-2 rounded-lg bg-white border border-border hover:border-indigo-200 hover:bg-slate-50 transition-all shadow-sm cursor-pointer">' + icon("close", "w-6 h-6 text-foreground") + "</button>" +
-        '<div class="overflow-y-auto max-h-[90vh] p-8 space-y-6">' +
-          '<div><h2 class="text-3xl sm:text-4xl font-bold mb-2 ' + GRADIENT_HEADING + '">' + project.title + '</h2><p class="text-muted-foreground">' + project.description + "</p></div>" +
-          '<div><h3 class="text-lg font-semibold text-foreground mb-3">Tech Stack</h3><div class="flex flex-wrap gap-2">' + techPills(project.techStack || [], false) + "</div></div>" +
-          highlightsList +
-          media +
-        "</div>" +
-      "</div>" +
+    '<div class="modal-panel relative w-full max-w-2xl max-h-[90vh] bg-white border border-border rounded-2xl shadow-xl overflow-hidden">' +
+    '<button type="button" id="close-modal" aria-label="Close modal" class="absolute top-4 right-4 z-10 p-2 rounded-lg bg-white border border-border hover:border-indigo-200 hover:bg-slate-50 transition-all shadow-sm cursor-pointer">' + icon("close", "w-6 h-6 text-foreground") + "</button>" +
+    '<div class="overflow-y-auto max-h-[90vh] p-8 space-y-6">' +
+    '<div><h2 class="text-3xl sm:text-4xl font-bold mb-2 ' + GRADIENT_HEADING + '">' + project.title + '</h2><p class="text-muted-foreground">' + project.description + "</p></div>" +
+    '<div><h3 class="text-lg font-semibold text-foreground mb-3">Tech Stack</h3><div class="flex flex-wrap gap-2">' + techPills(project.techStack || [], false) + "</div></div>" +
+    highlightsList +
+    media +
+    "</div>" +
+    "</div>" +
     "</div>";
 }
 
@@ -463,24 +462,24 @@ function renderAssistant() {
   shell.className = "assistant-shell";
   shell.innerHTML =
     '<section id="assistant-panel" class="assistant-panel is-hidden" aria-label="Rohan\'s personal AI assistant">' +
-      '<div class="assistant-header">' +
-        '<div class="flex items-start justify-between gap-3">' +
-          '<div class="flex items-center gap-3 min-w-0">' +
-            '<div class="w-11 h-11 rounded-2xl bg-white/15 border border-white/20 flex items-center justify-center shadow-sm">' + icon("zap", "w-6 h-6") + "</div>" +
-            '<div class="min-w-0">' +
-              '<p class="text-sm font-bold leading-tight">Rohan\'s AI Assistant</p>' +
-              '<div class="mt-1 flex items-center gap-2 text-xs text-white/80"><span class="assistant-status-dot"></span><span>Personal representative</span></div>' +
-            "</div>" +
-          "</div>" +
-          '<button type="button" id="assistant-close" aria-label="Close assistant" class="w-9 h-9 rounded-xl bg-white/10 hover:bg-white/20 border border-white/15 flex items-center justify-center transition-colors">' + icon("close", "w-5 h-5") + "</button>" +
-        "</div>" +
-      "</div>" +
-      '<div id="assistant-messages" class="assistant-messages"></div>' +
-      '<div id="assistant-quick-actions" class="assistant-quick-actions"></div>' +
-      '<form id="assistant-form" class="assistant-input-row">' +
-        '<input id="assistant-input" class="assistant-input" type="text" autocomplete="off" placeholder="Ask about Rohan, hiring, projects..." aria-label="Ask Rohan\'s assistant" />' +
-        '<button type="submit" class="assistant-send" aria-label="Send message">' + icon("arrowRight", "w-5 h-5") + "</button>" +
-      "</form>" +
+    '<div class="assistant-header">' +
+    '<div class="flex items-start justify-between gap-3">' +
+    '<div class="flex items-center gap-3 min-w-0">' +
+    '<div class="w-11 h-11 rounded-2xl bg-white/15 border border-white/20 flex items-center justify-center shadow-sm">' + icon("zap", "w-6 h-6") + "</div>" +
+    '<div class="min-w-0">' +
+    '<p class="text-sm font-bold leading-tight">Rohan\'s AI Assistant</p>' +
+    '<div class="mt-1 flex items-center gap-2 text-xs text-white/80"><span class="assistant-status-dot"></span><span>Personal representative</span></div>' +
+    "</div>" +
+    "</div>" +
+    '<button type="button" id="assistant-close" aria-label="Close assistant" class="w-9 h-9 rounded-xl bg-white/10 hover:bg-white/20 border border-white/15 flex items-center justify-center transition-colors">' + icon("close", "w-5 h-5") + "</button>" +
+    "</div>" +
+    "</div>" +
+    '<div id="assistant-messages" class="assistant-messages"></div>' +
+    '<div id="assistant-quick-actions" class="assistant-quick-actions"></div>' +
+    '<form id="assistant-form" class="assistant-input-row">' +
+    '<input id="assistant-input" class="assistant-input" type="text" autocomplete="off" placeholder="Ask about Rohan, hiring, projects..." aria-label="Ask Rohan\'s assistant" />' +
+    '<button type="submit" class="assistant-send" aria-label="Send message">' + icon("arrowRight", "w-5 h-5") + "</button>" +
+    "</form>" +
     "</section>" +
     '<button type="button" id="assistant-toggle" class="assistant-toggle" aria-label="Open Rohan\'s AI assistant">' + icon("mail", "w-7 h-7") + "</button>";
 
@@ -677,26 +676,36 @@ function attachEvents() {
 
     // Honors carousel
     if (event.target.closest("#honor-prev")) {
-      honorsIndex = Math.max(0, honorsIndex - 1);
+      pauseHonorsAutoplay();
+      var honors = (window.portfolioData && window.portfolioData.honors) || [];
+      var honorsLen = honors.length || 1;
+      honorsIndex = (honorsIndex - 1 + honorsLen) % honorsLen;
       renderHonors();
       observeReveals();
+      resumeHonorsAutoplayWithDelay(3500);
     }
     if (event.target.closest("#honor-next")) {
-      var honors = (window.portfolioData && window.portfolioData.honors) || [];
-      var maxHonors = honors.length > 0 ? honors.length - 1 : 0;
-      honorsIndex = Math.min(maxHonors, honorsIndex + 1);
+      pauseHonorsAutoplay();
+      var honors2 = (window.portfolioData && window.portfolioData.honors) || [];
+      var honorsLen2 = honors2.length || 1;
+      honorsIndex = (honorsIndex + 1) % honorsLen2;
       renderHonors();
       observeReveals();
+      resumeHonorsAutoplayWithDelay(3500);
     }
     var honorDot = event.target.closest("[data-honor-dot]");
     if (honorDot) {
+      pauseHonorsAutoplay();
       honorsIndex = Number(honorDot.getAttribute("data-honor-dot"));
       renderHonors();
+      resumeHonorsAutoplayWithDelay(3500);
     }
     var honorButton = event.target.closest("[data-honor-index]");
     if (honorButton) {
+      pauseHonorsAutoplay();
       var inner = honorButton.querySelector(".flip-inner");
       if (inner) inner.classList.toggle("flipped");
+      resumeHonorsAutoplayWithDelay(5000);
     }
 
     // Certifications carousel
@@ -737,6 +746,50 @@ function attachEvents() {
       sendAssistantMessage(assistantQuestion.getAttribute("data-assistant-question"));
     }
   });
+
+  // Mouse hover pause/resume for Honors & Certifications
+  document.addEventListener("mouseover", function (event) {
+    if (event.target.closest("#honors") || event.target.closest(".honor-track")) {
+      pauseHonorsAutoplay();
+    }
+  });
+
+  document.addEventListener("mouseout", function (event) {
+    if (event.target.closest("#honors") && (!event.relatedTarget || !event.relatedTarget.closest || !event.relatedTarget.closest("#honors"))) {
+      resumeHonorsAutoplayWithDelay(2500);
+    }
+  });
+
+  // Touch gesture swipe support for Honors Carousel
+  var honorTouchStartX = 0;
+  var honorTouchStartY = 0;
+
+  document.addEventListener("touchstart", function (event) {
+    var stage = event.target.closest("#honors") || event.target.closest(".honor-track");
+    if (!stage) return;
+    pauseHonorsAutoplay();
+    honorTouchStartX = event.touches[0].clientX;
+    honorTouchStartY = event.touches[0].clientY;
+  }, { passive: true });
+
+  document.addEventListener("touchend", function (event) {
+    var stage = event.target.closest("#honors") || event.target.closest(".honor-track");
+    if (!stage) return;
+    var deltaX = event.changedTouches[0].clientX - honorTouchStartX;
+    var deltaY = event.changedTouches[0].clientY - honorTouchStartY;
+
+    if (Math.abs(deltaX) > 35 && Math.abs(deltaX) > Math.abs(deltaY)) {
+      var honors = (window.portfolioData && window.portfolioData.honors) || [];
+      var honorsLen = honors.length || 1;
+      if (deltaX < 0) {
+        honorsIndex = (honorsIndex + 1) % honorsLen;
+      } else {
+        honorsIndex = (honorsIndex - 1 + honorsLen) % honorsLen;
+      }
+      renderHonors();
+    }
+    resumeHonorsAutoplayWithDelay(3500);
+  }, { passive: true });
 
   // Touch gesture swipe support for Certifications Carousel
   var certTouchStartX = 0;
@@ -848,7 +901,7 @@ function setupAutoplayVideos() {
       var video = entries[i].target;
       video.muted = true;
       if (entries[i].isIntersecting) {
-        video.play().catch(function () {});
+        video.play().catch(function () { });
       } else {
         video.pause();
       }
@@ -906,6 +959,32 @@ function pauseCertAutoplay() {
 }
 
 /* ══════════════════════════════════════════════════════════
+   HONORS AUTOPLAY ENGINE
+══════════════════════════════════════════════════════════ */
+function startHonorsAutoplay() {
+  clearInterval(honorsTimer);
+  clearTimeout(honorsResumeTimeout);
+  honorsTimer = setInterval(function () {
+    var honors = (window.portfolioData && window.portfolioData.honors) || [];
+    if (!honors.length) return;
+    honorsIndex = (honorsIndex + 1) % honors.length;
+    renderHonors();
+  }, 4200);
+}
+
+function pauseHonorsAutoplay() {
+  clearInterval(honorsTimer);
+  clearTimeout(honorsResumeTimeout);
+}
+
+function resumeHonorsAutoplayWithDelay(delayMs) {
+  clearTimeout(honorsResumeTimeout);
+  honorsResumeTimeout = setTimeout(function () {
+    startHonorsAutoplay();
+  }, delayMs || 3000);
+}
+
+/* ══════════════════════════════════════════════════════════
    INIT
 ══════════════════════════════════════════════════════════ */
 function renderPage() {
@@ -919,6 +998,7 @@ function renderPage() {
   setupAutoplayVideos();
   setupStreakCounter();
   startCertAutoplay();
+  startHonorsAutoplay();
 }
 
 document.addEventListener("DOMContentLoaded", renderPage);
