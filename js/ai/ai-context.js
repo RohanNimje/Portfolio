@@ -76,7 +76,7 @@ window.AI_CONTEXT = {
       techStack: ["Lovable.dev", "React", "Supabase", "Cursor IDE", "n8n", "Leonardo AI"],
       description: "A full-stack QR-based gamified loyalty platform designed to eliminate offline retail customer churn. Converts one-time shoppers into repeat buyers via physical QR cards given at checkout that unlock store-specific Spin & Win rewards when scanned at home.",
       isFeatured: true,
-      videoUrl: "https://res.cloudinary.com/doyiqcna9/video/upload/v1783673286/Ai_Daily_Coach_automation_qzojiw.mp4",
+      // videoUrl: "https://res.cloudinary.com/doyiqcna9/video/upload/v1783673286/Ai_Daily_Coach_automation_qzojiw.mp4",
       videoUrlmvp: "https://res.cloudinary.com/doyiqcna9/video/upload/v1783673286/Ai_Daily_Coach_automation_qzojiw.mp4",
       productDemoUrl: "https://res.cloudinary.com/doyiqcna9/video/upload/v1783677832/Untitled_design_exdmtc.mp4",
       projectCertImgUrl: "https://res.cloudinary.com/doyiqcna9/image/upload/v1783666876/mvp_certification_k5sedb.png",
@@ -217,7 +217,7 @@ window.AI_CONTEXT = {
       title: "National Finalist",
       event: "Idea2Impact Offline Hackathon (Hyderabad)",
       description: "Shortlisted among thousands of student builders across India based on Cosmolyze's product architecture, AI skin analysis model, and vision.",
-      CertImgUrl: "https://res.cloudinary.com/doyiqcna9/image/upload/v1783672197/rohan_nimje_profile_zkmb5q.jpg"
+      CertImgUrl: "https://res.cloudinary.com/doyiqcna9/image/upload/v1786384987/Ideaimpact_Certificate_orka1w.jpg"
     },
     {
       id: 2,

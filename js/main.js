@@ -140,7 +140,7 @@ function renderNavigation() {
    HONORS CAROUSEL (JS-rendered flip cards)
 ══════════════════════════════════════════════════════════ */
 function renderHonors() {
-  var honors = (window.AI_CONTEXT && window.AI_CONTEXT.honors) || [];
+  var honors = (window.portfolioData && window.portfolioData.honors) || [];
   if (!honors.length) return;
   if (honorsIndex > honors.length - 1) honorsIndex = honors.length - 1;
 
@@ -148,12 +148,13 @@ function renderHonors() {
   var dots = "";
   for (var i = 0; i < honors.length; i++) {
     var honor = honors[i];
+    var certSrc = honor.CertImgUrl || honor.image || "";
     var active = i === honorsIndex ? "active" : "";
     cards +=
       '<div class="flex-shrink-0 flex flex-col items-center" style="width:288px">' +
         '<button type="button" data-honor-index="' + i + '" class="honor-card-button ' + active + ' w-72 h-80 cursor-pointer perspective">' +
           '<div class="flip-inner w-full h-full relative">' +
-            '<div class="flip-side absolute inset-0 group"><img src="' + honor.CertImgUrl + '" alt="' + honor.title + '" class="w-full h-full rounded-2xl border border-slate-200 object-contain group-hover:border-indigo-200 transition-all shadow-sm" loading="' + (i === honorsIndex ? "eager" : "lazy") + '" draggable="false" /><div class="absolute bottom-4 right-4 z-10 px-3 py-1.5 bg-indigo-50 border border-indigo-100 rounded-full flex items-center gap-1.5 text-xs font-semibold text-indigo-700 group-hover:bg-indigo-100 transition-all"><span>Click to Flip</span>' + icon("flip", "w-3 h-3") + "</div></div>" +
+            '<div class="flip-side absolute inset-0 group"><img src="' + certSrc + '" alt="' + honor.title + '" class="w-full h-full rounded-2xl border border-slate-200 object-contain group-hover:border-indigo-200 transition-all shadow-sm" loading="' + (i === honorsIndex ? "eager" : "lazy") + '" draggable="false" /><div class="absolute bottom-4 right-4 z-10 px-3 py-1.5 bg-indigo-50 border border-indigo-100 rounded-full flex items-center gap-1.5 text-xs font-semibold text-indigo-700 group-hover:bg-indigo-100 transition-all"><span>Click to Flip</span>' + icon("flip", "w-3 h-3") + "</div></div>" +
             '<div class="flip-side flip-back absolute inset-0"><div class="w-full h-full rounded-2xl border border-slate-200 bg-gradient-to-br from-indigo-50/80 to-white p-6 flex flex-col justify-between hover:border-indigo-200 transition-all shadow-sm"><div class="space-y-3"><p class="text-xs text-muted-foreground font-semibold uppercase tracking-wide">' + honor.event + '</p><div class="w-1 h-5 bg-gradient-to-b from-accent to-foreground rounded-full"></div><p class="text-xs text-foreground leading-relaxed">' + honor.description + '</p></div><div class="flex items-center gap-1.5 text-xs font-semibold text-accent">' + icon("flip", "w-3 h-3") + "<span>Click to flip</span></div></div></div>" +
           "</div>" +
         "</button>" +
@@ -172,7 +173,7 @@ function renderHonors() {
           '<button type="button" aria-label="Next honor" id="honor-next" class="absolute right-0 top-1/2 -translate-y-1/2 w-12 sm:w-16 h-40 z-30 flex items-center justify-end pr-1 sm:pr-2 opacity-0 hover:opacity-100 group-hover/carousel:opacity-60 transition-opacity duration-300"><span class="flex items-center justify-center w-9 h-9 rounded-full bg-background/70 border border-white/10 backdrop-blur-sm text-foreground/70 hover:text-accent hover:border-accent/40 transition-colors">' + icon("chevronRight", "w-5 h-5") + "</span></button>" +
           '<div id="honor-track" class="honor-track flex gap-8 cursor-grab active:cursor-grabbing touch-pan-y py-2 w-max">' + cards + "</div>" +
         "</div>" +
-        '<div class="mt-5 space-y-3 text-center"><h3 class="text-base sm:text-lg font-bold text-foreground px-4">' + honors[honorsIndex].title + '</h3><div class="flex justify-center items-center gap-2">' + dots + "</div></div>" +
+        '<div class="mt-5 space-y-3 text-center"><h3 class="text-base sm:text-lg font-bold text-foreground px-4">' + (honors[honorsIndex] ? honors[honorsIndex].title : "") + '</h3><div class="flex justify-center items-center gap-2">' + dots + "</div></div>" +
       "</div>" +
     "</div>";
 
@@ -195,7 +196,7 @@ function getRelativePosition(index, activeIndex, total) {
 }
 
 function renderCertifications() {
-  var certs = (window.AI_CONTEXT && window.AI_CONTEXT.certifications) || [];
+  var certs = (window.portfolioData && window.portfolioData.certifications) || [];
   if (!certs.length) return;
 
   var activeCert = certs[certificationsIndex];
@@ -203,6 +204,7 @@ function renderCertifications() {
 
   for (var i = 0; i < certs.length; i++) {
     var cert = certs[i];
+    var certSrc = cert.CertImgUrl || cert.image || "";
     var position = getRelativePosition(i, certificationsIndex, certs.length);
     if (Math.abs(position) <= 1) {
       var x = position < 0 ? -220 : position > 0 ? 220 : 0;
@@ -212,7 +214,7 @@ function renderCertifications() {
       var rotate = position < 0 ? 42 : position > 0 ? -42 : 0;
       cards +=
         '<div data-cert-index="' + i + '" class="coverflow-card absolute cursor-pointer" style="z-index:' + zIndex + ";opacity:" + opacity + ";transform:translateX(" + x + "px) scale(" + scale + ") rotateY(" + rotate + 'deg);">' +
-          '<div class="block bg-white rounded-xl border border-slate-200 w-full h-full relative overflow-visible"><img src="' + cert.CertImgUrl + '" alt="' + cert.name + '" draggable="false" loading="lazy" decoding="async" class="block w-full h-full object-contain bg-white rounded-[10px]" style="box-shadow:' + (position === 0 ? "0 12px 40px rgba(67, 56, 202, 0.14)" : "0 4px 16px rgba(15, 23, 42, 0.06)") + ';" /></div>' +
+          '<div class="block bg-white rounded-xl border border-slate-200 w-full h-full relative overflow-visible"><img src="' + certSrc + '" alt="' + cert.name + '" draggable="false" loading="lazy" decoding="async" class="block w-full h-full object-contain bg-white rounded-[10px]" style="box-shadow:' + (position === 0 ? "0 12px 40px rgba(67, 56, 202, 0.14)" : "0 4px 16px rgba(15, 23, 42, 0.06)") + ';" /></div>' +
         "</div>";
     }
   }
@@ -229,7 +231,7 @@ function renderCertifications() {
             cards +
           "</div>" +
         "</div>" +
-        '<div class="mt-8 md:mt-10 space-y-3 text-center"><div><p class="text-sm sm:text-base md:text-lg font-semibold text-foreground">' + activeCert.name + '</p><p class="text-xs sm:text-sm text-muted-foreground">' + activeCert.issuer + '</p></div><div class="flex justify-center items-center gap-3 pt-2"><div class="w-2 h-2 rounded-full bg-accent tiny-pulse"></div><span class="text-xs sm:text-sm font-semibold text-muted-foreground"><span class="text-accent">' + (certificationsIndex + 1) + "</span> / " + certs.length + "</span></div></div>" +
+        '<div class="mt-8 md:mt-10 space-y-3 text-center"><div><p class="text-sm sm:text-base md:text-lg font-semibold text-foreground">' + (activeCert ? activeCert.name : "") + '</p><p class="text-xs sm:text-sm text-muted-foreground">' + (activeCert ? activeCert.issuer : "") + '</p></div><div class="flex justify-center items-center gap-3 pt-2"><div class="w-2 h-2 rounded-full bg-accent tiny-pulse"></div><span class="text-xs sm:text-sm font-semibold text-muted-foreground"><span class="text-accent">' + (certificationsIndex + 1) + "</span> / " + certs.length + "</span></div></div>" +
       "</div>" +
     "</div>";
 }
@@ -240,9 +242,6 @@ function renderCertifications() {
 function getProjectsData() {
   if (window.portfolioData && Array.isArray(window.portfolioData.projects) && window.portfolioData.projects.length > 0) {
     return window.portfolioData.projects;
-  }
-  if (window.AI_CONTEXT && Array.isArray(window.AI_CONTEXT.projects) && window.AI_CONTEXT.projects.length > 0) {
-    return window.AI_CONTEXT.projects;
   }
   return [];
 }
@@ -686,7 +685,8 @@ function attachEvents() {
       observeReveals();
     }
     if (event.target.closest("#honor-next")) {
-      var maxHonors = (window.AI_CONTEXT && window.AI_CONTEXT.honors) ? window.AI_CONTEXT.honors.length - 1 : 0;
+      var honors = (window.portfolioData && window.portfolioData.honors) || [];
+      var maxHonors = honors.length > 0 ? honors.length - 1 : 0;
       honorsIndex = Math.min(maxHonors, honorsIndex + 1);
       renderHonors();
       observeReveals();
@@ -705,13 +705,15 @@ function attachEvents() {
     // Certifications carousel
     if (event.target.closest("#cert-prev")) {
       pauseCertAutoplay();
-      var certLen = (window.AI_CONTEXT && window.AI_CONTEXT.certifications) ? window.AI_CONTEXT.certifications.length : 1;
+      var certs = (window.portfolioData && window.portfolioData.certifications) || [];
+      var certLen = certs.length || 1;
       certificationsIndex = (certificationsIndex - 1 + certLen) % certLen;
       renderCertifications();
     }
     if (event.target.closest("#cert-next")) {
       pauseCertAutoplay();
-      var certLen2 = (window.AI_CONTEXT && window.AI_CONTEXT.certifications) ? window.AI_CONTEXT.certifications.length : 1;
+      var certs2 = (window.portfolioData && window.portfolioData.certifications) || [];
+      var certLen2 = certs2.length || 1;
       certificationsIndex = (certificationsIndex + 1) % certLen2;
       renderCertifications();
     }
@@ -861,7 +863,8 @@ function setupStreakCounter() {
 function startCertAutoplay() {
   clearInterval(certificationTimer);
   certificationTimer = setInterval(function () {
-    var certLen = (window.AI_CONTEXT && window.AI_CONTEXT.certifications) ? window.AI_CONTEXT.certifications.length : 1;
+    var certs = (window.portfolioData && window.portfolioData.certifications) || [];
+    var certLen = certs.length || 1;
     certificationsIndex = (certificationsIndex + 1) % certLen;
     renderCertifications();
   }, 5000);
