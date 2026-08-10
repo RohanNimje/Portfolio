@@ -14,8 +14,8 @@ const portfolioData = {
     associateProductManager: {
       title: "Associate Product Manager / Product Engineer",
       highlights: [
-        "0-to-1 Product Execution: Built and launched ScanZy Rewards MVP for offline retailers to drive gamified customer retention.",
-        "Data-Driven Iteration: Transitioned from paper coupons to digital QR mechanics for real-time customer tracking.",
+        "0-to-1 Product Execution: Built and launched ScanZy Rewards for offline retailers to drive gamified customer retention.",
+        "Data-Driven Iteration: Replaced traditional paper coupons with dynamic QR mechanics for real-time customer engagement tracking.",
         "Rapid Prototyping: End-to-end full-stack MVPs combining seamless UI with automated backend systems."
       ]
     },
@@ -23,15 +23,15 @@ const portfolioData = {
       title: "Software Engineer / Full-Stack Developer",
       highlights: [
         "Core Algorithmic Competency: Global Rank 27 in DSA CodeVerse Bi-Weekly Contest #25.",
-        "Full-Stack Mastery: Hands-on expertise in Python, SQL, MongoDB, Supabase, Node.js, and REST APIs.",
+        "Full-Stack Mastery: Hands-on expertise in React, Python, SQL, MongoDB, Supabase, Node.js, and REST APIs.",
         "365-Day Consistency: Unbroken daily coding streak on NxtWave Academy."
       ]
     },
     solutionsArchitect: {
       title: "AI & Solutions Systems Architect",
       highlights: [
-        "Low-Latency AI Engineering: Sub-2s inference time on computer vision and AI models.",
-        "Agentic Automation: Custom Model Context Protocol (MCP) servers, Pipedream, and n8n workflows.",
+        "Low-Latency AI Engineering: Sub-2s inference time on computer vision and AI skin/image analysis models.",
+        "Agentic Automation: Custom Model Context Protocol (MCP) servers, Make.com, and n8n workflows.",
         "Fraud Prevention Infrastructure: Architected 'Trinity X' live binary validation system for national hackathons."
       ]
     }
@@ -47,9 +47,17 @@ const portfolioData = {
   projects: [
     {
       id: 1,
-      title: "ScanZy Rewards MVP Or Product",
-      techStack: ["MongoDB", "Supabase", "n8n", "Lovable", "Bolt", "Vercel", "Leonardo AI"],
-      description: "A QR-based gamified loyalty platform designed for offline retailers. Built to drive genuine customer retention and repeat business through interactive gamification, moving far beyond basic paper coupons.",
+      title: "Cosmolyze — AI-Powered Skincare Analyzer",
+      techStack: ["React", "Python", "Computer Vision AI", "Tailwind CSS", "Vercel"],
+      description: "An AI-powered 'Pocket Dermatologist' built to help users make informed skincare choices by cutting through misleading marketing. Scans skin condition in real time to recommend exact active ingredients (Niacinamide, Salicylic Acid) based on barrier needs. Shortlisted as National Finalist for NxtWave's Idea2Impact Hackathon in Hyderabad.",
+      productDemoUrl: "https://res.cloudinary.com/doyiqcna9/video/upload/v1783677832/Untitled_design_exdmtc.mp4",
+      isFeatured: true
+    },
+    {
+      id: 2,
+      title: "ScanZy Rewards — Gamified QR Loyalty & Retail Retention Platform",
+      techStack: ["Lovable.dev", "React", "Supabase", "Cursor IDE", "n8n", "Leonardo AI"],
+      description: "A full-stack QR-based gamified loyalty platform designed to eliminate offline retail customer churn. Converts one-time shoppers into repeat buyers via physical QR cards given at checkout that unlock store-specific Spin & Win rewards when scanned at home.",
       videoUrlmvp: "https://res.cloudinary.com/doyiqcna9/video/upload/v1783673286/Ai_Daily_Coach_automation_qzojiw.mp4",
       videourlproduct: "https://res.cloudinary.com/doyiqcna9/video/upload/v1783673286/Ai_Daily_Coach_automation_qzojiw.mp4",
       productDemoUrl: "https://res.cloudinary.com/doyiqcna9/video/upload/v1783677832/Untitled_design_exdmtc.mp4",
@@ -57,44 +65,38 @@ const portfolioData = {
       isFeatured: true
     },
     {
-      id: 2,
-      title: "AI Agent Ecosystem",
-      techStack: ["Cursor IDE", "Pipedream", "MCP Servers", "LLMs"],
-      description: "Built prompt-driven AI workflows integrating LLMs with external data using Cursor IDE, Pipedream, and Model Context Protocol (MCP) servers.",
-      videoUrl: "https://res.cloudinary.com/doyiqcna9/video/upload/v1783673286/Ai_Daily_Coach_automation_qzojiw.mp4",
-      projectCertImgUrl: "https://res.cloudinary.com/doyiqcna9/image/upload/v1783667795/AI_Agent_Development_fnkuyw.png"
-    },
-    {
       id: 3,
-      title: "corruption in infrastructure project",
-      techStack: ["Advanced AI Models", "Automation Engine", "Database Integration"],
-      description: "An autonomous AI validation engine that prevents infrastructure fraud through real-time 'Before & After' image analysis and instant status updates.",
+      title: "Infrastructure Corruption Detector (Trinity X)",
+      techStack: ["Vision AI", "n8n Workflows", "Supabase", "Appsmith"],
+      description: "An autonomous AI validation engine built to eliminate corruption in municipal infrastructure projects. Analyzes contractor Before & After photos automatically to detect fake repairs and visual anomalies. National Finalist at Innovators Hackathon 2026 (NMIET Pune & AIC T-Hub).",
       videoUrl: "https://res.cloudinary.com/doyiqcna9/video/upload/v1783772817/Infrastruture_Demo_Video_rvobvw.mp4"
     },
     {
       id: 4,
-      title: "Business Automation Engine",
-      techStack: ["Make.com", "OpenAI API"],
-      description: "Architected autonomous, multi-step business workflows linking external data and running entirely without human intervention using Make.com and OpenAI APIs.",
+      title: "Sparky — Automated AI Life Coach & Student Productivity System",
+      techStack: ["OpenAI API (GPT-4o)", "n8n Workflows", "Google Sheets", "Notion API"],
+      description: "An autonomous daily productivity coach that processes student habit goals via automated n8n trigger pipelines and dispatches tailored daily action steps and motivational guidance. Won State-Level Qualifier at OpenAI x NxtWave Buildathon.",
+      videoUrl: "https://res.cloudinary.com/doyiqcna9/video/upload/v1783673286/Ai_Daily_Coach_automation_qzojiw.mp4",
+      projectCertImgUrl: "https://res.cloudinary.com/doyiqcna9/image/upload/v1783667795/AI_Agent_Development_fnkuyw.png"
+    },
+    {
+      id: 5,
+      title: "Autonomous Business & Workflow Automation System",
+      techStack: ["Make.com", "OpenAI API", "Google Sheets API", "LinkedIn API", "Telegram Bot API"],
+      description: "Architected a zero-touch multi-step business workflow pipeline linking cloud databases, OpenAI text summarization & routing models, and automated multi-channel notification engines without manual intervention.",
       screenshoturl: "https://res.cloudinary.com/doyiqcna9/image/upload/v1783673671/make_lpslhr.jpg",
       projectCertImgUrl: "https://res.cloudinary.com/doyiqcna9/image/upload/v1783667816/Make.com_certificate_bwrfyn.png"
     },
     {
-      id: 5,
+      id: 6,
       title: "Smart Hackathon Finder Bot",
-      techStack: ["Automation Anywhere A360", "DOMXPath"],
+      techStack: ["Automation Anywhere A360", "DOMXPath", "RPA"],
       description: "An intelligent RPA bot utilizing Automation Anywhere A360 with dynamic DOMXPath scraping to extract and compile real-time hackathon data from Google's AI Overview.",
       videoUrl: "https://res.cloudinary.com/doyiqcna9/video/upload/v1783668274/Automation_Anywhere_Project_-_Hackathon_Finder_1_ez6s0w.mp4",
       projectCertImgUrl: "https://res.cloudinary.com/doyiqcna9/image/upload/v1783667845/Automation_Anywhere_complete_jowcjy.png"
-    },
-    {
-      id: 6,
-      title: "Cosmolyze",
-      techStack: ["React", "Node.js", "Python", "Tailwind CSS", "Vercel"],
-      description: "An advanced space data analysis and visualization engine designed to process complex astronomical datasets with sub-2s response latency and interactive real-time visual insights.",
-      isFeatured: true
     }
   ],
+
   experience: [
     {
       id: 1,
@@ -105,44 +107,56 @@ const portfolioData = {
       description: "Undergoing intensive software engineering training through NxtWave's CCBP 4.0 program. Focusing on full-stack architecture, AI agents, automation, and modern developer workflows."
     }
   ],
+
   certifications: [
-    { id: 1, name: "Programming Foundations with Python", issuer: "NxtWave", CertImgUrl: "https://res.cloudinary.com/doyiqcna9/image/upload/v1783666765/Python_dtzvco.png" },
-    { id: 2, name: "ScanZy Rewards MVP Architecture", issuer: "NxtWave", CertImgUrl: "https://res.cloudinary.com/doyiqcna9/image/upload/v1783666876/mvp_certification_k5sedb.png" },
-    { id: 3, name: "Generative AI for All", issuer: "Microsoft x PW", CertImgUrl: "https://res.cloudinary.com/doyiqcna9/image/upload/v1783666902/genrative_ai_shqice.png" },
-    { id: 4, name: "Agentblazer Workshop", issuer: "AWS", CertImgUrl: "https://res.cloudinary.com/doyiqcna9/image/upload/v1783667496/Salesforce_nqv0z9.png" },
-    { id: 5, name: "XPM 4.0 Fundamentals", issuer: "NxtWave", CertImgUrl: "https://res.cloudinary.com/doyiqcna9/image/upload/v1783667223/XPM_4.0_emxpxe.jpg" },
-    { id: 6, name: "SQL & Relational Databases", issuer: "NxtWave", CertImgUrl: "https://res.cloudinary.com/doyiqcna9/image/upload/v1783667271/sql_nwfd8x.jpg" },
-    { id: 7, name: "Advanced Frontend Development", issuer: "NxtWave", CertImgUrl: "https://res.cloudinary.com/doyiqcna9/image/upload/v1783667286/boostrap_flexbox_nimhpn.png" },
-    { id: 8, name: "Frontend Foundations", issuer: "NxtWave", CertImgUrl: "https://res.cloudinary.com/doyiqcna9/image/upload/v1783667306/html_css_amcncs.png" }
+    { id: 1, name: "Model Context Protocol (MCP) & Agentic AI Tooling", issuer: "NxtWave", CertImgUrl: "https://res.cloudinary.com/doyiqcna9/image/upload/v1783667795/AI_Agent_Development_fnkuyw.png" },
+    { id: 2, name: "Programming Foundations with Python", issuer: "NxtWave", CertImgUrl: "https://res.cloudinary.com/doyiqcna9/image/upload/v1783666765/Python_dtzvco.png" },
+    { id: 3, name: "ScanZy Rewards MVP Architecture", issuer: "NxtWave", CertImgUrl: "https://res.cloudinary.com/doyiqcna9/image/upload/v1783666876/mvp_certification_k5sedb.png" },
+    { id: 4, name: "Generative AI for All", issuer: "Microsoft x PW", CertImgUrl: "https://res.cloudinary.com/doyiqcna9/image/upload/v1783666902/genrative_ai_shqice.png" },
+    { id: 5, name: "Agentblazer Workshop", issuer: "AWS", CertImgUrl: "https://res.cloudinary.com/doyiqcna9/image/upload/v1783667496/Salesforce_nqv0z9.png" },
+    { id: 6, name: "XPM 4.0 Fundamentals", issuer: "NxtWave", CertImgUrl: "https://res.cloudinary.com/doyiqcna9/image/upload/v1783667223/XPM_4.0_emxpxe.jpg" },
+    { id: 7, name: "SQL & Relational Databases", issuer: "NxtWave", CertImgUrl: "https://res.cloudinary.com/doyiqcna9/image/upload/v1783667271/sql_nwfd8x.jpg" },
+    { id: 8, name: "Advanced Frontend Development", issuer: "NxtWave", CertImgUrl: "https://res.cloudinary.com/doyiqcna9/image/upload/v1783667286/boostrap_flexbox_nimhpn.png" },
+    { id: 9, name: "Frontend Foundations", issuer: "NxtWave", CertImgUrl: "https://res.cloudinary.com/doyiqcna9/image/upload/v1783667306/html_css_amcncs.png" }
   ],
+
   honors: [
     {
       id: 1,
-      CertImgUrl: "https://res.cloudinary.com/doyiqcna9/image/upload/v1783672981/innovator_hackthon_wrh0cm.jpg",
-      title: "National Level Qualifier",
-      event: "Innovators Hackathon 2026 (NMIET & AIC T-Hub)",
-      description: "Built 'Trinity X', a live AI binary validation system in 48 hours to eliminate infrastructure fraud."
+      CertImgUrl: "https://res.cloudinary.com/doyiqcna9/image/upload/v1783672197/rohan_nimje_profile_zkmb5q.jpg",
+      title: "National Finalist",
+      event: "Idea2Impact Offline Hackathon (Hyderabad)",
+      description: "Shortlisted among thousands of student builders across India based on Cosmolyze's product architecture, AI skin analysis model, and vision."
     },
     {
       id: 2,
+      CertImgUrl: "https://res.cloudinary.com/doyiqcna9/image/upload/v1783672981/innovator_hackthon_wrh0cm.jpg",
+      title: "National Level Qualifier",
+      event: "Innovators Hackathon 2026 (NMIET & AIC T-Hub)",
+      description: "Built 'Trinity X', a live AI binary validation system in 48 hours to eliminate public municipal infrastructure corruption."
+    },
+    {
+      id: 3,
       CertImgUrl: "https://res.cloudinary.com/doyiqcna9/image/upload/v1783672736/ZCWRN38D0K_kvrcoa.png",
       title: "State-Level Qualifier",
       event: "OpenAI x NxtWave Buildathon",
       description: "Developed 'Sparky', an AI Life Coach, pivoting through complex automation failures under immense time pressure using GPT-4o and n8n."
     },
     {
-      id: 3,
+      id: 4,
       CertImgUrl: "https://res.cloudinary.com/doyiqcna9/image/upload/v1783673057/DSA_wkno87.png",
       title: "Global Rank 27",
       event: "DSA CodeVerse Bi-Weekly Contest #25",
       description: "Proved core logical thinking and algorithmic problem-solving capabilities using Python Data Structures & Algorithms."
     }
   ],
+
   streak: {
     days: "365",
     title: "Day Nxtwave-Academy Streak",
     description: "Unbroken daily execution on NxtWave. Pure dedication to daily logical execution and coding consistency."
   },
+
   education: [
     {
       id: 1,
@@ -154,6 +168,7 @@ const portfolioData = {
       description: "Mastering core computer science fundamentals, Data Structures, and AI/ML principles while actively applying them in national-level hackathons and full-stack development."
     }
   ],
+
   contact: {
     email: "rohannimje53@gmail.com",
     linkedin: "https://www.linkedin.com/in/rohannimje/",
