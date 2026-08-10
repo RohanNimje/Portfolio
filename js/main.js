@@ -235,21 +235,200 @@ function renderCertifications() {
 }
 
 /* ══════════════════════════════════════════════════════════
+   PROJECTS DATA RETRIEVAL & DYNAMIC RENDERING
+══════════════════════════════════════════════════════════ */
+function getProjectsData() {
+  if (window.portfolioData && Array.isArray(window.portfolioData.projects) && window.portfolioData.projects.length > 0) {
+    return window.portfolioData.projects;
+  }
+  if (window.AI_CONTEXT && Array.isArray(window.AI_CONTEXT.projects) && window.AI_CONTEXT.projects.length > 0) {
+    return window.AI_CONTEXT.projects;
+  }
+  return [];
+}
+
+function getProjectById(id) {
+  var projects = getProjectsData();
+  var targetId = Number(id);
+  for (var i = 0; i < projects.length; i++) {
+    if (projects[i].id === targetId) return projects[i];
+  }
+  return null;
+}
+
+// Global UI Tool for AI Agent Modal Calling
+window.openProjectModal = function (id) {
+  var project = getProjectById(Number(id));
+  if (project) {
+    renderProjectModal(project);
+  }
+};
+
+function renderLaptopFrame(videoUrl, title) {
+  return (
+    '<div class="space-y-3 reveal">' +
+      '<h4 class="text-sm font-semibold text-slate-800">' + (title || "MVP Architecture") + '</h4>' +
+      '<div class="relative rounded-xl overflow-hidden border border-slate-200 bg-slate-900 shadow-md">' +
+        '<div class="bg-gray-900 px-4 py-3 border-b border-gray-800 flex items-center gap-2">' +
+          '<div class="flex gap-2">' +
+            '<div class="w-2.5 h-2.5 rounded-full bg-red-500"></div>' +
+            '<div class="w-2.5 h-2.5 rounded-full bg-yellow-500"></div>' +
+            '<div class="w-2.5 h-2.5 rounded-full bg-green-500"></div>' +
+          '</div>' +
+        '</div>' +
+        '<video src="' + videoUrl + '" autoplay muted loop playsinline controls preload="auto" class="autoplay-video w-full bg-black aspect-video object-cover"></video>' +
+      '</div>' +
+    '</div>'
+  );
+}
+
+function renderMobileFrame(videoUrl, title) {
+  return (
+    '<div class="space-y-3 flex flex-col items-center reveal">' +
+      '<h4 class="text-sm font-semibold text-slate-800 self-start">' + (title || "Product Demo") + '</h4>' +
+      '<div class="relative w-full max-w-[280px] aspect-[9/16] mx-auto rounded-[2.5rem] overflow-hidden border-[6px] border-gray-900 bg-black shadow-2xl flex-1">' +
+        '<video src="' + videoUrl + '" autoplay muted loop playsinline controls preload="auto" class="autoplay-video w-full h-full bg-black object-cover"></video>' +
+        '<div class="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-6 bg-gray-900 rounded-b-3xl z-20 flex items-center justify-center pointer-events-none">' +
+          '<div class="w-1 h-1 bg-gray-700 rounded-full"></div>' +
+        '</div>' +
+      '</div>' +
+    '</div>'
+  );
+}
+
+function renderProjects() {
+  var projects = getProjectsData();
+  if (!projects.length) return;
+
+  // Find the featured project (first item with isFeatured: true, or fallback to projects[0])
+  var featuredProject = null;
+  var secondaryProjects = [];
+
+  for (var i = 0; i < projects.length; i++) {
+    if (projects[i].isFeatured && !featuredProject) {
+      featuredProject = projects[i];
+    } else {
+      secondaryProjects.push(projects[i]);
+    }
+  }
+
+  if (!featuredProject && projects.length > 0) {
+    featuredProject = projects[0];
+    secondaryProjects = projects.slice(1);
+  }
+
+  // 1. Render Featured Project Hero Container
+  var featuredContainer = document.getElementById("featured-project-container");
+  if (featuredContainer && featuredProject) {
+    var laptopVideo = featuredProject.laptopVideoUrl || featuredProject.videoUrlmvp || "";
+    var mobileVideo = featuredProject.mobileVideoUrl || featuredProject.productDemoUrl || featuredProject.videourlproduct || "";
+
+    if (!laptopVideo && !mobileVideo && featuredProject.videoUrl) {
+      laptopVideo = featuredProject.videoUrl;
+    }
+
+    var videoMockupHtml = "";
+
+    if (laptopVideo && mobileVideo) {
+      // Dual layout: Laptop frame (Left) + Mobile frame (Right)
+      videoMockupHtml =
+        '<div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 pt-4">' +
+          renderLaptopFrame(laptopVideo, "MVP Architecture") +
+          renderMobileFrame(mobileVideo, "Product Demo") +
+        '</div>';
+    } else if (laptopVideo) {
+      // Single laptop frame
+      videoMockupHtml =
+        '<div class="grid grid-cols-1 gap-6 pt-4 max-w-3xl mx-auto">' +
+          renderLaptopFrame(laptopVideo, "System Architecture & Demo") +
+        '</div>';
+    } else if (mobileVideo) {
+      // Single mobile device frame
+      videoMockupHtml =
+        '<div class="flex justify-center pt-4">' +
+          renderMobileFrame(mobileVideo, "Product Showcase") +
+        '</div>';
+    }
+
+    var toggleBtnText = "Show All Projects (" + secondaryProjects.length + ")";
+
+    featuredContainer.innerHTML =
+      '<div class="group relative rounded-3xl overflow-hidden surface-card surface-card-hover reveal">' +
+        '<div class="p-8 md:p-12 space-y-8">' +
+          '<div class="space-y-4">' +
+            '<div class="inline-block px-4 py-1.5 rounded-full bg-violet-50 border border-violet-200">' +
+              '<span class="text-violet-700 text-xs font-semibold">Featured Project</span>' +
+            '</div>' +
+            '<h3 class="text-3xl sm:text-4xl md:text-5xl font-bold ' + GRADIENT_HEADING + '">' +
+              featuredProject.title +
+            '</h3>' +
+            '<p class="text-base md:text-lg text-slate-600 max-w-3xl">' +
+              featuredProject.description +
+            '</p>' +
+          '</div>' +
+          '<div class="flex flex-wrap gap-2">' +
+            techPills(featuredProject.techStack || [], false) +
+          '</div>' +
+          videoMockupHtml +
+          '<div class="flex flex-col sm:flex-row items-center gap-4 pt-4">' +
+            '<button type="button" id="featured-project-btn" data-project-id="' + featuredProject.id + '" class="' + PRIMARY_BUTTON + '">' +
+              'View Full Project Details ' + icon("arrowRight", "w-4 h-4") +
+            '</button>' +
+            (secondaryProjects.length > 0
+              ? '<button type="button" id="toggle-projects" class="' + SECONDARY_BUTTON + '">' +
+                  toggleBtnText + ' ' + icon("arrowDown", "w-4 h-4") +
+                '</button>'
+              : '') +
+          '</div>' +
+        '</div>' +
+      '</div>';
+  }
+
+  // 2. Render Secondary Projects Grid
+  var gridContainer = document.getElementById("projects-grid-container");
+  if (gridContainer) {
+    var gridHtml = "";
+    for (var j = 0; j < secondaryProjects.length; j++) {
+      var proj = secondaryProjects[j];
+      gridHtml +=
+        '<div class="group relative overflow-hidden text-left h-full reveal">' +
+          '<div class="relative h-64 sm:h-60 p-5 flex flex-col overflow-hidden surface-card surface-card-hover">' +
+            '<div class="relative z-10 space-y-2">' +
+              '<h3 class="text-sm md:text-base font-bold text-slate-800 line-clamp-2">' + proj.title + '</h3>' +
+              '<p class="text-slate-600 text-xs line-clamp-2">' + proj.description + '</p>' +
+              '<div class="flex flex-wrap gap-1 pt-0.5">' +
+                techPills(proj.techStack || [], true) +
+              '</div>' +
+            '</div>' +
+            '<div class="relative z-10 mt-auto pt-3">' +
+              '<button type="button" data-project-id="' + proj.id + '" class="inline-flex items-center justify-center gap-2 px-6 py-2 rounded-xl text-xs font-semibold bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200/80 shadow-sm hover:shadow hover:border-indigo-200 hover:text-indigo-700 transition-all duration-200 w-full cursor-pointer">' +
+                'View Details ' + icon("arrowRight", "w-3 h-3") +
+              '</button>' +
+            '</div>' +
+          '</div>' +
+        '</div>';
+    }
+    gridContainer.innerHTML = gridHtml;
+  }
+}
+
+/* ══════════════════════════════════════════════════════════
    PROJECT MODAL
 ══════════════════════════════════════════════════════════ */
 function renderProjectModal(project) {
+  if (!project) return;
   var media = "";
-  if (project.productDemoUrl || project.videourlproduct) {
-    var vurl = project.productDemoUrl || project.videourlproduct;
-    media += '<div><h3 class="text-lg font-semibold text-foreground mb-3">Product Demo</h3><div class="relative w-full aspect-video rounded-xl overflow-hidden border border-slate-200 bg-slate-900 shadow-sm"><video preload="none" src="' + vurl + '" controls class="w-full h-full object-cover"></video></div></div>';
-  } else if (project.videoUrl) {
-    media += '<div><h3 class="text-lg font-semibold text-foreground mb-3">Video Demo</h3><div class="relative w-full aspect-video rounded-xl overflow-hidden border border-slate-200 bg-slate-900 shadow-sm"><video preload="none" src="' + project.videoUrl + '" controls class="w-full h-full object-cover"></video></div></div>';
+  var demoUrl = project.mobileVideoUrl || project.laptopVideoUrl || project.productDemoUrl || project.videourlproduct || project.videoUrlmvp || project.videoUrl;
+  if (demoUrl) {
+    media += '<div><h3 class="text-lg font-semibold text-foreground mb-3">Project Demo / Architecture</h3><div class="relative w-full aspect-video rounded-xl overflow-hidden border border-slate-200 bg-slate-900 shadow-sm"><video preload="auto" src="' + demoUrl + '" controls class="w-full h-full object-cover"></video></div></div>';
   }
-  if (project.screenshotUrl) {
-    media += '<div><h3 class="text-lg font-semibold text-foreground mb-3">Screenshots</h3><img src="' + project.screenshotUrl + '" alt="Project screenshot" class="w-full rounded-xl border border-border" loading="lazy" /></div>';
+  var shotUrl = project.screenshotUrl || project.screenshoturl;
+  if (shotUrl) {
+    media += '<div><h3 class="text-lg font-semibold text-foreground mb-3">Screenshots</h3><div class="relative w-full rounded-xl overflow-hidden border border-slate-200 bg-white shadow-sm p-0"><img src="' + shotUrl + '" alt="' + project.title + ' screenshot" class="w-full h-auto block object-cover" loading="lazy" /></div></div>';
   }
-  if (project.projectCertImgUrl) {
-    media += '<div><h3 class="text-lg font-semibold text-foreground mb-3">Certificate</h3><img src="' + project.projectCertImgUrl + '" alt="Project certificate" class="w-full rounded-xl border border-glass-border max-h-96 object-cover" loading="lazy" /></div>';
+  var certImg = project.projectCertImgUrl || project.CertImgUrl;
+  if (certImg) {
+    media += '<div><h3 class="text-lg font-semibold text-foreground mb-3">Certificate & Recognition</h3><div class="relative w-full rounded-xl overflow-hidden border border-slate-200 bg-white shadow-sm p-0"><img src="' + certImg + '" alt="' + project.title + ' certificate" class="w-full h-auto block object-cover" loading="lazy" /></div></div>';
   }
 
   var highlightsList = "";
@@ -264,10 +443,10 @@ function renderProjectModal(project) {
   document.getElementById("project-modal-root").innerHTML =
     '<div id="project-modal" class="modal-backdrop fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">' +
       '<div class="modal-panel relative w-full max-w-2xl max-h-[90vh] bg-white border border-border rounded-2xl shadow-xl overflow-hidden">' +
-        '<button type="button" id="close-modal" class="absolute top-4 right-4 z-10 p-2 rounded-lg bg-white border border-border hover:border-indigo-200 hover:bg-slate-50 transition-all shadow-sm">' + icon("close", "w-6 h-6 text-foreground") + "</button>" +
+        '<button type="button" id="close-modal" aria-label="Close modal" class="absolute top-4 right-4 z-10 p-2 rounded-lg bg-white border border-border hover:border-indigo-200 hover:bg-slate-50 transition-all shadow-sm cursor-pointer">' + icon("close", "w-6 h-6 text-foreground") + "</button>" +
         '<div class="overflow-y-auto max-h-[90vh] p-8 space-y-6">' +
           '<div><h2 class="text-3xl sm:text-4xl font-bold mb-2 ' + GRADIENT_HEADING + '">' + project.title + '</h2><p class="text-muted-foreground">' + project.description + "</p></div>" +
-          '<div><h3 class="text-lg font-semibold text-foreground mb-3">Tech Stack</h3><div class="flex flex-wrap gap-2">' + techPills(project.techStack, false) + "</div></div>" +
+          '<div><h3 class="text-lg font-semibold text-foreground mb-3">Tech Stack</h3><div class="flex flex-wrap gap-2">' + techPills(project.techStack || [], false) + "</div></div>" +
           highlightsList +
           media +
         "</div>" +
@@ -459,25 +638,6 @@ function sendAssistantMessage(text) {
 }
 
 /* ══════════════════════════════════════════════════════════
-   PROJECT MODAL DATA LOOKUP & ACTION CALLING
-══════════════════════════════════════════════════════════ */
-function getProjectById(id) {
-  var projects = (window.AI_CONTEXT && window.AI_CONTEXT.projects) || [];
-  for (var i = 0; i < projects.length; i++) {
-    if (projects[i].id === id) return projects[i];
-  }
-  return null;
-}
-
-// Global UI Tool for AI Agent Modal Calling
-window.openProjectModal = function (id) {
-  var project = getProjectById(Number(id));
-  if (project) {
-    renderProjectModal(project);
-  }
-};
-
-/* ══════════════════════════════════════════════════════════
    EVENTS
 ══════════════════════════════════════════════════════════ */
 function attachEvents() {
@@ -496,9 +656,11 @@ function attachEvents() {
       var wrap = document.querySelector(".projects-grid-wrap");
       if (wrap) {
         var isOpen = wrap.classList.toggle("open");
+        var projects = getProjectsData();
+        var count = Math.max(0, projects.length - 1);
         toggleProjects.innerHTML =
-          (isOpen ? "Hide Projects" : "Show All Projects (5)") +
-          icon("arrowDown", "w-4 h-4 " + (isOpen ? "rotate-180" : ""));
+          (isOpen ? "Hide Projects" : "Show All Projects (" + count + ")") +
+          " " + icon("arrowDown", "w-4 h-4 " + (isOpen ? "rotate-180" : ""));
         observeReveals();
       }
     }
@@ -714,6 +876,7 @@ function pauseCertAutoplay() {
 ══════════════════════════════════════════════════════════ */
 function renderPage() {
   renderNavigation();
+  renderProjects();
   renderHonors();
   renderCertifications();
   renderAssistant();
