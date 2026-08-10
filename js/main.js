@@ -131,7 +131,7 @@ function renderNavigation() {
     '<button type="button" data-scroll="contact" class="ml-auto ' + PRIMARY_BUTTON + ' !px-5 !py-2 text-sm">' + icon("mail", "w-4 h-4") + "Get In Touch</button>" +
     "</div>" +
     "</nav>" +
-    '<div class="md:hidden fixed bottom-0 left-0 right-0 z-40 flex justify-center px-4 pb-5 pt-3 w-full bg-white border-t border-slate-200/60 shadow-[0_-8px_32px_rgba(15,23,42,0.08)] nav-enter-bottom">' +
+    '<div id="bottom-nav" class="bottom-nav md:hidden fixed bottom-0 left-0 right-0 z-40 flex justify-center px-4 pb-5 pt-3 w-full bg-white border-t border-slate-200/60 shadow-[0_-8px_32px_rgba(15,23,42,0.08)] nav-enter-bottom">' +
     '<div class="rounded-full px-3 py-2.5 bg-white border border-border flex items-center gap-1.5 max-w-lg w-full justify-center shadow-sm">' +
     mobileButtons +
     "</div>" +
@@ -671,12 +671,42 @@ function initDraggableAssistant() {
     if (!panel) return;
     var isMobile = window.innerWidth < 640;
     if (isMobile) {
-      panel.style.left = "0.75rem";
-      panel.style.right = "0.75rem";
-      panel.style.bottom = "5.5rem";
-      panel.style.top = "auto";
+      if (window.visualViewport) {
+        var vv = window.visualViewport;
+        var topOffset = vv.offsetTop || 0;
+        var availableHeight = vv.height;
+        var panelTop = topOffset + 10;
+        var panelHeight = Math.max(260, availableHeight - 20);
+
+        panel.style.position = "fixed";
+        panel.style.left = "0.75rem";
+        panel.style.right = "0.75rem";
+        panel.style.width = "calc(100vw - 1.5rem)";
+        panel.style.top = panelTop + "px";
+        panel.style.bottom = "auto";
+        panel.style.height = panelHeight + "px";
+        panel.style.maxHeight = panelHeight + "px";
+        panel.style.transformOrigin = "bottom center";
+      } else {
+        panel.style.position = "fixed";
+        panel.style.left = "0.75rem";
+        panel.style.right = "0.75rem";
+        panel.style.width = "calc(100vw - 1.5rem)";
+        panel.style.bottom = "5.5rem";
+        panel.style.top = "auto";
+        panel.style.height = "min(70vh, 620px)";
+        panel.style.maxHeight = "620px";
+        panel.style.transformOrigin = "bottom center";
+      }
       return;
     }
+
+    // Reset desktop dimensions
+    panel.style.position = "fixed";
+    panel.style.width = "min(380px, calc(100vw - 2rem))";
+    panel.style.height = "min(620px, calc(100vh - 7rem))";
+    panel.style.maxHeight = "none";
+    panel.style.top = "auto";
 
     var toggleRect = toggle.getBoundingClientRect();
     var panelW = 380;
@@ -704,7 +734,53 @@ function initDraggableAssistant() {
       panelBottom = Math.max(20, window.innerHeight - panelH - 20);
     }
     panel.style.bottom = panelBottom + "px";
-    panel.style.top = "auto";
+  }
+
+  // Visual Viewport listeners for mobile keyboard handling
+  if (window.visualViewport) {
+    window.visualViewport.addEventListener("resize", function () {
+      if (assistantIsOpen) alignPanelAnchor();
+    });
+    window.visualViewport.addEventListener("scroll", function () {
+      if (assistantIsOpen) alignPanelAnchor();
+    });
+  }
+
+  // Chat input focus & typing micro-interactions
+  var assistantInput = document.getElementById("assistant-input");
+  var sendButton = document.querySelector(".assistant-send");
+
+  if (assistantInput) {
+    assistantInput.addEventListener("focus", function () {
+      var bottomNav = document.getElementById("bottom-nav");
+      if (bottomNav) bottomNav.classList.add("nav-hidden");
+
+      alignPanelAnchor();
+      var msgContainer = document.getElementById("assistant-messages");
+      if (msgContainer) {
+        setTimeout(function () {
+          msgContainer.scrollTo({ top: msgContainer.scrollHeight, behavior: "smooth" });
+        }, 100);
+      }
+    });
+
+    assistantInput.addEventListener("blur", function () {
+      var bottomNav = document.getElementById("bottom-nav");
+      if (bottomNav) bottomNav.classList.remove("nav-hidden");
+
+      setTimeout(alignPanelAnchor, 120);
+    });
+
+    assistantInput.addEventListener("input", function () {
+      var btn = sendButton || document.querySelector(".assistant-send");
+      if (btn) {
+        if (assistantInput.value.trim().length > 0) {
+          btn.classList.add("is-active");
+        } else {
+          btn.classList.remove("is-active");
+        }
+      }
+    });
   }
 
   window.addEventListener("resize", function () {
@@ -761,19 +837,53 @@ function openAssistant() {
   var panel = document.getElementById("assistant-panel");
   var toggle = document.getElementById("assistant-toggle");
   var input = document.getElementById("assistant-input");
-  if (panel) panel.classList.remove("is-hidden");
+  if (panel) {
+    panel.classList.remove("is-hidden");
+    alignPanelAnchorGlobal();
+  }
   if (toggle) toggle.classList.add("is-hidden");
   lockBodyScroll();
-  if (input) setTimeout(function () { input.focus(); }, 120);
+  if (input) {
+    setTimeout(function () {
+      input.focus();
+      var msgBox = document.getElementById("assistant-messages");
+      if (msgBox) msgBox.scrollTo({ top: msgBox.scrollHeight, behavior: "smooth" });
+    }, 120);
+  }
+}
+
+function alignPanelAnchorGlobal() {
+  var panel = document.getElementById("assistant-panel");
+  if (!panel) return;
+  var isMobile = window.innerWidth < 640;
+  if (isMobile && window.visualViewport) {
+    var vv = window.visualViewport;
+    var topOffset = vv.offsetTop || 0;
+    var availableHeight = vv.height;
+    var panelTop = topOffset + 10;
+    var panelHeight = Math.max(260, availableHeight - 20);
+
+    panel.style.position = "fixed";
+    panel.style.left = "0.75rem";
+    panel.style.right = "0.75rem";
+    panel.style.width = "calc(100vw - 1.5rem)";
+    panel.style.top = panelTop + "px";
+    panel.style.bottom = "auto";
+    panel.style.height = panelHeight + "px";
+    panel.style.maxHeight = panelHeight + "px";
+    panel.style.transformOrigin = "bottom center";
+  }
 }
 
 function closeAssistant() {
   assistantIsOpen = false;
   var panel = document.getElementById("assistant-panel");
   var toggle = document.getElementById("assistant-toggle");
+  var bottomNav = document.getElementById("bottom-nav");
   var modalOpen = document.getElementById("project-modal");
   if (panel) panel.classList.add("is-hidden");
   if (toggle && !modalOpen) toggle.classList.remove("is-hidden");
+  if (bottomNav) bottomNav.classList.remove("nav-hidden");
   unlockBodyScroll();
 }
 

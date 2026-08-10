@@ -447,6 +447,16 @@ body.overflow-hidden {
   border-color: #a5b4fc;
 }
 
+.bottom-nav {
+  transition: transform 300ms cubic-bezier(0.4, 0, 0.2, 1), opacity 240ms ease;
+}
+
+.bottom-nav.nav-hidden {
+  transform: translateY(150%) !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
 .assistant-input-row {
   display: flex;
   gap: 0.6rem;
@@ -458,20 +468,20 @@ body.overflow-hidden {
 .assistant-input {
   min-width: 0;
   flex: 1;
-  border: 1px solid #e2e8f0;
+  border: 1.5px solid #e2e8f0;
   border-radius: 0.95rem;
   padding: 0.78rem 0.9rem;
   color: #1e293b;
   background: #f8fafc;
   font-size: 0.875rem;
   outline: none;
-  transition: border-color 180ms ease, box-shadow 180ms ease, background 180ms ease;
+  transition: border-color 200ms ease, box-shadow 200ms ease, background 200ms ease;
 }
 
 .assistant-input:focus {
-  border-color: #818cf8;
+  border-color: #6366f1;
   background: #ffffff;
-  box-shadow: 0 0 0 4px rgba(129, 140, 248, 0.16);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.22), 0 4px 14px rgba(99, 102, 241, 0.1);
 }
 
 .assistant-send {
@@ -483,13 +493,29 @@ body.overflow-hidden {
   border-radius: 0.95rem;
   color: #ffffff;
   background: linear-gradient(135deg, #4f46e5, #7c3aed);
-  box-shadow: 0 10px 20px rgba(67, 56, 202, 0.22);
-  transition: transform 180ms ease, box-shadow 180ms ease;
+  box-shadow: 0 4px 12px rgba(67, 56, 202, 0.22);
+  transition: transform 180ms ease, box-shadow 180ms ease, background 200ms ease;
+  cursor: pointer;
 }
 
 .assistant-send:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 14px 28px rgba(67, 56, 202, 0.3);
+  transform: translateY(-1px) scale(1.02);
+  box-shadow: 0 8px 20px rgba(67, 56, 202, 0.32);
+}
+
+.assistant-send.is-active {
+  background: linear-gradient(135deg, #4338ca, #6366f1);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.32), 0 6px 18px rgba(67, 56, 202, 0.4);
+  animation: sendPulse 2s ease-in-out infinite;
+}
+
+@keyframes sendPulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.06);
+  }
 }
 
 .assistant-toggle {
