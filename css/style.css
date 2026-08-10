@@ -661,3 +661,38 @@ body {
     opacity: 1;
   }
 }
+
+/* ══════════════════════════════════════════════════════════
+   FLUID RESPONSIVE SPACING (CSS clamp) & IMAGE OPTIMIZATIONS
+══════════════════════════════════════════════════════════ */
+.fluid-section {
+  padding-block: clamp(2.5rem, 6vh, 5.5rem);
+}
+
+.fluid-section-hero {
+  padding-top: clamp(4.5rem, 10vh, 7.5rem);
+  padding-bottom: clamp(2.5rem, 5vh, 4.5rem);
+}
+
+.fluid-heading-mb {
+  margin-bottom: clamp(1.25rem, 3.5vh, 3rem);
+}
+
+.fluid-divider-my {
+  margin-top: clamp(2.5rem, 5vh, 5rem);
+  margin-bottom: clamp(2.5rem, 5vh, 5rem);
+}
+
+/* Fast Image & Media Performance */
+img,
+video {
+  content-visibility: auto;
+}
+
+.coverflow-card,
+.honor-card-button,
+.surface-card {
+  will-change: transform;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}

@@ -107,20 +107,6 @@
       );
     }
 
-    // Who is Rohan? / Identity
-    if (/^(who is rohan|who is rohan nimje|who are you|about rohan|tell me about rohan|tell me about rohan nimje)$/.test(lower)) {
-      return (
-        "<strong class=\"font-semibold text-indigo-700\">Rohan Nimje</strong> is an AI Systems Architect & Full-Stack Engineer who loves turning complex tech ideas into fast, real-world solutions.<br>" +
-        "He is pursuing his <strong class=\"font-semibold text-indigo-700\">BCA in AI & Machine Learning (8.38 CGPA)</strong> at Shri Shivaji Science College while sharpening his skills via NxtWave's CCBP 4.0 program.<br>" +
-        "<ul class=\"list-disc pl-4 space-y-1 text-sm my-1\">" +
-        "<li><strong class=\"font-semibold text-indigo-700\">365-Day Streak:</strong> Unbroken daily coding streak on NxtWave Academy</li>" +
-        "<li><strong class=\"font-semibold text-indigo-700\">Global Rank 27:</strong> DSA CodeVerse Bi-Weekly Contest #25</li>" +
-        "<li><strong class=\"font-semibold text-indigo-700\">Key Builds:</strong> Cosmolyze AI Skincare Analyzer, ScanZy Rewards, Trinity X Fraud Detector</li>" +
-        "</ul>" +
-        SCROLL_BUTTONS.projects
-      );
-    }
-
     // Quick links / Contact
     if (/^(contact|contact rohan|show links|links|email|linkedin|github|reach rohan|how to reach rohan)$/.test(lower)) {
       return (

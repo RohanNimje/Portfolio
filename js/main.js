@@ -154,7 +154,7 @@ function renderHonors() {
       '<div class="flex-shrink-0 flex flex-col items-center" style="width:288px">' +
         '<button type="button" data-honor-index="' + i + '" class="honor-card-button ' + active + ' w-72 h-80 cursor-pointer perspective">' +
           '<div class="flip-inner w-full h-full relative">' +
-            '<div class="flip-side absolute inset-0 group"><img src="' + certSrc + '" alt="' + honor.title + '" class="w-full h-full rounded-2xl border border-slate-200 object-contain group-hover:border-indigo-200 transition-all shadow-sm" loading="' + (i === honorsIndex ? "eager" : "lazy") + '" draggable="false" /><div class="absolute bottom-4 right-4 z-10 px-3 py-1.5 bg-indigo-50 border border-indigo-100 rounded-full flex items-center gap-1.5 text-xs font-semibold text-indigo-700 group-hover:bg-indigo-100 transition-all"><span>Click to Flip</span>' + icon("flip", "w-3 h-3") + "</div></div>" +
+            '<div class="flip-side absolute inset-0 group"><img src="' + certSrc + '" alt="' + honor.title + '" class="w-full h-full rounded-2xl border border-slate-200 object-contain group-hover:border-indigo-200 transition-all shadow-sm" loading="' + (i === honorsIndex ? "eager" : "lazy") + '" decoding="async" draggable="false" /><div class="absolute bottom-4 right-4 z-10 px-3 py-1.5 bg-indigo-50 border border-indigo-100 rounded-full flex items-center gap-1.5 text-xs font-semibold text-indigo-700 group-hover:bg-indigo-100 transition-all"><span>Click to Flip</span>' + icon("flip", "w-3 h-3") + "</div></div>" +
             '<div class="flip-side flip-back absolute inset-0"><div class="w-full h-full rounded-2xl border border-slate-200 bg-gradient-to-br from-indigo-50/80 to-white p-6 flex flex-col justify-between hover:border-indigo-200 transition-all shadow-sm"><div class="space-y-3"><p class="text-xs text-muted-foreground font-semibold uppercase tracking-wide">' + honor.event + '</p><div class="w-1 h-5 bg-gradient-to-b from-accent to-foreground rounded-full"></div><p class="text-xs text-foreground leading-relaxed">' + honor.description + '</p></div><div class="flex items-center gap-1.5 text-xs font-semibold text-accent">' + icon("flip", "w-3 h-3") + "<span>Click to flip</span></div></div></div>" +
           "</div>" +
         "</button>" +
@@ -163,10 +163,10 @@ function renderHonors() {
   }
 
   document.getElementById("honors").innerHTML =
-    '<div class="py-20 px-4 sm:px-6 lg:px-8 bg-white relative">' +
+    '<div class="fluid-section px-4 sm:px-6 lg:px-8 bg-white relative">' +
       '<div class="absolute inset-0 overflow-hidden pointer-events-none"><div class="absolute top-20 right-10 w-64 h-64 bg-indigo-100/40 rounded-full blur-3xl"></div></div>' +
       '<div class="max-w-6xl mx-auto relative z-10">' +
-        '<div class="mb-10 text-center reveal"><h2 class="text-4xl sm:text-5xl font-bold mb-4 ' + GRADIENT_HEADING + '">Honors &amp; Achievements</h2><p class="text-slate-600">Recognitions from national-level competitions.</p></div>' +
+        '<div class="text-center reveal fluid-heading-mb"><h2 class="text-4xl sm:text-5xl font-bold mb-4 ' + GRADIENT_HEADING + '">Honors &amp; Achievements</h2><p class="text-slate-600">Recognitions from national-level competitions.</p></div>' +
         '<div class="group/carousel relative overflow-hidden transition-opacity duration-200">' +
           '<div class="absolute left-0 top-0 bottom-0 w-16 sm:w-24 bg-gradient-to-r from-background to-transparent z-20 pointer-events-none"></div><div class="absolute right-0 top-0 bottom-0 w-16 sm:w-24 bg-gradient-to-l from-background to-transparent z-20 pointer-events-none"></div>' +
           '<button type="button" aria-label="Previous honor" id="honor-prev" class="absolute left-0 top-1/2 -translate-y-1/2 w-12 sm:w-16 h-40 z-30 flex items-center justify-start pl-1 sm:pl-2 opacity-0 hover:opacity-100 group-hover/carousel:opacity-60 transition-opacity duration-300"><span class="flex items-center justify-center w-9 h-9 rounded-full bg-background/70 border border-white/10 backdrop-blur-sm text-foreground/70 hover:text-accent hover:border-accent/40 transition-colors">' + icon("chevronLeft", "w-5 h-5") + "</span></button>" +
@@ -219,21 +219,19 @@ function renderCertifications() {
     }
   }
 
-  document.getElementById("certifications").innerHTML =
-    '<div class="py-14 md:py-16 px-4 sm:px-6 lg:px-8 bg-[#F7F9FC] relative">' +
-      '<div class="max-w-7xl mx-auto">' +
-        '<div class="mb-6 md:mb-8 text-center reveal"><h2 class="text-3xl sm:text-4xl md:text-5xl font-bold mb-3 ' + GRADIENT_HEADING + '">Certifications</h2><p class="text-sm sm:text-base text-slate-600">Apple-style Cover Flow carousel showcasing professional credentials.</p></div>' +
-        '<div class="group/carousel relative w-full max-w-4xl mx-auto">' +
-          '<div class="coverflow-stage relative w-full flex items-center justify-center touch-pan-y cursor-grab active:cursor-grabbing">' +
-            '<button type="button" aria-label="Previous certification" id="cert-prev" class="absolute left-0 top-1/2 z-40 -translate-y-1/2 w-12 sm:w-16 md:w-20 flex items-center justify-start pl-2 sm:pl-3 opacity-0 hover:opacity-100 group-hover/carousel:opacity-60 transition-opacity duration-300"><span class="flex items-center justify-center w-9 h-9 rounded-full bg-white/70 border border-slate-200/50 backdrop-blur-sm text-slate-600 hover:text-indigo-600 hover:border-indigo-300 transition-all duration-200 shadow-sm">' + icon("chevronLeft", "w-5 h-5") + "</span></button>" +
-            '<button type="button" aria-label="Next certification" id="cert-next" class="absolute right-0 top-1/2 z-40 -translate-y-1/2 w-12 sm:w-16 md:w-20 flex items-center justify-end pr-2 sm:pr-3 opacity-0 hover:opacity-100 group-hover/carousel:opacity-60 transition-opacity duration-300"><span class="flex items-center justify-center w-9 h-9 rounded-full bg-white/70 border border-slate-200/50 backdrop-blur-sm text-slate-600 hover:text-indigo-600 hover:border-indigo-300 transition-all duration-200 shadow-sm">' + icon("chevronRight", "w-5 h-5") + "</span></button>" +
-            '<div class="absolute left-0 top-0 bottom-0 w-20 sm:w-24 md:w-32 bg-gradient-to-r from-[#F7F9FC] via-[#F7F9FC]/50 to-transparent z-20 pointer-events-none"></div><div class="absolute right-0 top-0 bottom-0 w-20 sm:w-24 md:w-32 bg-gradient-to-l from-[#F7F9FC] via-[#F7F9FC]/50 to-transparent z-20 pointer-events-none"></div>' +
-            cards +
-          "</div>" +
-        "</div>" +
-        '<div class="mt-8 md:mt-10 space-y-3 text-center"><div><p class="text-sm sm:text-base md:text-lg font-semibold text-foreground">' + (activeCert ? activeCert.name : "") + '</p><p class="text-xs sm:text-sm text-muted-foreground">' + (activeCert ? activeCert.issuer : "") + '</p></div><div class="flex justify-center items-center gap-3 pt-2"><div class="w-2 h-2 rounded-full bg-accent tiny-pulse"></div><span class="text-xs sm:text-sm font-semibold text-muted-foreground"><span class="text-accent">' + (certificationsIndex + 1) + "</span> / " + certs.length + "</span></div></div>" +
+  var container = document.getElementById("certifications-carousel-container") || document.getElementById("certifications");
+  if (!container) return;
+
+  container.innerHTML =
+    '<div class="group/carousel relative w-full max-w-4xl mx-auto">' +
+      '<div class="coverflow-stage relative w-full flex items-center justify-center touch-pan-y cursor-grab active:cursor-grabbing">' +
+        '<button type="button" aria-label="Previous certification" id="cert-prev" class="absolute left-0 top-1/2 z-40 -translate-y-1/2 w-12 sm:w-16 md:w-20 flex items-center justify-start pl-2 sm:pl-3 opacity-0 hover:opacity-100 group-hover/carousel:opacity-60 transition-opacity duration-300"><span class="flex items-center justify-center w-9 h-9 rounded-full bg-white/70 border border-slate-200/50 backdrop-blur-sm text-slate-600 hover:text-indigo-600 hover:border-indigo-300 transition-all duration-200 shadow-sm">' + icon("chevronLeft", "w-5 h-5") + "</span></button>" +
+        '<button type="button" aria-label="Next certification" id="cert-next" class="absolute right-0 top-1/2 z-40 -translate-y-1/2 w-12 sm:w-16 md:w-20 flex items-center justify-end pr-2 sm:pr-3 opacity-0 hover:opacity-100 group-hover/carousel:opacity-60 transition-opacity duration-300"><span class="flex items-center justify-center w-9 h-9 rounded-full bg-white/70 border border-slate-200/50 backdrop-blur-sm text-slate-600 hover:text-indigo-600 hover:border-indigo-300 transition-all duration-200 shadow-sm">' + icon("chevronRight", "w-5 h-5") + "</span></button>" +
+        '<div class="absolute left-0 top-0 bottom-0 w-20 sm:w-24 md:w-32 bg-gradient-to-r from-[#F7F9FC] via-[#F7F9FC]/50 to-transparent z-20 pointer-events-none"></div><div class="absolute right-0 top-0 bottom-0 w-20 sm:w-24 md:w-32 bg-gradient-to-l from-[#F7F9FC] via-[#F7F9FC]/50 to-transparent z-20 pointer-events-none"></div>' +
+        cards +
       "</div>" +
-    "</div>";
+    "</div>" +
+    '<div class="mt-8 md:mt-10 space-y-3 text-center"><div><p class="text-sm sm:text-base md:text-lg font-semibold text-foreground">' + (activeCert ? activeCert.name : "") + '</p><p class="text-xs sm:text-sm text-muted-foreground">' + (activeCert ? activeCert.issuer : "") + '</p></div><div class="flex justify-center items-center gap-3 pt-2"><div class="w-2 h-2 rounded-full bg-accent tiny-pulse"></div><span class="text-xs sm:text-sm font-semibold text-muted-foreground"><span class="text-accent">' + (certificationsIndex + 1) + "</span> / " + certs.length + "</span></div></div>";
 }
 
 /* ══════════════════════════════════════════════════════════
@@ -423,11 +421,11 @@ function renderProjectModal(project) {
   }
   var shotUrl = project.screenshotUrl || project.screenshoturl;
   if (shotUrl) {
-    media += '<div><h3 class="text-lg font-semibold text-foreground mb-3">Screenshots</h3><div class="relative w-full rounded-xl overflow-hidden border border-slate-200 bg-white shadow-sm p-0"><img src="' + shotUrl + '" alt="' + project.title + ' screenshot" class="w-full h-auto block object-cover" loading="lazy" /></div></div>';
+    media += '<div><h3 class="text-lg font-semibold text-foreground mb-3">Screenshots</h3><div class="relative w-full rounded-xl overflow-hidden border border-slate-200 bg-white shadow-sm p-0"><img src="' + shotUrl + '" alt="' + project.title + ' screenshot" class="w-full h-auto block object-cover" loading="lazy" decoding="async" /></div></div>';
   }
   var certImg = project.projectCertImgUrl || project.CertImgUrl;
   if (certImg) {
-    media += '<div><h3 class="text-lg font-semibold text-foreground mb-3">Certificate & Recognition</h3><div class="relative w-full rounded-xl overflow-hidden border border-slate-200 bg-white shadow-sm p-0"><img src="' + certImg + '" alt="' + project.title + ' certificate" class="w-full h-auto block object-cover" loading="lazy" /></div></div>';
+    media += '<div><h3 class="text-lg font-semibold text-foreground mb-3">Certificate & Recognition</h3><div class="relative w-full rounded-xl overflow-hidden border border-slate-200 bg-white shadow-sm p-0"><img src="' + certImg + '" alt="' + project.title + ' certificate" class="w-full h-auto block object-cover" loading="lazy" decoding="async" /></div></div>';
   }
 
   var highlightsList = "";
@@ -523,7 +521,6 @@ function renderAssistantMessages() {
 
 function renderAssistantQuickActions() {
   var actions = [
-    "Who is Rohan?",
     "Show me his projects",
     "View ScanZy demo video",
     "Why should I hire him?",
@@ -740,6 +737,40 @@ function attachEvents() {
       sendAssistantMessage(assistantQuestion.getAttribute("data-assistant-question"));
     }
   });
+
+  // Touch gesture swipe support for Certifications Carousel
+  var certTouchStartX = 0;
+  var certTouchStartY = 0;
+
+  document.addEventListener("touchstart", function (event) {
+    var stage = event.target.closest(".coverflow-stage") || event.target.closest("#certifications");
+    if (!stage) return;
+    certTouchStartX = event.touches[0].clientX;
+    certTouchStartY = event.touches[0].clientY;
+  }, { passive: true });
+
+  document.addEventListener("touchend", function (event) {
+    var stage = event.target.closest(".coverflow-stage") || event.target.closest("#certifications");
+    if (!stage) return;
+    var deltaX = event.changedTouches[0].clientX - certTouchStartX;
+    var deltaY = event.changedTouches[0].clientY - certTouchStartY;
+
+    // Detect horizontal swipe gesture
+    if (Math.abs(deltaX) > 35 && Math.abs(deltaX) > Math.abs(deltaY)) {
+      pauseCertAutoplay();
+      var certs = (window.portfolioData && window.portfolioData.certifications) || [];
+      var certLen = certs.length || 1;
+
+      if (deltaX < 0) {
+        // Swipe Left -> Next
+        certificationsIndex = (certificationsIndex + 1) % certLen;
+      } else {
+        // Swipe Right -> Previous
+        certificationsIndex = (certificationsIndex - 1 + certLen) % certLen;
+      }
+      renderCertifications();
+    }
+  }, { passive: true });
 
   // Form submit
   document.addEventListener("submit", function (event) {
