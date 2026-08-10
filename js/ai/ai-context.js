@@ -56,27 +56,13 @@ window.AI_CONTEXT = {
   projects: [
     {
       id: 1,
-      title: "Cosmolyze — AI-Powered Skincare Analyzer",
-      shortTitle: "Cosmolyze",
-      techStack: ["React", "Python", "Computer Vision AI", "Tailwind CSS", "Vercel"],
-      description: "An AI-powered 'Pocket Dermatologist' built to help users make informed skincare choices by cutting through misleading marketing. Scans skin condition in real time to recommend exact active ingredients (Niacinamide, Salicylic Acid) based on barrier needs. Shortlisted as National Finalist for NxtWave's Idea2Impact Hackathon in Hyderabad.",
-      isFeatured: true,
-      productDemoUrl: "https://res.cloudinary.com/doyiqcna9/video/upload/v1783677832/Untitled_design_exdmtc.mp4",
-      highlights: [
-        "AI skin condition analyzer acting as a digital dermatologist",
-        "Recommends targeted active ingredients based on skin barrier needs",
-        "National Finalist @ Idea2Impact Offline Hackathon in Hyderabad",
-        "Sub-2s response latency with interactive real-time visual insights"
-      ]
-    },
-    {
-      id: 2,
       title: "ScanZy Rewards — Gamified QR Loyalty & Retail Retention Platform",
       shortTitle: "ScanZy Rewards",
       techStack: ["Lovable.dev", "React", "Supabase", "Cursor IDE", "n8n", "Leonardo AI"],
       description: "A full-stack QR-based gamified loyalty platform designed to eliminate offline retail customer churn. Converts one-time shoppers into repeat buyers via physical QR cards given at checkout that unlock store-specific Spin & Win rewards when scanned at home.",
       isFeatured: true,
-      // videoUrl: "https://res.cloudinary.com/doyiqcna9/video/upload/v1783673286/Ai_Daily_Coach_automation_qzojiw.mp4",
+      laptopVideoUrl: "https://res.cloudinary.com/doyiqcna9/video/upload/v1783673286/Ai_Daily_Coach_automation_qzojiw.mp4",
+      mobileVideoUrl: "https://res.cloudinary.com/doyiqcna9/video/upload/v1783677832/Untitled_design_exdmtc.mp4",
       videoUrlmvp: "https://res.cloudinary.com/doyiqcna9/video/upload/v1783673286/Ai_Daily_Coach_automation_qzojiw.mp4",
       productDemoUrl: "https://res.cloudinary.com/doyiqcna9/video/upload/v1783677832/Untitled_design_exdmtc.mp4",
       projectCertImgUrl: "https://res.cloudinary.com/doyiqcna9/image/upload/v1783666876/mvp_certification_k5sedb.png",
@@ -85,6 +71,22 @@ window.AI_CONTEXT = {
         "Moved from paper coupons to real-time digital QR mechanics",
         "Full-stack architecture: React + Supabase + Cursor IDE + n8n automation",
         "Incentivizes repeat footfall over local neighborhood competitors"
+      ]
+    },
+    {
+      id: 2,
+      title: "Cosmolyze — AI-Powered Skincare Analyzer",
+      shortTitle: "Cosmolyze",
+      techStack: ["React", "Python", "Computer Vision AI", "Tailwind CSS", "Vercel"],
+      description: "An AI-powered 'Pocket Dermatologist' built to help users make informed skincare choices by cutting through misleading marketing. Scans skin condition in real time to recommend exact active ingredients (Niacinamide, Salicylic Acid) based on barrier needs. Shortlisted as National Finalist for NxtWave's Idea2Impact Hackathon in Hyderabad.",
+      isFeatured: false,
+      productDemoUrl: "https://res.cloudinary.com/doyiqcna9/video/upload/v1783677832/Untitled_design_exdmtc.mp4",
+      projectCertImgUrl: "https://res.cloudinary.com/doyiqcna9/image/upload/v1786384987/Ideaimpact_Certificate_orka1w.jpg",
+      highlights: [
+        "AI skin condition analyzer acting as a digital dermatologist",
+        "Recommends targeted active ingredients based on skin barrier needs",
+        "National Finalist @ Idea2Impact Offline Hackathon in Hyderabad",
+        "Sub-2s response latency with interactive real-time visual insights"
       ]
     },
     {

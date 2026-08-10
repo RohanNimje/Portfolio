@@ -243,20 +243,105 @@ function getProjectsData() {
   return [];
 }
 
-function getProjectById(id) {
+var PROJECT_SLUG_MAP = {
+  // ScanZy Rewards (ID: 1)
+  "1": 1,
+  "scanzy": 1,
+  "scanzy-rewards": 1,
+  "scanzy rewards": 1,
+  "scanzyreward": 1,
+  "scanzyrewards": 1,
+  "smartcareer": 1,
+  "loyalty": 1,
+  "qr loyalty": 1,
+
+  // Cosmolyze (ID: 2)
+  "2": 2,
+  "cosmolyze": 2,
+  "skincare": 2,
+  "skin analyzer": 2,
+  "dermatologist": 2,
+  "pocket dermatologist": 2,
+  "idea2impact": 2,
+
+  // Infrastructure Corruption Detector - Trinity X (ID: 3)
+  "3": 3,
+  "trinity": 3,
+  "trinity x": 3,
+  "trinity-x": 3,
+  "infrastructure": 3,
+  "corruption": 3,
+  "corruption detector": 3,
+
+  // Sparky (ID: 4)
+  "4": 4,
+  "sparky": 4,
+  "sparky ai": 4,
+  "life coach": 4,
+  "productivity": 4,
+  "student productivity": 4,
+
+  // Autonomous Business & Workflow Automation System (ID: 5)
+  "5": 5,
+  "automation": 5,
+  "make": 5,
+  "make.com": 5,
+  "automation engine": 5,
+  "business automation": 5,
+  "workflow automation": 5,
+
+  // Smart Hackathon Finder Bot (ID: 6)
+  "6": 6,
+  "hackathon": 6,
+  "hackathon bot": 6,
+  "hackathon finder": 6,
+  "automation anywhere": 6,
+  "rpa": 6
+};
+
+function getProjectById(idOrSlug) {
   var projects = getProjectsData();
-  var targetId = Number(id);
-  for (var i = 0; i < projects.length; i++) {
-    if (projects[i].id === targetId) return projects[i];
+  if (!idOrSlug || !projects.length) return null;
+
+  var targetStr = String(idOrSlug).trim().toLowerCase();
+
+  // 1. Direct Slug Dictionary Mapping
+  if (PROJECT_SLUG_MAP.hasOwnProperty(targetStr)) {
+    var mappedId = PROJECT_SLUG_MAP[targetStr];
+    for (var i = 0; i < projects.length; i++) {
+      if (projects[i].id === mappedId) return projects[i];
+    }
   }
+
+  // 2. Numeric ID lookup
+  var num = parseInt(targetStr, 10);
+  if (!isNaN(num)) {
+    for (var j = 0; j < projects.length; j++) {
+      if (projects[j].id === num) return projects[j];
+    }
+  }
+
+  // 3. Case-Insensitive Title/Description Substring Search
+  for (var k = 0; k < projects.length; k++) {
+    var p = projects[k];
+    var titleLower = (p.title || "").toLowerCase();
+    var descLower = (p.description || "").toLowerCase();
+    if (titleLower.indexOf(targetStr) !== -1 || targetStr.indexOf(titleLower) !== -1 || descLower.indexOf(targetStr) !== -1) {
+      return p;
+    }
+  }
+
+  // Strict: NEVER default to projects[0]!
   return null;
 }
 
 // Global UI Tool for AI Agent Modal Calling
-window.openProjectModal = function (id) {
-  var project = getProjectById(Number(id));
+window.openProjectModal = function (idOrSlug) {
+  var project = getProjectById(idOrSlug);
   if (project) {
     renderProjectModal(project);
+  } else {
+    console.warn("[Project Modal] No matching project found for target:", idOrSlug);
   }
 };
 

@@ -168,7 +168,7 @@
       "- When asked for certificates, output image cards:\n" +
       "  <div class=\"mt-2\"><img src=\"[CertImgUrl]\" alt=\"[name]\" class=\"w-full max-w-xs rounded-xl border border-slate-200 shadow-sm\" loading=\"lazy\" /><p class=\"text-xs text-slate-500 mt-1\">[name] — [issuer]</p></div>\n" +
       "- PROJECT MODAL ACTION TRIGGER:\n" +
-      "  When the user asks to see, view, open, or watch project demos/videos/modals (e.g. ScanZy Rewards, Cosmolyze, Trinity X, Sparky, etc.), append [[ACTION:openProjectModal:ID]] with the matching project ID (e.g. [[ACTION:openProjectModal:1]] for Cosmolyze, [[ACTION:openProjectModal:2]] for ScanZy, [[ACTION:openProjectModal:3]] for Trinity X, [[ACTION:openProjectModal:4]] for Sparky, [[ACTION:openProjectModal:5]] for Automation Engine, [[ACTION:openProjectModal:6]] for Hackathon Bot).\n" +
+      "  When the user asks to see, view, open, or watch project demos/videos/modals (e.g. ScanZy Rewards, Cosmolyze, Trinity X, Sparky, etc.), append [[ACTION:openProjectModal:ID]] with the matching project ID (e.g. [[ACTION:openProjectModal:1]] for ScanZy Rewards, [[ACTION:openProjectModal:2]] for Cosmolyze, [[ACTION:openProjectModal:3]] for Trinity X, [[ACTION:openProjectModal:4]] for Sparky, [[ACTION:openProjectModal:5]] for Automation Engine, [[ACTION:openProjectModal:6]] for Hackathon Bot).\n" +
       "- AUTO-SCROLL BUTTON INSTRUCTIONS:\n" +
       "  When answering inquiries about projects, append: " + SCROLL_BUTTONS.projects + "\n" +
       "  When answering inquiries about certifications, append: " + SCROLL_BUTTONS.certifications + "\n" +
@@ -191,8 +191,8 @@
         details.push("Title: " + proj.title);
         details.push("Tech Stack: " + (proj.techStack || []).join(", "));
         details.push("Description: " + proj.description);
-        if (proj.videoUrl || proj.videoUrlmvp) details.push("Video Demo URL: " + (proj.videoUrlmvp || proj.videoUrl));
-        if (proj.productDemoUrl) details.push("Product Demo URL: " + proj.productDemoUrl);
+        if (proj.laptopVideoUrl || proj.videoUrl || proj.videoUrlmvp) details.push("Video Demo URL: " + (proj.laptopVideoUrl || proj.videoUrlmvp || proj.videoUrl));
+        if (proj.mobileVideoUrl || proj.productDemoUrl) details.push("Product Demo URL: " + (proj.mobileVideoUrl || proj.productDemoUrl));
         if (proj.projectCertImgUrl) details.push("Certificate Image URL: " + proj.projectCertImgUrl);
         if (proj.screenshotUrl) details.push("Screenshot URL: " + proj.screenshotUrl);
         if (proj.highlights && proj.highlights.length) details.push("Highlights: " + proj.highlights.join("; "));
@@ -320,7 +320,7 @@
 
   function addToHistory(role, text) {
     // Strip internal action tags before storing in conversational history
-    var cleanText = String(text || "").replace(/\[\[ACTION:openProjectModal:\d+\]\]/g, "").trim();
+    var cleanText = String(text || "").replace(/\[\[ACTION:openProjectModal:[^\]]+\]\]/g, "").trim();
     _conversationHistory.push({
       role: role,
       parts: [{ text: cleanText }]
@@ -336,15 +336,15 @@
     if (!text || typeof text !== "string") return "";
 
     // Strip action tags from visible HTML
-    var str = text.replace(/\[\[ACTION:openProjectModal:\d+\]\]/g, "").trim();
+    var str = text.replace(/\[\[ACTION:openProjectModal:[^\]]+\]\]/g, "").trim();
 
     // ── Step 1: Headers (### → styled paragraph) ───────────
-    str = str.replace(/^#{1,6}\s+(.*?)$/gm, '<p class="font-bold text-slate-800 mt-2 mb-1">$1</p>');
+    str = str.replace(/^#{1,6}\s+(.*?)$/gm, '<p class="font-bold text-slate-800 mt-2.5 mb-1">$1</p>');
 
     // ── Step 2: Markdown links [label](url) → HTML anchors ──
     str = str.replace(/\[([^\]]+)\]\((https?:\/\/[^)]+)\)/g, function (match, label, url) {
       if (/watch demo|demo video|product demo|video/i.test(label)) {
-        return '<a href="' + url + '" target="_blank" rel="noopener" class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-indigo-50 border border-indigo-200 text-indigo-700 font-semibold text-sm hover:bg-indigo-100 transition-colors">🎬 ' + label + '</a>';
+        return '<a href="' + url + '" target="_blank" rel="noopener" class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-indigo-50 border border-indigo-200 text-indigo-700 font-semibold text-sm hover:bg-indigo-100 transition-colors my-1">🎬 ' + label + '</a>';
       }
       return '<a href="' + url + '" target="_blank" rel="noopener" class="text-indigo-600 font-semibold underline">' + label + '</a>';
     });
@@ -363,30 +363,60 @@
 
     for (var i = 0; i < lines.length; i++) {
       var line = lines[i];
+      var trimmed = line.trim();
 
-      // Skip blank lines inside a list (Groq inter-item padding)
-      if (inList && line.trim() === "") continue;
+      // Skip blank lines inside a list (Groq/Gemini inter-item padding)
+      if (inList && trimmed === "") continue;
 
       var bulletMatch = line.match(/^\s*[-*\u2022]\s+(.+)$/);
-      var numMatch    = line.match(/^\s*\d+[.)]\s+(.+)$/);
+      var numMatch    = line.match(/^\s*(\d+)[.)]\s+(.+)$/);
 
-      if (bulletMatch) {
+      // Check if this line contains block-level elements (cards, buttons, divs, images)
+      var hasBlockTag = /<(div|button|img|video|form|iframe|section|article)/i.test(line) ||
+                        /class="inline-flex/i.test(line) ||
+                        /scrollIntoView/i.test(line);
+
+      // Check if a numbered line is actually a prominent title/heading (e.g. "1. ScanZy Rewards...", "1. As a Software Engineer...")
+      var isNumberedTitle = false;
+      if (numMatch) {
+        var numContent = numMatch[2].trim();
+        if (numContent.startsWith("<strong") || numContent.startsWith("<p") || hasBlockTag || numContent.length > 180 || /:\s*$/.test(numContent)) {
+          isNumberedTitle = true;
+        }
+      }
+
+      if (hasBlockTag || isNumberedTitle) {
+        // Close any active list
+        if (inList) {
+          out.push(listType === "ul" ? "</ul>" : "</ol>");
+          inList = false;
+          listType = null;
+        }
+
+        if (isNumberedTitle) {
+          out.push('<p class="font-bold text-slate-800 mt-2.5 mb-1">' + numMatch[1] + '. ' + numMatch[2] + '</p>');
+        } else {
+          out.push(line);
+        }
+      } else if (bulletMatch) {
         if (!inList || listType !== "ul") {
           if (inList) out.push(listType === "ul" ? "</ul>" : "</ol>");
-          out.push('<ul class="ai-list">');
+          out.push('<ul class="ai-clean-list">');
           inList   = true;
           listType = "ul";
         }
-        out.push("<li>" + bulletMatch[1].trim() + "</li>");
+        var itemContent = bulletMatch[1].trim().replace(/(?:<br\s*\/?>)+$/gi, "");
+        out.push("<li>" + itemContent + "</li>");
 
       } else if (numMatch) {
         if (!inList || listType !== "ol") {
           if (inList) out.push(listType === "ul" ? "</ul>" : "</ol>");
-          out.push('<ol class="ai-list ai-list-decimal">');
+          out.push('<ol class="ai-clean-list ai-clean-list-decimal">');
           inList   = true;
           listType = "ol";
         }
-        out.push("<li>" + numMatch[1].trim() + "</li>");
+        var itemContent = numMatch[2].trim().replace(/(?:<br\s*\/?>)+$/gi, "");
+        out.push("<li>" + itemContent + "</li>");
 
       } else {
         if (inList) {
@@ -401,16 +431,28 @@
 
     str = out.join("\n");
 
-    // ── Step 6: Clean stray newlines around block tags ───────
+    // ── Step 6: Un-nest cards, buttons, images from <li>/<ul>/<ol>
+    str = str.replace(/<li[^>]*>\s*(<(?:div|button|a\s+class="inline-flex|img|video)[^>]*>[\s\S]*?<\/(?:div|button|a|video)>|<img[^>]*>)\s*<\/li>/gi, "$1");
+    str = str.replace(/<ul(\s+class="[^"]*")?>/gi, '<ul class="ai-clean-list">');
+    str = str.replace(/<ol(\s+class="[^"]*")?>/gi, '<ol class="ai-clean-list ai-clean-list-decimal">');
+    str = str.replace(/<ul[^>]*>\s*<\/ul>/gi, "");
+    str = str.replace(/<ol[^>]*>\s*<\/ol>/gi, "");
+
+    // ── Step 7: Clean inner <li> formatting
+    str = str.replace(/<li>\s*(?:<br\s*\/?>\s*)+/gi, "<li>");
+    str = str.replace(/(?:<br\s*\/?>\s*)+<\/li>/gi, "</li>");
+    str = str.replace(/(<strong[^>]*>.*?<\/strong>)\s*<br\s*\/?>\s*/gi, "$1 ");
+
+    // ── Step 8: Clean stray newlines around block tags ───────
     str = str
       .replace(/<\/(ul|ol|li|div|p|button)>\n+/gi, "</$1>")
       .replace(/\n+<(ul|ol|li|div|p|button)/gi, "<$1")
       .replace(/<p>\s*<\/p>/gi, "");
 
-    // ── Step 7: Remaining \n → <br> (non-list prose) ────────
+    // ── Step 9: Remaining \n → <br> (non-list prose) ────────
     str = str.replace(/\n/g, "<br>");
 
-    // ── Step 8: Collapse multiple consecutive <br> ───────────
+    // ── Step 10: Collapse multiple consecutive <br> ───────────
     str = str.replace(/(<br\s*\/?>\s*){2,}/gi, "<br>");
 
     return str.trim();
@@ -446,14 +488,14 @@
     var openedModals = {};
 
     return callProxyAPIStream(contents, systemPrompt, function (fullRawText) {
-      // Check for project modal action tag in the live stream
-      var modalMatches = fullRawText.matchAll(/\[\[ACTION:openProjectModal:(\d+)\]\]/g);
+      // Check for project modal action tag in the live stream (supports numbers & string slugs)
+      var modalMatches = fullRawText.matchAll(/\[\[ACTION:openProjectModal:([^\]]+)\]\]/g);
       for (var match of modalMatches) {
-        var projectId = match[1];
-        if (!openedModals[projectId]) {
-          openedModals[projectId] = true;
+        var projectTarget = match[1].trim();
+        if (!openedModals[projectTarget]) {
+          openedModals[projectTarget] = true;
           if (typeof window.openProjectModal === "function") {
-            window.openProjectModal(Number(projectId));
+            window.openProjectModal(projectTarget);
           }
         }
       }

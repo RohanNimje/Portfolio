@@ -352,25 +352,92 @@ body.overflow-hidden {
   margin-bottom: 0;
 }
 
+/* Fail-safe AI Chat List Styling */
 .assistant-message.bot ul,
 .assistant-message.bot ol,
+.ai-clean-list,
 .ai-list {
-  margin-top: 0.3rem;
-  margin-bottom: 0.45rem;
-  padding-left: 1.25rem;
-  list-style-type: disc;
+  margin-top: 0.35rem;
+  margin-bottom: 0.5rem;
+  padding-left: 0 !important;
+  list-style: none !important;
 }
 
-.ai-list.ai-list-decimal {
-  list-style-type: decimal;
-}
-
-.assistant-message.bot li,
+.assistant-message.bot ul li,
+.assistant-message.bot ol li,
+.ai-clean-list li,
 .ai-list li {
-  display: list-item;
-  margin-bottom: 0.22rem;
+  position: relative;
+  display: block;
+  padding-left: 1.15rem;
+  margin-bottom: 0.3rem;
   line-height: 1.5;
-  padding-left: 0.1rem;
+  color: inherit;
+}
+
+/* Perfect Horizontal Alignment with Pseudo-Element Bullet */
+.assistant-message.bot ul li::before,
+.ai-clean-list li::before,
+.ai-list:not(.ai-clean-list-decimal):not(.ai-list-decimal) li::before {
+  content: "•";
+  position: absolute;
+  left: 0.2rem;
+  top: 0;
+  line-height: 1.5;
+  color: #4f46e5;
+  font-weight: 800;
+  font-size: 1.05rem;
+}
+
+.ai-clean-list-decimal,
+.ai-list-decimal {
+  counter-reset: ai-item;
+}
+
+.ai-clean-list-decimal li::before,
+.ai-list-decimal li::before {
+  content: counter(ai-item) ".";
+  counter-increment: ai-item;
+  position: absolute;
+  left: 0;
+  top: 0;
+  line-height: 1.5;
+  color: #4f46e5;
+  font-weight: 700;
+  font-size: 0.85rem;
+}
+
+/* Explicitly disable bullets on block-level elements, cards, headings, and buttons */
+.assistant-message.bot li:has(div, h1, h2, h3, h4, h5, h6, .card, .ai-card-wrapper, button, img, video, .assistant-email-card, .inline-flex),
+.ai-clean-list li:has(div, h1, h2, h3, h4, h5, h6, .card, .ai-card-wrapper, button, img, video, .assistant-email-card, .inline-flex),
+.ai-list li:has(div, h1, h2, h3, h4, h5, h6, .card, .ai-card-wrapper, button, img, video, .assistant-email-card, .inline-flex),
+li.ai-no-bullet,
+li.ai-card-item {
+  padding-left: 0 !important;
+}
+
+.assistant-message.bot li:has(div, h1, h2, h3, h4, h5, h6, .card, .ai-card-wrapper, button, img, video, .assistant-email-card, .inline-flex)::before,
+.ai-clean-list li:has(div, h1, h2, h3, h4, h5, h6, .card, .ai-card-wrapper, button, img, video, .assistant-email-card, .inline-flex)::before,
+.ai-list li:has(div, h1, h2, h3, h4, h5, h6, .card, .ai-card-wrapper, button, img, video, .assistant-email-card, .inline-flex)::before,
+li.ai-no-bullet::before,
+li.ai-card-item::before {
+  display: none !important;
+  content: none !important;
+}
+
+/* Ensure inline text inside plain li stays inline */
+.assistant-message.bot li:not(:has(div, h1, h2, h3, h4, h5, h6, .card, .ai-card-wrapper, button, img, video)) p,
+.ai-clean-list li:not(:has(div, h1, h2, h3, h4, h5, h6, .card, .ai-card-wrapper, button, img, video)) p,
+.ai-list li:not(:has(div, h1, h2, h3, h4, h5, h6, .card, .ai-card-wrapper, button, img, video)) p {
+  display: inline;
+  margin: 0;
+  padding: 0;
+}
+
+.assistant-message.bot li br,
+.ai-clean-list li br,
+.ai-list li br {
+  display: none;
 }
 
 /* Inline code from AI responses */
