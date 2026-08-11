@@ -10,136 +10,167 @@
     content="Rohan Nimje, AI Engineer, Full-Stack Developer, AI Architect, Portfolio, ScanZy, Trinity X, NxtWave, BCA AI ML" />
   <meta name="author" content="Rohan Nimje" />
   <meta property="og:title" content="Rohan Nimje — AI Architect & Full-Stack Engineer" />
-  <meta property="og:description" content="Vision into Reality — LOGIC :: CODE :: AUTOMATION :: IMPACT" />
-  <meta property="og:image"
-    content="https://res.cloudinary.com/doyiqcna9/image/upload/v1783672197/rohan_nimje_profile_zkmb5q.jpg" />
-  <title>Rohan Nimje — AI Architect & Full-Stack Engineer</title>
+  <meta property="og:description" content="I BUILD DIGITAL SYSTEMS THAT CREATE IMPACT." />
+  <meta property="og:image" content="https://res.cloudinary.com/doyiqcna9/image/upload/v1783672140/rohan_qfsija.jpg" />
+  <title>Rohan Nimje — AI Systems Architect & Full-Stack Engineer</title>
 
   <link rel="icon" href="/public/icon-light-32x32.png" media="(prefers-color-scheme: light)" />
   <link rel="icon" href="/public/icon-dark-32x32.png" media="(prefers-color-scheme: dark)" />
   <link rel="icon" href="/public/icon.svg" type="image/svg+xml" />
   <link rel="apple-touch-icon" href="/public/apple-icon.png" />
 
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;1,400&display=swap"
+    rel="stylesheet">
+
   <!-- Preconnect for Cloudinary media -->
   <link rel="preconnect" href="https://res.cloudinary.com" crossorigin="anonymous" />
   <link rel="dns-prefetch" href="https://res.cloudinary.com" />
-  <link rel="preload" as="image"
-    href="https://res.cloudinary.com/doyiqcna9/image/upload/v1783672197/rohan_nimje_profile_zkmb5q.jpg"
+  <link rel="preload" as="image" href="https://res.cloudinary.com/doyiqcna9/image/upload/v1783672140/rohan_qfsija.jpg"
     fetchpriority="high" />
 
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="/css/style.css" />
 </head>
 
-<body class="bg-background text-foreground pb-32 md:pb-0">
-  <main id="app" class="min-h-screen bg-[#F7F9FC] text-slate-800">
+<body class="bg-background text-foreground pb-32 md:pb-0 font-sans">
+  <main id="app" class="min-h-screen bg-background text-foreground transition-colors duration-300">
 
     <!-- ═══════════════════════════════════════════════════
-           NAVIGATION (JS-controlled for active state)
+           NAVIGATION (JS-controlled for active state & theme toggle)
       ════════════════════════════════════════════════════ -->
     <div id="navigation"></div>
 
     <!-- ═══════════════════════════════════════════════════
-           HERO SECTION
+           HERO SECTION (Editorial Editorial Style)
       ════════════════════════════════════════════════════ -->
     <section id="hero" class="scroll-mt-20">
-      <div class="relative min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8 fluid-section-hero">
-        <!-- Background glows -->
-        <div class="absolute inset-0 overflow-hidden pointer-events-none">
-          <div class="absolute -top-24 right-0 w-[28rem] h-[28rem] rounded-full bg-indigo-100/70 blur-3xl"></div>
-          <div class="absolute bottom-10 left-10 w-72 h-72 rounded-full bg-violet-100/50 blur-3xl"></div>
-          <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(67,56,202,0.07),transparent_55%)]"></div>
-        </div>
+      <div class="relative min-h-[90vh] flex items-center justify-center px-4 sm:px-6 lg:px-8 fluid-section-hero">
+        <div class="max-w-7xl mx-auto w-full grid lg:grid-cols-12 gap-12 lg:gap-8 items-center">
 
-        <div class="relative z-10 max-w-6xl mx-auto grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-          <!-- Left: Text -->
-          <div class="space-y-6 reveal">
+          <!-- Left Content (Column 1-7) -->
+          <div class="lg:col-span-7 space-y-6 reveal">
             <div class="space-y-3">
-              <h1
-                class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-slate-900 via-indigo-800 to-slate-900">
-                Rohan Nimje
+              <div class="section-tag">[00] ROHAN NIMJE</div>
+              <h1 class="hero-headline">
+                I BUILD DIGITAL SYSTEMS THAT CREATE IMPACT.
               </h1>
-              <p
-                class="text-xs sm:text-sm md:text-base text-slate-600 font-mono tracking-wide uppercase leading-relaxed">
-                Vision into Reality — LOGIC :: CODE :: AUTOMATION :: IMPACT
-              </p>
             </div>
-            <p class="text-sm sm:text-base text-slate-600 leading-relaxed max-w-lg">
-              Hey! I'm an AI Systems Architect &amp; Full-Stack Engineer who loves turning complex tech ideas into fast,
-              real-world solutions. Pursuing BCA in AI &amp; ML (8.38 CGPA) with a 365-day unbroken coding streak and
-              Global Rank 27 in DSA.
+
+            <p class="text-base sm:text-lg text-muted-foreground leading-relaxed max-w-xl font-sans">
+              AI Systems Architect &amp; Full-Stack Engineer building high-performance products, low-latency AI
+              pipelines, and autonomous cloud workflows.
             </p>
+
             <div class="flex flex-wrap gap-2 pt-1">
               <span
-                class="px-3 py-1 text-xs font-semibold rounded-full border bg-slate-800 text-white border-slate-800">Next.js</span>
+                class="px-3 py-1 text-xs font-semibold rounded-full border bg-card text-foreground border-border">Next.js</span>
               <span
-                class="px-3 py-1 text-xs font-semibold rounded-full border bg-emerald-50 text-emerald-700 border-emerald-300">Supabase</span>
+                class="px-3 py-1 text-xs font-semibold rounded-full border bg-card text-foreground border-border">Python
+                &amp; Computer Vision</span>
               <span
-                class="px-3 py-1 text-xs font-semibold rounded-full border bg-emerald-50 text-emerald-700 border-emerald-200">MongoDB</span>
+                class="px-3 py-1 text-xs font-semibold rounded-full border bg-card text-foreground border-border">Supabase</span>
               <span
-                class="px-3 py-1 text-xs font-semibold rounded-full border bg-orange-50 text-orange-700 border-orange-200">n8n</span>
+                class="px-3 py-1 text-xs font-semibold rounded-full border bg-card text-foreground border-border">MongoDB</span>
               <span
-                class="px-3 py-1 text-xs font-semibold rounded-full border bg-blue-50 text-blue-700 border-blue-200">TypeScript</span>
+                class="px-3 py-1 text-xs font-semibold rounded-full border bg-card text-foreground border-border">n8n
+                Automation</span>
               <span
-                class="px-3 py-1 text-xs font-semibold rounded-full border bg-slate-100 text-slate-800 border-slate-300">Vercel</span>
+                class="px-3 py-1 text-xs font-semibold rounded-full border bg-card text-foreground border-border">TypeScript</span>
             </div>
-            <div class="pt-2">
+
+            <div class="flex flex-wrap items-center gap-4 pt-3">
               <button type="button" id="hero-cta" data-scroll="contact"
-                class="magnetic-button inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-semibold text-white bg-gradient-to-r from-indigo-600 to-violet-600 border border-indigo-700/20 shadow-md shadow-indigo-200/50 hover:shadow-lg hover:shadow-indigo-300/60 hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 overflow-hidden group cursor-pointer">
+                class="magnetic-button inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl font-semibold text-white bg-indigo-600 hover:bg-indigo-700 shadow-md shadow-indigo-600/20 hover:shadow-lg hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 cursor-pointer">
                 <span class="relative flex items-center gap-2">
                   Get In Touch
-                  <svg class="w-4 h-4 group-hover:translate-x-0.5 transition-transform duration-200" fill="none"
-                    stroke="currentColor" viewBox="0 0 24 24">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                       d="M13 7l5 5m0 0l-5 5m5-5H6" />
                   </svg>
                 </span>
               </button>
+
+              <button type="button" data-scroll="projects"
+                class="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl font-semibold text-foreground bg-card border border-border hover:border-accent hover:text-accent transition-all duration-200 cursor-pointer">
+                View Systems &amp; Work
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+                </svg>
+              </button>
             </div>
+
+            <!-- Proof / Stats Column Row (Solt Editorial Inspired) -->
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-6 border-t border-border mt-8">
+              <div class="stat-box">
+                <p class="font-display font-bold text-2xl text-foreground">365</p>
+                <p class="text-xs text-muted-foreground font-mono mt-0.5">Days Streak</p>
+              </div>
+              <div class="stat-box">
+                <p class="font-display font-bold text-2xl text-accent">Rank 27</p>
+                <p class="text-xs text-muted-foreground font-mono mt-0.5">DSA Global</p>
+              </div>
+              <div class="stat-box">
+                <p class="font-display font-bold text-2xl text-foreground">&lt; 2s</p>
+                <p class="text-xs text-muted-foreground font-mono mt-0.5">CV Latency</p>
+              </div>
+              <div class="stat-box">
+                <p class="font-display font-bold text-2xl text-foreground">35%</p>
+                <p class="text-xs text-muted-foreground font-mono mt-0.5">Sync Optimized</p>
+              </div>
+            </div>
+
           </div>
 
-          <!-- Right: Profile Image -->
-          <div class="relative h-72 sm:h-96 flex items-center justify-center lg:justify-end reveal">
-            <div class="absolute w-64 sm:w-80 md:w-96 aspect-square rounded-full pointer-events-none"
-              style="background: radial-gradient(circle, rgba(67,56,202,0.2) 0%, rgba(139,92,246,0.1) 45%, transparent 70%);">
-            </div>
-            <div class="relative rounded-full p-1.5 bg-white ring-1 ring-slate-200/80 shadow-lg shadow-slate-300/60">
+          <!-- Right Content: Profile Image Editorial Frame (Column 8-12) -->
+          <div class="lg:col-span-5 flex items-center justify-center lg:justify-end reveal">
+            <div class="editorial-frame w-full max-w-md aspect-[4/5] relative">
+              <img src="https://res.cloudinary.com/doyiqcna9/image/upload/v1783672140/rohan_qfsija.jpg"
+                alt="Rohan Nimje — AI Architect & Full-Stack Engineer" class="w-full h-full object-cover"
+                loading="eager" fetchpriority="high" decoding="async" />
               <div
-                class="rounded-full overflow-hidden aspect-square w-52 sm:w-64 md:w-72 shadow-[0_20px_50px_-12px_rgba(67,56,202,0.25)]">
-                <img src="https://res.cloudinary.com/doyiqcna9/image/upload/v1783672197/rohan_nimje_profile_zkmb5q.jpg"
-                  alt="Rohan Nimje — AI Architect & Full-Stack Engineer" class="w-full h-full object-cover"
-                  loading="eager" fetchpriority="high" decoding="async" />
+                class="absolute bottom-0 inset-x-0 p-5 bg-gradient-to-t from-black/80 via-black/40 to-transparent text-white">
+                <p class="font-display font-bold text-lg">Rohan Nimje</p>
+                <p class="text-xs font-mono text-white/80">BCA AI &amp; ML — 8.38 CGPA</p>
               </div>
             </div>
           </div>
+
         </div>
       </div>
     </section>
+
+    <div class="editorial-divider max-w-7xl mx-auto px-4"></div>
 
     <!-- ═══════════════════════════════════════════════════
            PROJECTS SECTION
       ════════════════════════════════════════════════════ -->
     <section id="projects" class="scroll-mt-20">
-      <div class="fluid-section px-4 sm:px-6 lg:px-8 bg-[#F7F9FC] relative">
-        <div class="max-w-7xl mx-auto space-y-8">
+      <div class="fluid-section px-4 sm:px-6 lg:px-8 relative">
+        <div class="max-w-7xl mx-auto space-y-10">
 
           <!-- Header -->
-          <div class="text-center reveal fluid-heading-mb">
-            <h2
-              class="text-4xl sm:text-5xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-slate-900 via-indigo-800 to-slate-900">
-              Featured Projects
+          <div class="space-y-3 reveal">
+            <div class="section-tag">[01] FEATURED PROJECTS</div>
+            <h2 class="section-title">
+              Engineered Products &amp; System Case Studies
             </h2>
-            <p class="text-slate-600 max-w-2xl mx-auto">
-              Premium architectures showcasing AI automation, full-stack development, and MVP deployment.
+            <p class="text-muted-foreground max-w-2xl text-base">
+              High-impact architectures showcasing AI automation, computer vision, full-stack systems, and live
+              production MVPs.
             </p>
           </div>
 
-          <!-- Featured Project Dynamic Hero Container -->
+          <!-- Featured Project Dynamic Hero Container (ScanZy & MVP Demo) -->
           <div id="featured-project-container"></div>
 
           <!-- Other Projects Grid (collapsible) -->
           <div class="projects-grid-wrap">
-            <div id="projects-grid-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+            <div id="projects-grid-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pt-4"></div>
           </div><!-- /projects-grid-wrap -->
 
         </div>
@@ -148,310 +179,290 @@
       </div>
     </section>
 
+    <div class="editorial-divider max-w-7xl mx-auto px-4"></div>
+
     <!-- ═══════════════════════════════════════════════════
            EXPERIENCE SECTION
       ════════════════════════════════════════════════════ -->
     <section id="experience" class="scroll-mt-20">
-      <div class="fluid-section px-4 sm:px-6 lg:px-8 bg-white relative">
-        <div class="max-w-4xl mx-auto">
-          <div class="text-center reveal fluid-heading-mb">
-            <h2
-              class="text-4xl sm:text-5xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-slate-900 via-indigo-800 to-slate-900">
-              Experience
+      <div class="fluid-section px-4 sm:px-6 lg:px-8 relative">
+        <div class="max-w-5xl mx-auto space-y-10">
+          <div class="space-y-3 reveal">
+            <div class="section-tag">[02] EXPERIENCE</div>
+            <h2 class="section-title">
+              Professional Journey &amp; Roles
             </h2>
-            <p class="text-slate-600">Professional journey and key roles.</p>
+            <p class="text-muted-foreground">Practical execution in full-stack architecture and AI systems.</p>
           </div>
+
           <div class="space-y-8">
             <div class="relative reveal">
-              <div class="flex gap-6 sm:gap-8">
-                <div class="hidden sm:flex relative flex-col items-center flex-shrink-0">
-                  <div
-                    class="w-16 h-16 rounded-full border border-indigo-200 bg-white flex items-center justify-center shadow-sm">
-                    <svg class="w-8 h-8 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M13 10V3L4 14h7v7l9-11h-7z" />
-                    </svg>
+              <div class="p-8 surface-card surface-card-hover space-y-4">
+                <div
+                  class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 pb-4 border-b border-border">
+                  <div>
+                    <h3 class="text-2xl font-bold font-display text-foreground">Full-Stack Developer Trainee</h3>
+                    <p class="text-accent font-semibold text-sm">NxtWave — CCBP 4.0 Academy</p>
+                  </div>
+                  <div class="text-left sm:text-right">
+                    <span
+                      class="inline-block px-3 py-1 text-xs font-mono rounded-full bg-muted text-muted-foreground font-semibold">Sep
+                      2024 – Present</span>
+                    <p class="text-xs text-muted-foreground mt-1">Maharashtra, India — Remote</p>
                   </div>
                 </div>
-                <div class="flex-1 hover:translate-x-1 transition-transform duration-300">
-                  <div class="p-6 surface-card surface-card-hover">
-                    <div class="flex sm:hidden gap-3 mb-3">
-                      <div
-                        class="w-12 h-12 rounded-full border border-indigo-200 bg-indigo-50 flex items-center justify-center flex-shrink-0">
-                        <svg class="w-6 h-6 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M13 10V3L4 14h7v7l9-11h-7z" />
-                        </svg>
-                      </div>
-                      <div>
-                        <h3 class="text-lg font-bold text-foreground">Full-Stack Developer Trainee</h3>
-                        <p class="text-indigo-600 font-semibold text-sm">NxtWave</p>
-                      </div>
-                    </div>
-                    <div class="hidden sm:flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-3">
-                      <div>
-                        <h3 class="text-xl font-bold text-foreground">Full-Stack Developer Trainee</h3>
-                        <p class="text-indigo-600 font-semibold">NxtWave</p>
-                      </div>
-                      <span class="text-sm text-muted-foreground whitespace-nowrap font-mono">Sep 2024 – Present</span>
-                    </div>
-                    <p class="sm:hidden text-xs text-muted-foreground font-mono mb-2">Sep 2024 – Present</p>
-                    <p class="text-sm text-muted-foreground mb-2">Maharashtra, India — Remote</p>
-                    <p class="text-foreground leading-relaxed">
-                      Undergoing intensive software engineering training through NxtWave's CCBP 4.0 program. Focusing on
-                      full-stack architecture, AI agents, automation, and modern developer workflows.
-                    </p>
-                  </div>
+                <p class="text-foreground leading-relaxed text-base pt-2">
+                  Undergoing intensive software engineering training focusing on full-stack architecture, AI agents,
+                  automated workflow design, low-latency API integration, and modern developer workflows.
+                </p>
+                <div class="flex flex-wrap gap-2 pt-2">
+                  <span
+                    class="px-3 py-1 text-xs font-semibold rounded-full border bg-muted text-foreground border-border">Full-Stack
+                    Architecture</span>
+                  <span
+                    class="px-3 py-1 text-xs font-semibold rounded-full border bg-muted text-foreground border-border">AI
+                    Agent Tooling</span>
+                  <span
+                    class="px-3 py-1 text-xs font-semibold rounded-full border bg-muted text-foreground border-border">Database
+                    Optimization</span>
+                  <span
+                    class="px-3 py-1 text-xs font-semibold rounded-full border bg-muted text-foreground border-border">System
+                    Automation</span>
                 </div>
               </div>
             </div>
           </div>
+
         </div>
       </div>
     </section>
+
+    <div class="editorial-divider max-w-7xl mx-auto px-4"></div>
 
     <!-- ═══════════════════════════════════════════════════
            HONORS & ACHIEVEMENTS SECTION (JS carousel)
       ════════════════════════════════════════════════════ -->
     <section id="honors" class="scroll-mt-20">
-      <div class="fluid-section px-4 sm:px-6 lg:px-8 bg-white relative">
-        <div class="absolute inset-0 overflow-hidden pointer-events-none">
-          <div class="absolute top-20 right-10 w-64 h-64 bg-indigo-100/40 rounded-full blur-3xl"></div>
-        </div>
-        <div class="max-w-6xl mx-auto relative z-10">
-          <div class="text-center reveal fluid-heading-mb">
-            <h2
-              class="text-4xl sm:text-5xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-slate-900 via-indigo-800 to-slate-900">
-              Honors &amp; Achievements
+      <div class="fluid-section px-4 sm:px-6 lg:px-8 relative">
+        <div class="max-w-7xl mx-auto space-y-10">
+          <div class="space-y-3 reveal">
+            <div class="section-tag">[03] HONORS &amp; RECOGNITION</div>
+            <h2 class="section-title">
+              National Hackathons &amp; Competition Rank
             </h2>
-            <p class="text-slate-600">Recognitions from national-level competitions.</p>
+            <p class="text-muted-foreground">Top-tier awards and algorithmic competition recognitions. Click cards to
+              flip.</p>
           </div>
+
           <div id="honors-carousel-container"></div>
         </div>
       </div>
     </section>
 
+    <div class="editorial-divider max-w-7xl mx-auto px-4"></div>
+
     <!-- ═══════════════════════════════════════════════════
            CERTIFICATIONS SECTION (JS coverflow carousel)
       ════════════════════════════════════════════════════ -->
     <section id="certifications" class="scroll-mt-20">
-      <div class="fluid-section px-4 sm:px-6 lg:px-8 bg-[#F7F9FC] relative">
-        <div class="max-w-7xl mx-auto">
-          <div class="text-center reveal fluid-heading-mb">
-            <h2
-              class="text-3xl sm:text-4xl md:text-5xl font-bold mb-3 bg-clip-text text-transparent bg-gradient-to-r from-slate-900 via-indigo-800 to-slate-900">
-              Certifications
+      <div class="fluid-section px-4 sm:px-6 lg:px-8 relative">
+        <div class="max-w-7xl mx-auto space-y-10">
+          <div class="space-y-3 reveal">
+            <div class="section-tag">[04] CERTIFICATIONS</div>
+            <h2 class="section-title">
+              Verified Technical Credentials
             </h2>
-            <p class="text-sm sm:text-base text-slate-600">Apple-style Cover Flow carousel showcasing professional
-              credentials.</p>
+            <p class="text-muted-foreground">Interactive 3D Cover Flow carousel showcasing verified skill
+              certifications.</p>
           </div>
+
           <div id="certifications-carousel-container"></div>
         </div>
       </div>
     </section>
 
+    <div class="editorial-divider max-w-7xl mx-auto px-4"></div>
+
     <!-- ═══════════════════════════════════════════════════
            EDUCATION & STREAK SECTION
       ════════════════════════════════════════════════════ -->
     <section id="education" class="scroll-mt-20">
-      <div class="fluid-section px-4 sm:px-6 lg:px-8 bg-[#F7F9FC] relative">
-        <div class="max-w-6xl mx-auto">
+      <div class="fluid-section px-4 sm:px-6 lg:px-8 relative">
+        <div class="max-w-7xl mx-auto space-y-12">
 
-          <!-- Streak Counter -->
-          <div class="fluid-heading-mb reveal">
-            <div class="grid md:grid-cols-2 gap-12 items-center">
-              <div class="flex flex-col items-center justify-center">
-                <div class="relative w-64 h-64 flex items-center justify-center">
-                  <svg class="absolute inset-0 w-full h-full -rotate-90" viewBox="0 0 256 256">
-                    <circle cx="128" cy="128" r="120" fill="none" stroke="url(#grad)" stroke-width="2" opacity="0.35">
-                    </circle>
-                    <defs>
-                      <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" stop-color="#4338ca"></stop>
-                        <stop offset="100%" stop-color="#0ea5e9"></stop>
-                      </linearGradient>
-                    </defs>
-                  </svg>
-                  <div class="relative z-10 text-center space-y-3">
-                    <div id="streak-count" data-target="365"
-                      class="streak-pulse text-6xl sm:text-7xl font-bold bg-gradient-to-r from-indigo-600 to-sky-500 bg-clip-text text-transparent">
-                      0</div>
-                    <p class="text-lg font-semibold text-foreground">Day Streak</p>
-                  </div>
+          <!-- Section Tag -->
+          <div class="space-y-3 reveal">
+            <div class="section-tag">[05] EDUCATION &amp; CONSISTENCY</div>
+            <h2 class="section-title">
+              Academic Foundation &amp; Daily Streak
+            </h2>
+          </div>
+
+          <!-- Streak Counter & Education Grid -->
+          <div class="grid lg:grid-cols-12 gap-8 items-stretch reveal">
+
+            <!-- Streak Counter Box (Column 1-5) -->
+            <div class="lg:col-span-5 surface-card p-8 flex flex-col items-center justify-center text-center space-y-6">
+              <div class="relative w-56 h-56 flex items-center justify-center">
+                <svg class="absolute inset-0 w-full h-full -rotate-90" viewBox="0 0 256 256">
+                  <circle cx="128" cy="128" r="118" fill="none" stroke="var(--border)" stroke-width="4"></circle>
+                  <circle cx="128" cy="128" r="118" fill="none" stroke="var(--accent)" stroke-width="4"
+                    stroke-dasharray="741" stroke-dashoffset="100" class="transition-all duration-1000"></circle>
+                </svg>
+                <div class="relative z-10 text-center space-y-2">
+                  <div id="streak-count" data-target="365"
+                    class="streak-pulse font-display text-6xl sm:text-7xl font-extrabold text-accent">
+                    0</div>
+                  <p class="text-sm font-semibold font-mono text-muted-foreground uppercase tracking-wider">Day Streak
+                  </p>
                 </div>
               </div>
-              <div class="space-y-6">
-                <div>
-                  <h2 class="text-3xl sm:text-4xl font-bold text-foreground mb-3">365 Day NxtWave-Academy Streak</h2>
-                  <p class="text-lg text-muted-foreground leading-relaxed">Unbroken daily execution on NxtWave. Pure
-                    dedication to daily logical execution and coding consistency.</p>
+              <div>
+                <h3 class="text-xl font-bold font-display text-foreground mb-1">365 Day NxtWave Streak</h3>
+                <p class="text-sm text-muted-foreground leading-relaxed">
+                  Unbroken daily execution on NxtWave Academy. 100% commitment to problem solving and engineering daily.
+                </p>
+              </div>
+            </div>
+
+            <!-- Degree Card (Column 6-12) -->
+            <div class="lg:col-span-7 surface-card p-8 flex flex-col justify-between space-y-6">
+              <div class="space-y-4">
+                <div
+                  class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 pb-4 border-b border-border">
+                  <div>
+                    <h3 class="text-2xl font-bold font-display text-foreground">Bachelor of Computer Application (BCA)
+                    </h3>
+                    <p class="text-accent font-semibold text-base mt-1">Shri Shivaji Science College (SGBAU)</p>
+                    <p class="text-sm text-muted-foreground mt-0.5">Specialization: Artificial Intelligence &amp;
+                      Machine Learning</p>
+                  </div>
+                  <div class="sm:text-right">
+                    <p class="font-mono text-emerald-600 font-bold text-xl">8.38 CGPA</p>
+                    <p class="text-xs font-mono text-muted-foreground">Sep 2024 – Sep 2027</p>
+                  </div>
                 </div>
-                <div class="p-6 surface-card space-y-3">
-                  <div class="flex items-start gap-3">
-                    <div class="w-1.5 h-1.5 rounded-full bg-indigo-500 mt-2"></div>
-                    <p class="text-foreground">Consistency is the foundation of mastery</p>
-                  </div>
-                  <div class="flex items-start gap-3">
-                    <div class="w-1.5 h-1.5 rounded-full bg-sky-500 mt-2"></div>
-                    <p class="text-foreground">Every day builds towards excellence</p>
-                  </div>
-                  <div class="flex items-start gap-3">
-                    <div class="w-1.5 h-1.5 rounded-full bg-emerald-500 mt-2"></div>
-                    <p class="text-foreground">One year of dedicated execution</p>
-                  </div>
+                <p class="text-foreground leading-relaxed text-base">
+                  Mastering computer science fundamentals, Data Structures &amp; Algorithms, Linear Algebra, and Machine
+                  Learning principles while building live production systems and competing in national hackathons.
+                </p>
+              </div>
+
+              <div class="flex flex-wrap gap-2.5 pt-2">
+                <span
+                  class="px-3.5 py-1.5 text-xs font-semibold rounded-full border bg-muted text-foreground border-border">Data
+                  Structures &amp; Algorithms</span>
+                <span
+                  class="px-3.5 py-1.5 text-xs font-semibold rounded-full border bg-muted text-foreground border-border">AI
+                  &amp; Machine Learning</span>
+                <span
+                  class="px-3.5 py-1.5 text-xs font-semibold rounded-full border bg-muted text-foreground border-border">Database
+                  Systems</span>
+                <span
+                  class="px-3.5 py-1.5 text-xs font-semibold rounded-full border bg-muted text-foreground border-border">Software
+                  Engineering</span>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <div class="editorial-divider max-w-7xl mx-auto px-4"></div>
+
+    <!-- ═══════════════════════════════════════════════════
+           CONTACT SECTION & EDITORIAL FOOTER
+      ════════════════════════════════════════════════════ -->
+    <section id="contact" class="scroll-mt-20">
+      <div class="fluid-section px-4 sm:px-6 lg:px-8 relative">
+        <div class="max-w-7xl mx-auto space-y-16">
+
+          <!-- High-Impact CTA Box -->
+          <div class="surface-card p-8 sm:p-14 text-center space-y-6 relative overflow-hidden reveal">
+            <div class="section-tag justify-center">[06] LET'S BUILD TOGETHER</div>
+            <h2 class="hero-headline max-w-3xl mx-auto">
+              Have an ambitious digital system to engineer?
+            </h2>
+            <p class="text-muted-foreground max-w-xl mx-auto text-base sm:text-lg">
+              Whether you need AI pipelines, full-stack applications, or automated workflows — let's build something
+              exceptional.
+            </p>
+            <div class="pt-4 flex flex-wrap justify-center gap-4">
+              <a href="mailto:rohannimje53@gmail.com" id="contact-email-cta"
+                class="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl font-semibold text-white bg-indigo-600 hover:bg-indigo-700 shadow-md shadow-indigo-600/20 hover:scale-[1.02] active:scale-[0.98] transition-all duration-200">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M3 8l7.89 5.26a2 2 0 0 0 2.22 0L21 8M5 19h14a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2z" />
+                </svg>
+                Send Direct Message
+              </a>
+              <a href="https://www.linkedin.com/in/rohannimje/" target="_blank" rel="noopener noreferrer"
+                class="inline-flex items-center justify-center gap-2 px-7 py-4 rounded-xl font-semibold text-foreground bg-card border border-border hover:border-accent hover:text-accent transition-all duration-200">
+                LinkedIn Profile
+              </a>
+            </div>
+          </div>
+
+          <!-- Editorial 3-Column Footer -->
+          <div class="grid md:grid-cols-12 gap-10 pt-6 border-t border-border text-sm reveal">
+            <!-- Col 1: Bio -->
+            <div class="md:col-span-5 space-y-4">
+              <p class="font-display font-bold text-xl text-foreground">Rohan Nimje</p>
+              <p class="text-muted-foreground leading-relaxed max-w-sm">
+                AI Systems Architect &amp; Full-Stack Engineer. Dedicated to low-latency performance, clean
+                architecture, and real-world impact.
+              </p>
+              <p class="text-xs font-mono text-muted-foreground">LOGIC :: CODE :: AUTOMATION :: IMPACT</p>
+            </div>
+
+            <!-- Col 2: Navigation -->
+            <div class="md:col-span-3 space-y-3">
+              <p class="font-mono text-xs uppercase font-bold text-foreground tracking-wider">Navigation</p>
+              <nav class="flex flex-col space-y-2 text-muted-foreground">
+                <a href="#projects" class="hover:text-accent transition-colors">Featured Projects</a>
+                <a href="#experience" class="hover:text-accent transition-colors">Experience</a>
+                <a href="#honors" class="hover:text-accent transition-colors">Honors &amp; Recognition</a>
+                <a href="#certifications" class="hover:text-accent transition-colors">Certifications</a>
+                <a href="#education" class="hover:text-accent transition-colors">Education &amp; Streak</a>
+              </nav>
+            </div>
+
+            <!-- Col 3: Direct Connect -->
+            <div class="md:col-span-4 space-y-4">
+              <p class="font-mono text-xs uppercase font-bold text-foreground tracking-wider">Connect Directly</p>
+              <div class="space-y-3">
+                <a href="mailto:rohannimje53@gmail.com"
+                  class="block text-foreground font-semibold hover:text-accent transition-colors truncate">
+                  rohannimje53@gmail.com
+                </a>
+                <div class="flex items-center gap-3 pt-1">
+                  <a href="https://www.linkedin.com/in/rohannimje/" target="_blank" rel="noopener noreferrer"
+                    class="p-2.5 rounded-lg border border-border bg-card hover:border-accent text-foreground hover:text-accent transition-all">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                      <path
+                        d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.225 0z" />
+                    </svg>
+                  </a>
+                  <a href="https://github.com/RohanNimje" target="_blank" rel="noopener noreferrer"
+                    class="p-2.5 rounded-lg border border-border bg-card hover:border-accent text-foreground hover:text-accent transition-all">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                      <path
+                        d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
+                    </svg>
+                  </a>
                 </div>
               </div>
             </div>
           </div>
 
           <div
-            class="h-px bg-gradient-to-r from-transparent via-border to-transparent fluid-divider-my origin-left reveal">
+            class="flex flex-col sm:flex-row items-center justify-between gap-4 pt-8 border-t border-border text-xs text-muted-foreground reveal">
+            <p>&copy; 2026 Rohan Nimje. Designed with precision &amp; high performance.</p>
+            <p class="font-mono">Built for Impact</p>
           </div>
 
-          <!-- Education -->
-          <div class="reveal">
-            <h2
-              class="text-4xl sm:text-5xl font-bold mb-8 text-center bg-clip-text text-transparent bg-gradient-to-r from-slate-900 via-indigo-800 to-slate-900">
-              Education &amp; Foundation
-            </h2>
-            <div class="grid md:grid-cols-1 gap-8">
-              <div class="p-8 surface-card surface-card-hover group">
-                <div class="space-y-6">
-                  <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
-                    <div>
-                      <h3 class="text-2xl font-bold text-foreground mb-1">Bachelor of Computer Application (BCA)</h3>
-                      <p class="text-lg text-indigo-600 font-semibold">Shri Shivaji Science College (SGBAU)</p>
-                      <p class="text-sm text-muted-foreground mt-1">Artificial Intelligence &amp; Machine Learning</p>
-                    </div>
-                    <div class="text-right">
-                      <p class="font-mono text-emerald-600 font-bold text-lg">8.38 CGPA</p>
-                      <p class="text-sm text-muted-foreground">Sep 2024 – Sep 2027</p>
-                    </div>
-                  </div>
-                  <p class="text-foreground leading-relaxed">
-                    Mastering core computer science fundamentals, Data Structures, and AI/ML principles while actively
-                    applying them in national-level hackathons and full-stack development.
-                  </p>
-                  <div class="flex flex-wrap gap-3">
-                    <span
-                      class="px-3 py-1 text-xs font-semibold rounded-full border bg-blue-50 text-blue-700 border-blue-200">Core
-                      CS Fundamentals</span>
-                    <span
-                      class="px-3 py-1 text-xs font-semibold rounded-full border bg-emerald-50 text-emerald-700 border-emerald-200">Data
-                      Structures &amp; Algorithms</span>
-                    <span
-                      class="px-3 py-1 text-xs font-semibold rounded-full border bg-purple-50 text-purple-700 border-purple-200">AI/ML
-                      Principles</span>
-                    <span
-                      class="px-3 py-1 text-xs font-semibold rounded-full border bg-violet-50 text-violet-700 border-violet-200">Full-Stack
-                      Development</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-        </div>
-      </div>
-    </section>
-
-    <!-- ═══════════════════════════════════════════════════
-           CONTACT SECTION
-      ════════════════════════════════════════════════════ -->
-    <section id="contact" class="scroll-mt-20">
-      <div class="fluid-section px-4 sm:px-6 lg:px-8 bg-white relative border-t border-slate-200/60">
-        <div class="max-w-5xl mx-auto">
-          <div class="text-center reveal fluid-heading-mb">
-            <h2
-              class="text-4xl sm:text-5xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-slate-900 via-indigo-800 to-slate-900">
-              Let's Build Together
-            </h2>
-            <p class="text-lg text-slate-600">Ready to turn ideas into reality? Let's connect and create something
-              extraordinary.</p>
-          </div>
-
-          <div class="grid md:grid-cols-3 gap-12 items-start">
-            <!-- About -->
-            <div class="space-y-6 reveal">
-              <div>
-                <h3 class="text-xl font-bold text-foreground mb-2">Rohan Nimje</h3>
-                <p class="text-sm text-muted-foreground">Vision into Reality — LOGIC :: CODE :: AUTOMATION :: IMPACT</p>
-              </div>
-              <p class="text-sm leading-relaxed text-foreground">
-                AI Systems Architect &amp; Full-Stack Engineer. Building fast, real-world solutions with clean code,
-                rapid execution, and genuine impact.
-              </p>
-            </div>
-
-            <!-- Quick Links -->
-            <div class="space-y-6 reveal">
-              <h3 class="text-lg font-bold text-foreground">Quick Links</h3>
-              <nav class="space-y-3">
-                <a href="#projects"
-                  class="flex items-center gap-2 text-muted-foreground hover:text-indigo-600 transition-colors text-sm">
-                  <div class="w-1 h-1 rounded-full bg-indigo-400"></div>Projects
-                </a>
-                <a href="#experience"
-                  class="flex items-center gap-2 text-muted-foreground hover:text-indigo-600 transition-colors text-sm">
-                  <div class="w-1 h-1 rounded-full bg-indigo-400"></div>Experience
-                </a>
-                <a href="#honors"
-                  class="flex items-center gap-2 text-muted-foreground hover:text-indigo-600 transition-colors text-sm">
-                  <div class="w-1 h-1 rounded-full bg-indigo-400"></div>Honors
-                </a>
-                <a href="#certifications"
-                  class="flex items-center gap-2 text-muted-foreground hover:text-indigo-600 transition-colors text-sm">
-                  <div class="w-1 h-1 rounded-full bg-indigo-400"></div>Certifications
-                </a>
-              </nav>
-            </div>
-
-            <!-- Connect -->
-            <div class="space-y-6 reveal">
-              <h3 class="text-lg font-bold text-foreground">Connect</h3>
-              <a href="mailto:rohannimje53@gmail.com" id="contact-email-link"
-                class="flex items-start gap-3 p-4 surface-card surface-card-hover group">
-                <div
-                  class="w-10 h-10 rounded-full bg-indigo-50 flex items-center justify-center flex-shrink-0 group-hover:bg-indigo-100 transition-colors">
-                  <svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="M3 8l7.89 5.26a2 2 0 0 0 2.22 0L21 8M5 19h14a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2z" />
-                  </svg>
-                </div>
-                <div class="min-w-0">
-                  <p class="text-xs text-muted-foreground">Email</p>
-                  <p class="text-sm font-semibold text-foreground truncate">rohannimje53@gmail.com</p>
-                </div>
-              </a>
-              <div class="flex gap-3">
-                <a href="https://www.linkedin.com/in/rohannimje/" target="_blank" rel="noopener noreferrer"
-                  id="contact-linkedin-link"
-                  class="w-12 h-12 rounded-xl border border-border bg-white hover:bg-slate-50 hover:border-blue-200 flex items-center justify-center transition-all shadow-sm">
-                  <svg class="w-6 h-6 text-slate-600 hover:text-blue-600 transition-colors" fill="currentColor"
-                    viewBox="0 0 24 24">
-                    <path
-                      d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.225 0z" />
-                  </svg>
-                </a>
-                <a href="https://github.com/RohanNimje" target="_blank" rel="noopener noreferrer"
-                  id="contact-github-link"
-                  class="w-12 h-12 rounded-xl border border-border bg-white hover:bg-slate-50 hover:border-slate-300 flex items-center justify-center transition-all shadow-sm">
-                  <svg class="w-6 h-6 text-slate-600 hover:text-slate-900 transition-colors" fill="currentColor"
-                    viewBox="0 0 24 24">
-                    <path
-                      d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
-                  </svg>
-                </a>
-              </div>
-            </div>
-          </div>
-
-          <div class="h-px bg-gradient-to-r from-transparent via-border to-transparent mt-16 mb-8 origin-left reveal">
-          </div>
-          <div class="text-center space-y-2 reveal">
-            <p class="text-sm text-muted-foreground">Crafted with precision. Built to perform.</p>
-            <p class="text-xs text-muted-foreground/60">&copy; 2026 Rohan Nimje. All rights reserved.</p>
-          </div>
         </div>
       </div>
     </section>

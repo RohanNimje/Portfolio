@@ -14,12 +14,40 @@
  * All page content is static HTML in index.html.
  */
 
+/* ── Theme Management ──────────────────────────────────── */
+var currentTheme = (function() {
+  if (typeof localStorage !== "undefined" && localStorage.getItem("portfolio-theme")) {
+    return localStorage.getItem("portfolio-theme");
+  }
+  return "light";
+})();
+
+function applyTheme(theme) {
+  currentTheme = theme;
+  if (typeof localStorage !== "undefined") {
+    localStorage.setItem("portfolio-theme", theme);
+  }
+  if (theme === "dark") {
+    document.documentElement.classList.add("dark");
+    document.documentElement.classList.remove("light");
+  } else {
+    document.documentElement.classList.add("light");
+    document.documentElement.classList.remove("dark");
+  }
+}
+
+function toggleTheme() {
+  var newTheme = currentTheme === "dark" ? "light" : "dark";
+  applyTheme(newTheme);
+  renderNavigation();
+}
+
 /* ── Style Tokens ──────────────────────────────────────── */
-var GRADIENT_HEADING = "bg-clip-text text-transparent bg-gradient-to-r from-slate-900 via-indigo-800 to-slate-900";
+var GRADIENT_HEADING = "font-display font-bold text-foreground";
 var ELEVATED_CARD = "surface-card";
 var ELEVATED_CARD_HOVER = "surface-card-hover";
-var PRIMARY_BUTTON = "inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-semibold text-white bg-gradient-to-r from-indigo-600 to-violet-600 border border-indigo-700/20 shadow-md shadow-indigo-200/50 hover:shadow-lg hover:shadow-indigo-300/60 hover:scale-[1.02] active:scale-[0.98] transition-all duration-200";
-var SECONDARY_BUTTON = "inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-semibold bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200/80 shadow-sm hover:shadow transition-all duration-200";
+var PRIMARY_BUTTON = "inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-semibold text-white bg-indigo-600 hover:bg-indigo-700 shadow-md shadow-indigo-600/20 hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 cursor-pointer";
+var SECONDARY_BUTTON = "inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-semibold bg-card hover:bg-muted text-foreground border border-border hover:border-accent hover:text-accent shadow-sm transition-all duration-200 cursor-pointer";
 
 /* ── State ─────────────────────────────────────────────── */
 var activeNavId = "hero";
@@ -45,44 +73,17 @@ function icon(name, className) {
     chevronLeft: '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m15 19-7-7 7-7" />',
     chevronRight: '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m9 5 7 7-7 7" />',
     close: '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18 18 6M6 6l12 12" />',
-    flip: '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4v12m6-16v12m0 0 4-4m-4 4-4-4" />'
+    flip: '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4v12m6-16v12m0 0 4-4m-4 4-4-4" />',
+    sun: '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />',
+    moon: '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />'
   };
   return '<svg class="' + className + '" fill="none" stroke="currentColor" viewBox="0 0 24 24">' + (icons[name] || "") + "</svg>";
 }
 
 /* ── Tech Pill Helpers ─────────────────────────────────── */
 function getTechPillClass(tech, index) {
-  var base = "px-3 py-1 text-xs font-semibold rounded-full border";
-  var map = {
-    "Next.js": "bg-slate-800 text-white border-slate-800",
-    TypeScript: "bg-blue-50 text-blue-700 border-blue-200",
-    JavaScript: "bg-amber-50 text-amber-700 border-amber-200",
-    MongoDB: "bg-emerald-50 text-emerald-700 border-emerald-200",
-    Supabase: "bg-emerald-50 text-emerald-700 border-emerald-300",
-    PostgreSQL: "bg-sky-50 text-sky-700 border-sky-200",
-    SQL: "bg-sky-50 text-sky-700 border-sky-200",
-    n8n: "bg-orange-50 text-orange-700 border-orange-200",
-    Vercel: "bg-slate-100 text-slate-800 border-slate-300",
-    Lovable: "bg-pink-50 text-pink-700 border-pink-200",
-    Bolt: "bg-violet-50 text-violet-700 border-violet-200",
-    "Leonardo AI": "bg-purple-50 text-purple-700 border-purple-200",
-    "Cursor IDE": "bg-indigo-50 text-indigo-700 border-indigo-200",
-    Pipedream: "bg-cyan-50 text-cyan-700 border-cyan-200",
-    "MCP Servers": "bg-teal-50 text-teal-700 border-teal-200",
-    LLMs: "bg-fuchsia-50 text-fuchsia-700 border-fuchsia-200",
-    Python: "bg-yellow-50 text-yellow-800 border-yellow-200",
-    React: "bg-sky-50 text-sky-700 border-sky-200",
-    "Tailwind CSS": "bg-teal-50 text-teal-700 border-teal-200"
-  };
-  var fallbacks = [
-    "bg-blue-50 text-blue-700 border-blue-200",
-    "bg-emerald-50 text-emerald-700 border-emerald-200",
-    "bg-purple-50 text-purple-700 border-purple-200",
-    "bg-violet-50 text-violet-700 border-violet-200",
-    "bg-cyan-50 text-cyan-700 border-cyan-200",
-    "bg-rose-50 text-rose-700 border-rose-200"
-  ];
-  return base + " " + (map[tech] || fallbacks[index % fallbacks.length]);
+  var base = "px-3 py-1 text-xs font-semibold rounded-full border bg-card text-foreground border-border";
+  return base;
 }
 
 function techPills(items, small) {
@@ -95,7 +96,7 @@ function techPills(items, small) {
 }
 
 /* ══════════════════════════════════════════════════════════
-   NAVIGATION (JS-driven for active state highlighting)
+   NAVIGATION (JS-driven for active state & theme toggle)
 ══════════════════════════════════════════════════════════ */
 function renderNavigation() {
   var navItems = [
@@ -108,32 +109,44 @@ function renderNavigation() {
 
   var desktopButtons = "";
   var mobileButtons = "";
-  var GHOST_BUTTON = "inline-flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors duration-200";
+  var GHOST_BUTTON = "inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold text-muted-foreground hover:text-foreground hover:bg-muted transition-all duration-200";
 
   for (var i = 0; i < navItems.length; i++) {
     var item = navItems[i];
     var isActive = activeNavId === item.id;
     var desktopClass = isActive
-      ? "relative px-3 py-2 text-sm font-semibold transition-all duration-300 flex items-center gap-2 rounded-lg text-indigo-700 bg-indigo-50 border border-indigo-100"
-      : "relative " + GHOST_BUTTON + " !px-3 !py-2";
+      ? "relative px-3.5 py-2 text-sm font-semibold transition-all duration-300 flex items-center gap-2 rounded-xl text-accent bg-muted border border-border"
+      : "relative " + GHOST_BUTTON + " !px-3.5 !py-2";
     var mobileClass = isActive
-      ? "relative w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300 bg-indigo-50 text-indigo-700 border border-indigo-100"
-      : "relative w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300 text-slate-500 hover:bg-slate-100 hover:text-slate-800";
+      ? "relative w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300 bg-muted text-accent border border-border"
+      : "relative w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300 text-muted-foreground hover:bg-muted hover:text-foreground";
 
     desktopButtons += '<button type="button" data-scroll="' + item.id + '" class="' + desktopClass + '">' + icon(item.icon, "w-4 h-4") + item.label + "</button>";
     mobileButtons += '<button type="button" aria-label="' + item.label + '" data-scroll="' + item.id + '" class="' + mobileClass + '">' + icon(item.icon, "w-[18px] h-[18px]") + "</button>";
   }
 
+  var themeToggleBtnDesktop =
+    '<button type="button" id="theme-toggle-btn" aria-label="Toggle light and dark theme" class="p-2.5 rounded-xl border border-border bg-card hover:bg-muted text-foreground hover:text-accent transition-all duration-200 flex items-center justify-center cursor-pointer shadow-sm ml-2">' +
+    icon(currentTheme === "dark" ? "sun" : "moon", "w-4 h-4 text-accent") +
+    '</button>';
+
+  var themeToggleBtnMobile =
+    '<button type="button" id="theme-toggle-mobile" aria-label="Toggle theme" class="w-10 h-10 rounded-full border border-border bg-card flex items-center justify-center text-accent shadow-sm ml-1">' +
+    icon(currentTheme === "dark" ? "sun" : "moon", "w-4 h-4") +
+    '</button>';
+
   document.getElementById("navigation").innerHTML =
     '<nav class="hidden md:flex fixed top-0 left-0 right-0 z-40 justify-center pt-5 px-4 w-full nav-enter-top">' +
-    '<div class="border border-slate-200/60 rounded-full px-6 py-3 bg-white shadow-lg shadow-slate-200/40 flex items-center gap-4 max-w-5xl w-full">' +
+    '<div class="border border-border rounded-full px-6 py-3 bg-card shadow-lg flex items-center gap-3 max-w-5xl w-full backdrop-blur-md">' +
     desktopButtons +
+    themeToggleBtnDesktop +
     '<button type="button" data-scroll="contact" class="ml-auto ' + PRIMARY_BUTTON + ' !px-5 !py-2 text-sm">' + icon("mail", "w-4 h-4") + "Get In Touch</button>" +
     "</div>" +
     "</nav>" +
-    '<div id="bottom-nav" class="bottom-nav md:hidden fixed bottom-0 left-0 right-0 z-40 flex justify-center px-4 pb-5 pt-3 w-full bg-white border-t border-slate-200/60 shadow-[0_-8px_32px_rgba(15,23,42,0.08)] nav-enter-bottom">' +
-    '<div class="rounded-full px-3 py-2.5 bg-white border border-border flex items-center gap-1.5 max-w-lg w-full justify-center shadow-sm">' +
+    '<div id="bottom-nav" class="bottom-nav md:hidden fixed bottom-0 left-0 right-0 z-40 flex justify-center px-4 pb-5 pt-3 w-full bg-card border-t border-border shadow-lg nav-enter-bottom">' +
+    '<div class="rounded-full px-3 py-2 bg-card border border-border flex items-center gap-1.5 max-w-lg w-full justify-center shadow-sm">' +
     mobileButtons +
+    themeToggleBtnMobile +
     "</div>" +
     "</div>";
 }
@@ -348,14 +361,16 @@ window.openProjectModal = function (idOrSlug) {
 function renderLaptopFrame(videoUrl, title) {
   return (
     '<div class="space-y-3 reveal">' +
-    '<h4 class="text-sm font-semibold text-slate-800">' + (title || "MVP Architecture") + '</h4>' +
-    '<div class="relative rounded-xl overflow-hidden border border-slate-200 bg-slate-900 shadow-md">' +
-    '<div class="bg-gray-900 px-4 py-3 border-b border-gray-800 flex items-center gap-2">' +
+    '<h4 class="text-xs font-mono font-semibold uppercase text-muted-foreground tracking-wider">' + (title || "MVP Architecture") + '</h4>' +
+    '<div class="relative rounded-2xl overflow-hidden border border-border bg-black shadow-2xl">' +
+    '<div class="bg-slate-900 px-4 py-2.5 border-b border-slate-800 flex items-center justify-between">' +
     '<div class="flex gap-2">' +
-    '<div class="w-2.5 h-2.5 rounded-full bg-red-500"></div>' +
-    '<div class="w-2.5 h-2.5 rounded-full bg-yellow-500"></div>' +
-    '<div class="w-2.5 h-2.5 rounded-full bg-green-500"></div>' +
+    '<div class="w-2.5 h-2.5 rounded-full bg-red-500/80"></div>' +
+    '<div class="w-2.5 h-2.5 rounded-full bg-yellow-500/80"></div>' +
+    '<div class="w-2.5 h-2.5 rounded-full bg-green-500/80"></div>' +
     '</div>' +
+    '<span class="text-[11px] font-mono text-slate-400">scanzy-mvp-architecture.mp4</span>' +
+    '<div></div>' +
     '</div>' +
     '<video src="' + videoUrl + '" autoplay muted loop playsinline controls preload="auto" class="autoplay-video w-full bg-black aspect-video object-cover"></video>' +
     '</div>' +
@@ -366,11 +381,11 @@ function renderLaptopFrame(videoUrl, title) {
 function renderMobileFrame(videoUrl, title) {
   return (
     '<div class="space-y-3 flex flex-col items-center reveal">' +
-    '<h4 class="text-sm font-semibold text-slate-800 self-start">' + (title || "Product Demo") + '</h4>' +
-    '<div class="relative w-full max-w-[280px] aspect-[9/16] mx-auto rounded-[2.5rem] overflow-hidden border-[6px] border-gray-900 bg-black shadow-2xl flex-1">' +
+    '<h4 class="text-xs font-mono font-semibold uppercase text-muted-foreground tracking-wider self-start">' + (title || "Product Demo") + '</h4>' +
+    '<div class="relative w-full max-w-[280px] aspect-[9/16] mx-auto rounded-[2.5rem] overflow-hidden border-[7px] border-slate-900 bg-black shadow-2xl flex-1 ring-1 ring-border">' +
     '<video src="' + videoUrl + '" autoplay muted loop playsinline controls preload="auto" class="autoplay-video w-full h-full bg-black object-cover"></video>' +
-    '<div class="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-6 bg-gray-900 rounded-b-3xl z-20 flex items-center justify-center pointer-events-none">' +
-    '<div class="w-1 h-1 bg-gray-700 rounded-full"></div>' +
+    '<div class="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-5 bg-slate-900 rounded-b-2xl z-20 flex items-center justify-center pointer-events-none">' +
+    '<div class="w-2 h-2 bg-slate-800 rounded-full"></div>' +
     '</div>' +
     '</div>' +
     '</div>'
@@ -414,8 +429,8 @@ function renderProjects() {
       // Dual layout: Laptop frame (Left) + Mobile frame (Right)
       videoMockupHtml =
         '<div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 pt-4">' +
-        renderLaptopFrame(laptopVideo, "MVP Architecture") +
-        renderMobileFrame(mobileVideo, "Product Demo") +
+        renderLaptopFrame(laptopVideo, "MVP Architecture Demo") +
+        renderMobileFrame(mobileVideo, "Product Mobile Showcase") +
         '</div>';
     } else if (laptopVideo) {
       // Single laptop frame
@@ -437,13 +452,13 @@ function renderProjects() {
       '<div class="group relative rounded-3xl overflow-hidden surface-card surface-card-hover reveal">' +
       '<div class="p-8 md:p-12 space-y-8">' +
       '<div class="space-y-4">' +
-      '<div class="inline-block px-4 py-1.5 rounded-full bg-violet-50 border border-violet-200">' +
-      '<span class="text-violet-700 text-xs font-semibold">Featured Project</span>' +
+      '<div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-muted border border-border text-accent text-xs font-semibold font-mono">' +
+      '<span class="w-2 h-2 rounded-full bg-accent"></span> Featured Product Case Study' +
       '</div>' +
-      '<h3 class="text-3xl sm:text-4xl md:text-5xl font-bold ' + GRADIENT_HEADING + '">' +
+      '<h3 class="text-3xl sm:text-4xl md:text-5xl font-bold font-display text-foreground">' +
       featuredProject.title +
       '</h3>' +
-      '<p class="text-base md:text-lg text-slate-600 max-w-3xl">' +
+      '<p class="text-base md:text-lg text-muted-foreground max-w-3xl leading-relaxed">' +
       featuredProject.description +
       '</p>' +
       '</div>' +
@@ -451,9 +466,9 @@ function renderProjects() {
       techPills(featuredProject.techStack || [], false) +
       '</div>' +
       videoMockupHtml +
-      '<div class="flex flex-col sm:flex-row items-center gap-4 pt-4">' +
+      '<div class="flex flex-col sm:flex-row items-center gap-4 pt-4 border-t border-border mt-6">' +
       '<button type="button" id="featured-project-btn" data-project-id="' + featuredProject.id + '" class="' + PRIMARY_BUTTON + '">' +
-      'View Full Project Details ' + icon("arrowRight", "w-4 h-4") +
+      'View Full System Details ' + icon("arrowRight", "w-4 h-4") +
       '</button>' +
       (secondaryProjects.length > 0
         ? '<button type="button" id="toggle-projects" class="' + SECONDARY_BUTTON + '">' +
@@ -473,17 +488,17 @@ function renderProjects() {
       var proj = secondaryProjects[j];
       gridHtml +=
         '<div class="group relative overflow-hidden text-left h-full reveal">' +
-        '<div class="relative h-64 sm:h-60 p-5 flex flex-col overflow-hidden surface-card surface-card-hover">' +
-        '<div class="relative z-10 space-y-2">' +
-        '<h3 class="text-sm md:text-base font-bold text-slate-800 line-clamp-2">' + proj.title + '</h3>' +
-        '<p class="text-slate-600 text-xs line-clamp-2">' + proj.description + '</p>' +
-        '<div class="flex flex-wrap gap-1 pt-0.5">' +
+        '<div class="relative h-64 sm:h-60 p-6 flex flex-col overflow-hidden surface-card surface-card-hover">' +
+        '<div class="relative z-10 space-y-2.5">' +
+        '<h3 class="text-base font-bold font-display text-foreground line-clamp-2">' + proj.title + '</h3>' +
+        '<p class="text-muted-foreground text-xs line-clamp-2 leading-relaxed">' + proj.description + '</p>' +
+        '<div class="flex flex-wrap gap-1 pt-1">' +
         techPills(proj.techStack || [], true) +
         '</div>' +
         '</div>' +
-        '<div class="relative z-10 mt-auto pt-3">' +
-        '<button type="button" data-project-id="' + proj.id + '" class="inline-flex items-center justify-center gap-2 px-6 py-2 rounded-xl text-xs font-semibold bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200/80 shadow-sm hover:shadow hover:border-indigo-200 hover:text-indigo-700 transition-all duration-200 w-full cursor-pointer">' +
-        'View Details ' + icon("arrowRight", "w-3 h-3") +
+        '<div class="relative z-10 mt-auto pt-4">' +
+        '<button type="button" data-project-id="' + proj.id + '" class="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-xs font-semibold bg-card hover:bg-muted text-foreground border border-border hover:border-accent hover:text-accent transition-all duration-200 w-full cursor-pointer shadow-sm">' +
+        'View System Specs ' + icon("arrowRight", "w-3 h-3") +
         '</button>' +
         '</div>' +
         '</div>' +
@@ -1147,6 +1162,11 @@ function attachEvents() {
       renderCertifications();
     }
 
+    // Theme Toggle Handler
+    if (event.target.closest("#theme-toggle-btn") || event.target.closest("#theme-toggle-mobile")) {
+      toggleTheme();
+    }
+
     // AI Assistant close button
     if (event.target.closest("#assistant-close")) {
       closeAssistant();
@@ -1412,6 +1432,7 @@ function resumeHonorsAutoplayWithDelay(delayMs) {
    INIT
 ══════════════════════════════════════════════════════════ */
 function renderPage() {
+  applyTheme(currentTheme);
   renderNavigation();
   renderProjects();
   renderHonors();
