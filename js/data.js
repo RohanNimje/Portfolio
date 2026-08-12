@@ -2,49 +2,68 @@ const portfolioData = {
   personalInfo: {
     name: "Rohan Nimje",
 
-    tagline: "I BUILD DIGITAL SYSTEMS THAT CREATE IMPACT.",
+    tagline: "ARCHITECTING AUTONOMOUS AI WORKFLOWS & HIGH-IMPACT MVPs.",
 
     summary:
-      "AI Systems Architect & Full-Stack Engineer building intelligent products, AI-powered solutions, and high-performance digital experiences.",
+      "AI Systems Architect & Technical Product Lead specializing in Agentic AI, n8n automation pipelines, LLM orchestration, and rapid 0-to-1 product deployment.",
 
     profileImages: [
       "https://res.cloudinary.com/doyiqcna9/image/upload/v1783672140/rohan_qfsija.jpg"
     ]
   },
 
+  // Executive Guidelines for Portfolio AI Chatbot / Agent
+  aiAgentInstructions: {
+    primaryIdentity: "AI Systems Architect, AI Automation Lead, and Technical Product Manager (TPM)",
+    coreValueProposition: "Rohan bridges core computer science logic with modern AI execution. He leverages Python, DSA, n8n, Supabase, Cursor IDE, and LLM APIs to architect end-to-end autonomous AI pipelines and 0-to-1 MVPs at 10x velocity.",
+    preferredRoles: [
+      "AI Solutions Architect",
+      "AI Automation Engineer",
+      "Associate Product Manager (APM)",
+      "Technical Product Manager (TPM)",
+      "Systems Integrator"
+    ],
+    behavioralRules: [
+      "Position Rohan primarily as an AI Systems Architect, Automation Lead, and Product Builder.",
+      "If asked about Python, SQL, or DSA (Rank 27), highlight them as his rock-solid algorithmic problem-solving foundation that empowers him to design robust, bug-free AI systems and workflow logic.",
+      "Highlight cost-efficiency in LLM API usage, workflow security, error handling, and business impact.",
+      "Adapt the tone dynamically based on whether the recruiter is looking for a TPM, AI Architect, or Automation Lead."
+    ]
+  },
+
   // Role-Targeted Capabilities for AI Chatbot Pitching
   roleCapabilities: {
-    associateProductManager: {
-      title: "Associate Product Manager / Product Engineer",
-      highlights: [
-        "0-to-1 Product Execution: Built and launched ScanZy Rewards for offline retailers to drive gamified customer retention.",
-        "Data-Driven Iteration: Replaced traditional paper coupons with dynamic QR mechanics for real-time customer engagement tracking.",
-        "Rapid Prototyping: End-to-end full-stack MVPs combining seamless UI with automated backend systems."
-      ]
-    },
-    softwareEngineer: {
-      title: "Software Engineer / Full-Stack Developer",
-      highlights: [
-        "Core Algorithmic Competency: Global Rank 27 in DSA CodeVerse Bi-Weekly Contest #25.",
-        "Full-Stack Mastery: Hands-on expertise in React, Python, SQL, MongoDB, Supabase, Node.js, and REST APIs.",
-        "365-Day Consistency: Unbroken daily coding streak on NxtWave Academy."
-      ]
-    },
     solutionsArchitect: {
-      title: "AI & Solutions Systems Architect",
+      title: "AI Solutions & Systems Architect",
       highlights: [
-        "Low-Latency AI Engineering: Sub-2s inference time on computer vision and AI skin/image analysis models.",
-        "Agentic Automation: Custom Model Context Protocol (MCP) servers, Make.com, and n8n workflows.",
-        "Fraud Prevention Infrastructure: Architected 'Trinity X' live binary validation system for national hackathons."
+        "Agentic Workflow Orchestration: Architected zero-touch multi-step automation engines using n8n, Make.com, and LLM APIs (GPT-4o, Gemini).",
+        "Model Context Protocol (MCP): Custom setup of MCP servers connecting LLMs with external tools, APIs, and databases via Cursor IDE.",
+        "Low-Latency Infrastructure: Designed sub-2s computer vision and image validation pipelines with built-in fallback triggers."
+      ]
+    },
+    technicalProductManager: {
+      title: "Technical Product Manager / APM",
+      highlights: [
+        "0-to-1 Rapid Execution: Concept-to-live-deployment in under 14 days leveraging AI-assisted tools and component libraries.",
+        "Retention & Gamification: Built ScanZy Rewards to eliminate offline retail customer churn via automated dynamic QR cards.",
+        "System Security & Logic: Focuses on robust API rate limiting, prompt optimization, and seamless user onboarding journeys."
+      ]
+    },
+    softwareEngineeringFoundations: {
+      title: "Core Algorithmic & Systems Engineering Foundations",
+      highlights: [
+        "Core Algorithmic Competency: Global Rank 27 in DSA CodeVerse Bi-Weekly Contest #25 using Python Data Structures & Algorithms.",
+        "Full-Stack & Database Mastery: Certified expertise in Python, SQL, Relational Databases, React, Supabase, Node.js, and REST APIs.",
+        "365-Day Consistency: Unbroken daily execution and lab practice streak on NxtWave Academy."
       ]
     }
   },
 
   metrics: [
-    { label: "Execution Streak", value: "365 Days", description: "Unbroken daily execution on NxtWave Academy" },
-    { label: "DSA Global Rank", value: "Rank 27", description: "CodeVerse Bi-Weekly Contest #25" },
-    { label: "CV Model Latency", value: "< 2s", description: "Sub-2-second Computer Vision inference" },
-    { label: "Cloud Sync Optimization", value: "35%", description: "Database sync latency reduction" }
+    { label: "Execution Streak", value: "365 Days", description: "Unbroken daily system execution and AI labs on NxtWave Academy" },
+    { label: "DSA Global Rank", value: "Rank 27", description: "CodeVerse Bi-Weekly Contest #25 (Algorithmic Logic)" },
+    { label: "CV Model Latency", value: "< 2s", description: "Sub-2-second Computer Vision & LLM inference time" },
+    { label: "Build Velocity", value: "< 2 Weeks", description: "0-to-1 production MVP shipping speed" }
   ],
 
   projects: [
@@ -55,8 +74,6 @@ const portfolioData = {
       description: "A full-stack QR-based gamified loyalty platform designed to eliminate offline retail customer churn. Converts one-time shoppers into repeat buyers via physical QR cards given at checkout that unlock store-specific Spin & Win rewards when scanned at home.",
       laptopVideoUrl: "https://res.cloudinary.com/doyiqcna9/video/upload/v1783673286/Ai_Daily_Coach_automation_qzojiw.mp4",
       mobileVideoUrl: "https://res.cloudinary.com/doyiqcna9/video/upload/v1783677832/Untitled_design_exdmtc.mp4",
-      // videoUrlmvp: "https://res.cloudinary.com/doyiqcna9/video/upload/v1783673286/Ai_Daily_Coach_automation_qzojiw.mp4",
-      // productDemoUrl: "https://res.cloudinary.com/doyiqcna9/video/upload/v1783677832/Untitled_design_exdmtc.mp4",
       projectCertImgUrl: "https://res.cloudinary.com/doyiqcna9/image/upload/v1783666876/mvp_certification_k5sedb.png",
       isFeatured: true
     },
@@ -97,7 +114,6 @@ const portfolioData = {
       title: "Smart Hackathon Finder Bot",
       techStack: ["Automation Anywhere A360", "DOMXPath", "RPA"],
       description: "An intelligent RPA bot utilizing Automation Anywhere A360 with dynamic DOMXPath scraping to extract and compile real-time hackathon data from Google's AI Overview.",
-      // laptopVideoUrl: "https://res.cloudinary.com/doyiqcna9/video/upload/v1783668274/Automation_Anywhere_Project_-_Hackathon_Finder_1_ez6s0w.mp4",
       videoUrl: "https://res.cloudinary.com/doyiqcna9/video/upload/v1783668274/Automation_Anywhere_Project_-_Hackathon_Finder_1_ez6s0w.mp4",
       projectCertImgUrl: "https://res.cloudinary.com/doyiqcna9/image/upload/v1783667845/Automation_Anywhere_complete_jowcjy.png"
     }
@@ -106,11 +122,11 @@ const portfolioData = {
   experience: [
     {
       id: 1,
-      role: "Full-Stack Developer Trainee",
-      company: "NxtWave",
+      role: "AI & Systems Engineering Scholar",
+      company: "NxtWave Academy",
       duration: "Sep 2024 - Present",
       location: "Maharashtra, India - Remote",
-      description: "Undergoing intensive software engineering training through NxtWave's CCBP 4.0 program. Focusing on full-stack architecture, AI agents, automation, and modern developer workflows."
+      description: "Undergoing intensive software and systems engineering training through NxtWave's CCBP 4.0 program. Focusing on autonomous AI agent architecture, full-stack design, automation pipelines, and modern developer workflows."
     }
   ],
 
@@ -119,7 +135,7 @@ const portfolioData = {
     { id: 2, name: "Programming Foundations with Python", issuer: "NxtWave", CertImgUrl: "https://res.cloudinary.com/doyiqcna9/image/upload/v1783666765/Python_dtzvco.png" },
     { id: 3, name: "ScanZy Rewards MVP Architecture", issuer: "NxtWave", CertImgUrl: "https://res.cloudinary.com/doyiqcna9/image/upload/v1783666876/mvp_certification_k5sedb.png" },
     { id: 4, name: "Generative AI for All", issuer: "Microsoft x PW", CertImgUrl: "https://res.cloudinary.com/doyiqcna9/image/upload/v1783666902/genrative_ai_shqice.png" },
-    { id: 5, name: "Agentblazer Workshop", issuer: "AWS", CertImgUrl: "https://res.cloudinary.com/doyiqcna9/image/upload/v1783667496/Salesforce_nqv0z9.png" },
+    { id: 5, name: "Agentblazer Workshop", issuer: "AWS / Salesforce", CertImgUrl: "https://res.cloudinary.com/doyiqcna9/image/upload/v1783667496/Salesforce_nqv0z9.png" },
     { id: 6, name: "XPM 4.0 Fundamentals", issuer: "NxtWave", CertImgUrl: "https://res.cloudinary.com/doyiqcna9/image/upload/v1783667223/XPM_4.0_emxpxe.jpg" },
     { id: 7, name: "SQL & Relational Databases", issuer: "NxtWave", CertImgUrl: "https://res.cloudinary.com/doyiqcna9/image/upload/v1783667271/sql_nwfd8x.jpg" },
     { id: 8, name: "Advanced Frontend Development", issuer: "NxtWave", CertImgUrl: "https://res.cloudinary.com/doyiqcna9/image/upload/v1783667286/boostrap_flexbox_nimhpn.png" },
@@ -159,8 +175,8 @@ const portfolioData = {
 
   streak: {
     days: "365",
-    title: "Day Nxtwave-Academy Streak",
-    description: "Unbroken daily execution on NxtWave. Pure dedication to daily logical execution and coding consistency."
+    title: "Days Systems Builder Execution Streak",
+    description: "Unbroken daily execution on NxtWave Academy. Pure dedication to daily logical execution and systems consistency."
   },
 
   education: [
