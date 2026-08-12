@@ -53,14 +53,16 @@ var ORDINAL_MAP = {
 function detectProvider(key, configured) {
   if (configured && typeof configured === "string") {
     var p = configured.trim().toLowerCase();
-    if (p === "groq" || p === "gemini") return p;
+    if (p === "gemini") return "gemini";
+    // Everything else (groq, anthropic, openrouter) assumes openai_compatible
+    return "openai_compatible";
   }
-  if (key && String(key).indexOf("gsk_") === 0) return "groq";
+  if (key && String(key).indexOf("gsk_") === 0) return "openai_compatible";
   return "gemini";
 }
 
 function defaultModel(provider) {
-  return provider === "groq" ? "llama-3.3-70b-versatile" : "gemini-2.5-flash";
+  return provider === "openai_compatible" ? "llama-3.3-70b-versatile" : "gemini-2.5-flash";
 }
 
 function discoverTargets() {
@@ -86,6 +88,8 @@ function discoverTargets() {
       groups[prefix].model = val.trim();
     } else if (suffix === "PROVIDER") {
       groups[prefix].provider = val.trim().toLowerCase();
+    } else if (suffix === "BASE_URL" || suffix === "ENDPOINT") {
+      groups[prefix].baseUrl = val.trim();
     }
   });
 
@@ -95,11 +99,13 @@ function discoverTargets() {
     if (!g.key) return;
     var provider = detectProvider(g.key, g.provider);
     var model    = g.model || defaultModel(provider);
+    var baseUrl  = g.baseUrl || (provider === "openai_compatible" ? "https://api.groq.com/openai/v1/chat/completions" : "");
     targets.push({
       group:    prefix,
       key:      g.key,
       model:    model,
       provider: provider,
+      baseUrl:  baseUrl,
       priority: ORDINAL_MAP[prefix] || 99
     });
   });
@@ -145,80 +151,81 @@ async function processSSEStream(response, onChunk) {
   }
 }
 
-/* ── Gemini Streaming API ───────────────────────────────────── */
-async function streamGemini(target, messages, systemPrompt, onToken) {
-  var url = GEMINI_STREAM_BASE + target.model + ":streamGenerateContent?alt=sse&key=" + target.key;
-  var body = {
-    system_instruction: { parts: [{ text: systemPrompt }] },
-    contents: messages,
-    generationConfig: {
-      temperature: 0.7,
-      topK: 40,
-      topP: 0.95,
-      maxOutputTokens: 2048
-    },
-    safetySettings: [
-      { category: "HARM_CATEGORY_HARASSMENT",        threshold: "BLOCK_ONLY_HIGH" },
-      { category: "HARM_CATEGORY_HATE_SPEECH",        threshold: "BLOCK_ONLY_HIGH" },
-      { category: "HARM_CATEGORY_SEXUALLY_EXPLICIT",  threshold: "BLOCK_ONLY_HIGH" },
-      { category: "HARM_CATEGORY_DANGEROUS_CONTENT",  threshold: "BLOCK_ONLY_HIGH" }
-    ]
-  };
+/* ── Dynamic Provider Adapters ──────────────────────────────── */
+var PROVIDER_ADAPTERS = {
+  gemini: async function(target, messages, systemPrompt, onToken) {
+    var url = GEMINI_STREAM_BASE + target.model + ":streamGenerateContent?alt=sse&key=" + target.key;
+    var body = {
+      system_instruction: { parts: [{ text: systemPrompt }] },
+      contents: messages,
+      generationConfig: {
+        temperature: 0.7,
+        topK: 40,
+        topP: 0.95,
+        maxOutputTokens: 2048
+      },
+      safetySettings: [
+        { category: "HARM_CATEGORY_HARASSMENT",        threshold: "BLOCK_ONLY_HIGH" },
+        { category: "HARM_CATEGORY_HATE_SPEECH",        threshold: "BLOCK_ONLY_HIGH" },
+        { category: "HARM_CATEGORY_SEXUALLY_EXPLICIT",  threshold: "BLOCK_ONLY_HIGH" },
+        { category: "HARM_CATEGORY_DANGEROUS_CONTENT",  threshold: "BLOCK_ONLY_HIGH" }
+      ]
+    };
 
-  var res = await fetchWithTimeout(url, {
-    method:  "POST",
-    headers: { "Content-Type": "application/json" },
-    body:    JSON.stringify(body)
-  }, FETCH_TIMEOUT_MS);
+    var res = await fetchWithTimeout(url, {
+      method:  "POST",
+      headers: { "Content-Type": "application/json" },
+      body:    JSON.stringify(body)
+    }, FETCH_TIMEOUT_MS);
 
-  if (!res.ok) throw new Error("Gemini HTTP " + res.status + " (" + target.model + ")");
+    if (!res.ok) throw new Error("Gemini HTTP " + res.status + " (" + target.model + ")");
 
-  await processSSEStream(res, function (data) {
-    if (data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts) {
-      var parts = data.candidates[0].content.parts;
-      for (var p = 0; p < parts.length; p++) {
-        if (parts[p].text) {
-          onToken(parts[p].text);
+    await processSSEStream(res, function (data) {
+      if (data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts) {
+        var parts = data.candidates[0].content.parts;
+        for (var p = 0; p < parts.length; p++) {
+          if (parts[p].text) {
+            onToken(parts[p].text);
+          }
         }
       }
-    }
-  });
-}
+    });
+  },
 
-/* ── Groq Streaming API ─────────────────────────────────────── */
-async function streamGroq(target, messages, systemPrompt, onToken) {
-  var oaiMessages = [{ role: "system", content: systemPrompt }];
-  messages.forEach(function (turn) {
-    var role    = turn.role === "user" ? "user" : "assistant";
-    var content = (turn.parts && turn.parts[0] && turn.parts[0].text) || "";
-    if (content) oaiMessages.push({ role: role, content: content });
-  });
+  openai_compatible: async function(target, messages, systemPrompt, onToken) {
+    var oaiMessages = [{ role: "system", content: systemPrompt }];
+    messages.forEach(function (turn) {
+      var role    = turn.role === "user" ? "user" : "assistant";
+      var content = (turn.parts && turn.parts[0] && turn.parts[0].text) || "";
+      if (content) oaiMessages.push({ role: role, content: content });
+    });
 
-  var body = {
-    model:       target.model || "llama-3.3-70b-versatile",
-    messages:    oaiMessages,
-    stream:      true,
-    temperature: 0.7,
-    max_tokens:  2048
-  };
+    var body = {
+      model:       target.model,
+      messages:    oaiMessages,
+      stream:      true,
+      temperature: 0.7,
+      max_tokens:  2048
+    };
 
-  var res = await fetchWithTimeout(GROQ_BASE, {
-    method:  "POST",
-    headers: {
-      "Content-Type":  "application/json",
-      "Authorization": "Bearer " + target.key
-    },
-    body: JSON.stringify(body)
-  }, FETCH_TIMEOUT_MS);
+    var res = await fetchWithTimeout(target.baseUrl, {
+      method:  "POST",
+      headers: {
+        "Content-Type":  "application/json",
+        "Authorization": "Bearer " + target.key
+      },
+      body: JSON.stringify(body)
+    }, FETCH_TIMEOUT_MS);
 
-  if (!res.ok) throw new Error("Groq HTTP " + res.status + " (" + target.model + ")");
+    if (!res.ok) throw new Error("OpenAI-Compatible HTTP " + res.status + " (" + target.model + ")");
 
-  await processSSEStream(res, function (data) {
-    if (data.choices && data.choices[0] && data.choices[0].delta && data.choices[0].delta.content) {
-      onToken(data.choices[0].delta.content);
-    }
-  });
-}
+    await processSSEStream(res, function (data) {
+      if (data.choices && data.choices[0] && data.choices[0].delta && data.choices[0].delta.content) {
+        onToken(data.choices[0].delta.content);
+      }
+    });
+  }
+};
 
 /* ── Streaming Failover Dispatcher ──────────────────────────── */
 async function callWithFailoverStream(messages, systemPrompt, onToken) {
@@ -226,37 +233,58 @@ async function callWithFailoverStream(messages, systemPrompt, onToken) {
   if (targets.length === 0) throw new Error("NO_TARGETS_CONFIGURED");
 
   var failed = {};
+  var accumulatedText = "";
+  var hasYieldedAtAll = false;
+
   for (var i = 0; i < targets.length; i++) {
     var t = targets[i];
     if (failed[t.key]) continue;
 
     console.log("[api/chat] Trying " + t.provider + " | " + t.model + " (group: " + t.group + ")");
-    var hasYielded = false;
+    
+    var currentHasYielded = false;
+    var currentSystemPrompt = systemPrompt;
+    var currentMessages = messages.slice();
+
+    // Context-Aware State Handoff
+    if (hasYieldedAtAll && accumulatedText.length > 0) {
+      currentMessages.push({
+        role: "assistant",
+        parts: [{ text: accumulatedText }]
+      });
+      currentMessages.push({
+        role: "user",
+        parts: [{ text: "Your previous response was interrupted due to a network error. Please continue writing your response seamlessly from exactly the last word you wrote. Do NOT apologize, do NOT repeat what you already said, and do NOT add conversational filler. Just resume the exact sentence seamlessly." }]
+      });
+    }
 
     try {
       var tokenWrapper = function (token) {
-        hasYielded = true;
+        hasYieldedAtAll = true;
+        currentHasYielded = true;
+        accumulatedText += token;
         onToken(token);
       };
 
-      if (t.provider === "groq") {
-        await streamGroq(t, messages, systemPrompt, tokenWrapper);
-      } else {
-        await streamGemini(t, messages, systemPrompt, tokenWrapper);
-      }
-      return;
+      var adapter = PROVIDER_ADAPTERS[t.provider];
+      if (!adapter) throw new Error("No adapter for provider: " + t.provider);
+
+      await adapter(t, currentMessages, currentSystemPrompt, tokenWrapper);
+      return; // Stream finished successfully
     } catch (err) {
       var reason = err.name === "AbortError" ? "timeout (" + FETCH_TIMEOUT_MS + "ms)" : err.message;
-      console.warn("[api/chat] Target failed (" + t.group + "): " + reason + ". Rotating...");
+      console.warn("[api/chat] Target failed (" + t.group + "): " + reason + ". Rotating immediately...");
       failed[t.key] = true;
-
-      if (hasYielded) {
-        throw new Error("STREAM_INTERRUPTED: " + reason);
-      }
+      // Loop continues instantly to the next provider
     }
   }
 
-  throw new Error("ALL_TARGETS_EXHAUSTED");
+  // Exhaustion States
+  if (hasYieldedAtAll) {
+    throw new Error("EXHAUSTED_MIDSTREAM: " + accumulatedText.length + " chars sent.");
+  } else {
+    throw new Error("EXHAUSTED_INITIAL");
+  }
 }
 
 /* ── CORS Helper ────────────────────────────────────────────── */

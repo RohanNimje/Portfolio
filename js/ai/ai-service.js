@@ -298,7 +298,11 @@
 
         try {
           var payload = JSON.parse(dataStr);
-          if (payload.error) throw new Error(payload.error);
+          if (payload.error) {
+            var err = new Error(payload.error);
+            err.fullRawText = fullRawText;
+            throw err;
+          }
           if (payload.chunk) {
             fullRawText += payload.chunk;
             if (typeof onChunk === "function") {
@@ -306,7 +310,10 @@
             }
           }
         } catch (e) {
-          if (e.message && e.message.indexOf("JSON") === -1) throw e;
+          if (e.message && e.message.indexOf("JSON") === -1) {
+            e.fullRawText = fullRawText;
+            throw e;
+          }
         }
       }
     }
@@ -518,6 +525,27 @@
         if (_conversationHistory.length > 0) _conversationHistory.pop();
         console.error("[AI Service] Streaming failed:", err);
 
+        // Check if we exhausted mid-stream and already have partial text
+        if ((err.message && err.message.indexOf("EXHAUSTED_MIDSTREAM") !== -1) || (err.fullRawText && err.fullRawText.trim().length > 0)) {
+          var partialHtml = sanitiseResponse(err.fullRawText || "");
+          // Cleanly terminate the partial sentence
+          if (partialHtml.length > 0 && !/[.!?]$/.test(partialHtml.trim())) {
+            partialHtml += ".";
+          }
+          
+          var actionChips = '<div class="mt-4 flex flex-wrap gap-2">' +
+            '<button type="button" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-indigo-600 text-white font-medium text-sm hover:bg-indigo-700 transition-colors cursor-pointer" onclick="sendAIMessage(\'Explore Technical Architecture\', window._aiActiveStreamCallback)">Explore Technical Architecture &rarr;</button>' +
+            '<button type="button" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-indigo-50 text-indigo-700 font-medium text-sm hover:bg-indigo-100 transition-colors cursor-pointer" onclick="sendAIMessage(\'Ask About System Implementation\', window._aiActiveStreamCallback)">Ask About System Implementation</button>' +
+            '</div>';
+            
+          var finalHtml = partialHtml + actionChips;
+          if (typeof onChunk === "function") {
+             onChunk(finalHtml, true);
+          }
+          return finalHtml;
+        }
+
+        // Initial Handshake Failure
         var standbyCard = getStandbyErrorCard();
         if (typeof onChunk === "function") {
           onChunk(standbyCard, true);
