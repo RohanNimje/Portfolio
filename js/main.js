@@ -15,7 +15,7 @@
  */
 
 /* ── Theme Management ──────────────────────────────────── */
-var currentTheme = (function() {
+var currentTheme = (function () {
   if (typeof localStorage !== "undefined" && localStorage.getItem("portfolio-theme")) {
     return localStorage.getItem("portfolio-theme");
   }
@@ -136,13 +136,21 @@ function renderNavigation() {
     '</button>';
 
   document.getElementById("navigation").innerHTML =
-    '<nav class="hidden md:flex fixed top-0 left-0 right-0 z-40 justify-center pt-5 px-4 w-full nav-enter-top">' +
-    '<div class="border border-border rounded-full px-6 py-3 bg-card shadow-lg flex items-center gap-3 max-w-5xl w-full backdrop-blur-md">' +
+    '<nav class="hidden md:flex fixed top-0 left-0 right-0 z-50 w-full bg-card border-b border-border shadow-sm nav-enter-top">' +
+    '<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full flex items-center justify-between h-16">' +
+    '<div class="flex-shrink-0 flex items-center gap-2 cursor-pointer transition-transform hover:scale-[1.02]" data-scroll="hero">' +
+    '<div class="w-8 h-8 rounded-lg bg-accent text-white flex items-center justify-center font-display font-bold text-lg">R</div>' +
+    '<span class="font-display font-bold text-foreground">Rohan Nimje</span>' +
+    '</div>' +
+    '<div class="hidden md:flex items-center gap-1 absolute left-1/2 -translate-x-1/2">' +
     desktopButtons +
+    '</div>' +
+    '<div class="flex items-center gap-2">' +
     themeToggleBtnDesktop +
-    '<button type="button" data-scroll="contact" class="ml-auto ' + PRIMARY_BUTTON + ' !px-5 !py-2 text-sm">' + icon("mail", "w-4 h-4") + "Get In Touch</button>" +
-    "</div>" +
-    "</nav>" +
+    '<button type="button" data-scroll="contact" class="' + PRIMARY_BUTTON + ' !px-5 !py-2 text-sm">' + icon("mail", "w-4 h-4") + "Get In Touch</button>" +
+    '</div>' +
+    '</div>' +
+    '</nav>' +
     '<div id="bottom-nav" class="bottom-nav md:hidden fixed bottom-0 left-0 right-0 z-40 flex justify-center px-4 pb-5 pt-3 w-full bg-card border-t border-border shadow-lg nav-enter-bottom">' +
     '<div class="rounded-full px-3 py-2 bg-card border border-border flex items-center gap-1.5 max-w-lg w-full justify-center shadow-sm">' +
     mobileButtons +
