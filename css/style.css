@@ -216,16 +216,69 @@ html.dark .assistant-input {
   border-color: var(--border) !important;
 }
 
-html.dark .coverflow-card img,
-html.dark .honor-card-button img {
+html.dark .coverflow-card img {
   background-color: var(--card) !important;
   border-color: var(--border) !important;
 }
 
-/* Honor card flip-back dark mode */
-html.dark .honor-flip-back-inner {
-  background: linear-gradient(135deg, rgba(99, 102, 241, 0.08), var(--card)) !important;
-  border-color: var(--border) !important;
+/* ═══════════════════════════════════════════════════
+   HONORS & RECOGNITION (Editorial Certificate Showcase)
+   ════════════════════════════════════════════════════ */
+.honor-deck-track {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  scroll-behavior: smooth;
+}
+
+.honor-deck-track::-webkit-scrollbar {
+  display: none;
+}
+
+.honor-card {
+  background: var(--card);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+  transition: transform 300ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 300ms cubic-bezier(0.16, 1, 0.3, 1), border-color 300ms ease;
+  will-change: transform;
+}
+
+html.dark .honor-card {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.28);
+}
+
+.honor-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(79, 70, 229, 0.25);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(79, 70, 229, 0.06);
+}
+
+html.dark .honor-card:hover {
+  border-color: rgba(99, 102, 241, 0.35);
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(99, 102, 241, 0.12);
+}
+
+/* High-DPI Crisp Certificate Image Rendering */
+.honor-cert-img {
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transition: transform 350ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.honor-card:hover .honor-cert-img {
+  transform: scale(1.025);
+}
+
+/* Mobile Track Active Indicator Dot */
+.honor-indicator-dot {
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.honor-indicator-dot.active {
+  width: 24px;
+  background-color: var(--accent);
 }
 
 /* Cert gradient overlays — theme-aware via CSS variables */

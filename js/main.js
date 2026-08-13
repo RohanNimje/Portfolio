@@ -160,49 +160,87 @@ function renderNavigation() {
 }
 
 /* ══════════════════════════════════════════════════════════
-   HONORS CAROUSEL (JS-rendered flip cards)
+   HONORS & RECOGNITION (Editorial Certificate Showcase)
 ══════════════════════════════════════════════════════════ */
 function renderHonors() {
   var honors = (window.portfolioData && window.portfolioData.honors) || [];
   if (!honors.length) return;
-  if (honorsIndex > honors.length - 1) honorsIndex = honors.length - 1;
-
-  var cards = "";
-  var dots = "";
-  for (var i = 0; i < honors.length; i++) {
-    var honor = honors[i];
-    var certSrc = honor.CertImgUrl || honor.image || "";
-    var active = i === honorsIndex ? "active" : "";
-    cards +=
-      '<div class="flex-shrink-0 flex flex-col items-center" style="width:288px">' +
-      '<button type="button" data-honor-index="' + i + '" class="honor-card-button ' + active + ' w-72 h-80 cursor-pointer perspective">' +
-      '<div class="flip-inner w-full h-full relative">' +
-      '<div class="flip-side absolute inset-0 group"><img src="' + certSrc + '" alt="' + honor.title + '" class="w-full h-full rounded-2xl border border-border object-contain group-hover:border-accent/30 transition-all shadow-sm" loading="' + (i === honorsIndex ? "eager" : "lazy") + '" decoding="async" draggable="false" /><div class="absolute bottom-4 right-4 z-10 px-3 py-1.5 bg-card border border-border rounded-full flex items-center gap-1.5 text-xs font-semibold text-accent group-hover:bg-accent-subtle transition-all opacity-0 group-hover:opacity-100">' + icon("flip", "w-3 h-3") + "</div></div>" +
-      '<div class="flip-side flip-back absolute inset-0"><div class="honor-flip-back-inner w-full h-full rounded-2xl border border-border bg-gradient-to-br from-muted to-card p-6 flex flex-col justify-between transition-all shadow-sm"><div class="space-y-3"><p class="text-xs text-muted-foreground font-semibold uppercase tracking-wide">' + honor.event + '</p><div class="w-1 h-5 bg-gradient-to-b from-accent to-foreground/20 rounded-full"></div><p class="text-xs text-foreground leading-relaxed">' + honor.description + '</p></div><div class="flex items-center gap-1.5 text-xs font-semibold text-accent">' + icon("flip", "w-3 h-3") + "<span>Click to flip</span></div></div></div>" +
-      "</div>" +
-      "</button>" +
-      "</div>";
-    dots += '<button type="button" aria-label="Go to honor ' + (i + 1) + '" data-honor-dot="' + i + '" class="h-2 rounded-full transition-all duration-300 ' + (i === honorsIndex ? "w-6 bg-accent" : "w-2 bg-muted-foreground/30 hover:bg-muted-foreground/50") + '"></button>';
-  }
 
   var container = document.getElementById("honors-carousel-container") || document.getElementById("honors");
   if (!container) return;
 
-  container.innerHTML =
-    '<div class="group/carousel relative overflow-hidden transition-opacity duration-200">' +
-    '<div class="absolute left-0 top-0 bottom-0 w-16 sm:w-24 bg-gradient-to-r from-background to-transparent z-20 pointer-events-none"></div><div class="absolute right-0 top-0 bottom-0 w-16 sm:w-24 bg-gradient-to-l from-background to-transparent z-20 pointer-events-none"></div>' +
-    '<button type="button" aria-label="Previous honor" id="honor-prev" class="absolute left-0 top-1/2 -translate-y-1/2 w-12 sm:w-16 h-40 z-30 flex items-center justify-start pl-1 sm:pl-2 opacity-0 hover:opacity-100 group-hover/carousel:opacity-60 transition-opacity duration-300"><span class="flex items-center justify-center w-9 h-9 rounded-full bg-background/70 border border-white/10 backdrop-blur-sm text-foreground/70 hover:text-accent hover:border-accent/40 transition-colors">' + icon("chevronLeft", "w-5 h-5") + "</span></button>" +
-    '<button type="button" aria-label="Next honor" id="honor-next" class="absolute right-0 top-1/2 -translate-y-1/2 w-12 sm:w-16 h-40 z-30 flex items-center justify-end pr-1 sm:pr-2 opacity-0 hover:opacity-100 group-hover/carousel:opacity-60 transition-opacity duration-300"><span class="flex items-center justify-center w-9 h-9 rounded-full bg-background/70 border border-white/10 backdrop-blur-sm text-foreground/70 hover:text-accent hover:border-accent/40 transition-colors">' + icon("chevronRight", "w-5 h-5") + "</span></button>" +
-    '<div id="honor-track" class="honor-track flex gap-8 cursor-grab active:cursor-grabbing touch-pan-y py-2 w-max">' + cards + "</div>" +
-    "</div>" +
-    '<div class="mt-5 space-y-3 text-center"><h3 class="text-base sm:text-lg font-bold text-foreground px-4">' + (honors[honorsIndex] ? honors[honorsIndex].title : "") + '</h3><div class="flex justify-center items-center gap-2">' + dots + "</div></div>";
+  var cards = "";
+  var dots = "";
 
-  updateHonorTrack();
+  for (var i = 0; i < honors.length; i++) {
+    var honor = honors[i];
+    var certSrc = honor.CertImgUrl || honor.image || "";
+    var stackHtml = "";
+    if (honor.techStack && honor.techStack.length) {
+      for (var s = 0; s < Math.min(3, honor.techStack.length); s++) {
+        stackHtml += '<span class="px-2 py-0.5 rounded bg-muted/60 text-muted-foreground text-[10px] font-mono font-medium tracking-tight border border-border/40">' + honor.techStack[s] + '</span>';
+      }
+    }
+
+    cards +=
+      '<div class="honor-card flex-shrink-0 snap-center w-[295px] sm:w-[335px] md:w-auto h-[390px] sm:h-[410px] cursor-pointer group select-none flex flex-col rounded-2xl overflow-hidden" data-honor-modal-id="' + honor.id + '" data-honor-index="' + i + '">' +
+      
+      '<!-- Certificate Hero Image (Occupies ~68% of card height) -->' +
+      '<div class="relative w-full h-[68%] bg-muted/25 dark:bg-muted/10 p-3 sm:p-4 flex items-center justify-center border-b border-border/60 overflow-hidden">' +
+      '<img src="' + certSrc + '" alt="' + honor.title + '" class="honor-cert-img w-full h-full object-contain rounded-lg" loading="lazy" decoding="async" draggable="false" />' +
+      '</div>' +
+
+      '<!-- Minimalist Footer Info Dock (~32% of card height) -->' +
+      '<div class="w-full h-[32%] p-3.5 sm:p-4 flex flex-col justify-between bg-card">' +
+      '<div class="space-y-1">' +
+      '<div class="flex items-center justify-between gap-2">' +
+      '<h3 class="font-display font-bold text-sm sm:text-base text-foreground tracking-tight truncate">' + honor.title + '</h3>' +
+      '<span class="text-[11px] font-mono text-muted-foreground font-medium shrink-0">' + (honor.date || "2026") + '</span>' +
+      '</div>' +
+      '<p class="text-xs text-muted-foreground font-medium truncate">' + honor.event + '</p>' +
+      '</div>' +
+      
+      (stackHtml ? '<div class="flex flex-wrap gap-1.5 pt-1.5">' + stackHtml + '</div>' : '') +
+      '</div>' +
+
+      '</div>';
+
+    dots += '<button type="button" aria-label="Go to honor ' + (i + 1) + '" data-honor-dot="' + i + '" class="honor-indicator-dot h-1.5 rounded-full transition-all duration-300 ' + (i === 0 ? "w-6 bg-accent" : "w-1.5 bg-muted-foreground/30 hover:bg-muted-foreground/50") + '"></button>';
+  }
+
+  container.innerHTML =
+    '<div class="honor-deck-container relative w-full select-none">' +
+    '<!-- Dynamic Responsive Grid / Mobile Swipe Track -->' +
+    '<div id="honor-deck" class="honor-deck-track flex md:grid md:grid-cols-2 lg:grid-cols-4 gap-5 overflow-x-auto md:overflow-x-visible pb-2 pt-1 px-1 snap-x snap-mandatory scroll-smooth no-scrollbar">' +
+    cards +
+    '</div>' +
+    '<!-- Mobile Navigation Indicators (Hidden on desktop) -->' +
+    '<div class="mt-3 flex md:hidden justify-center items-center gap-1.5" id="honor-indicators">' +
+    dots +
+    '</div>' +
+    '</div>';
+
+  initHonorCards();
 }
 
-function updateHonorTrack() {
-  var track = document.getElementById("honor-track");
-  if (track) track.style.transform = "translateX(" + (-honorsIndex * 320) + "px)";
+function initHonorCards() {
+  var deck = document.getElementById("honor-deck");
+  var cards = document.querySelectorAll(".honor-card");
+  if (!deck || !cards.length) return;
+
+  deck.addEventListener("scroll", function () {
+    var scrollLeft = deck.scrollLeft;
+    var cardWidth = 310;
+    var activeIdx = Math.min(cards.length - 1, Math.max(0, Math.round(scrollLeft / cardWidth)));
+    var dots = document.querySelectorAll("[data-honor-dot]");
+    dots.forEach(function (dot, idx) {
+      if (idx === activeIdx) {
+        dot.className = "honor-indicator-dot h-1.5 rounded-full transition-all duration-300 w-6 bg-accent";
+      } else {
+        dot.className = "honor-indicator-dot h-1.5 rounded-full transition-all duration-300 w-1.5 bg-muted-foreground/30 hover:bg-muted-foreground/50";
+      }
+    });
+  }, { passive: true });
 }
 
 /* ══════════════════════════════════════════════════════════
@@ -524,7 +562,7 @@ function lockBodyScroll() {
 }
 
 function unlockBodyScroll() {
-  var modalOpen = document.getElementById("project-modal");
+  var modalOpen = document.getElementById("project-modal") || document.getElementById("honor-lightbox-modal");
   if (!modalOpen && !assistantIsOpen) {
     document.body.classList.remove("overflow-hidden");
   }
@@ -536,6 +574,90 @@ function closeProjectModal() {
   var toggle = document.getElementById("assistant-toggle");
   if (toggle && !assistantIsOpen) toggle.classList.remove("is-hidden");
   unlockBodyScroll();
+}
+
+/* ══════════════════════════════════════════════════════════
+   HONOR / CERTIFICATE LIGHTBOX MODAL
+══════════════════════════════════════════════════════════ */
+function openHonorModal(honorId) {
+  var honors = (window.portfolioData && window.portfolioData.honors) || [];
+  var honor = honors.find(function(h) { return h.id === Number(honorId); });
+  if (honor) {
+    renderHonorModal(honor);
+  }
+}
+
+function closeHonorModal() {
+  var modalRoot = document.getElementById("honor-modal-root");
+  if (modalRoot) modalRoot.innerHTML = "";
+  var toggle = document.getElementById("assistant-toggle");
+  if (toggle && !assistantIsOpen) toggle.classList.remove("is-hidden");
+  unlockBodyScroll();
+}
+
+function renderHonorModal(honor) {
+  if (!honor) return;
+  lockBodyScroll();
+
+  var toggle = document.getElementById("assistant-toggle");
+  if (toggle) toggle.classList.add("is-hidden");
+
+  var certSrc = honor.CertImgUrl || honor.image || "";
+  var stackPills = "";
+  if (honor.techStack && honor.techStack.length) {
+    for (var s = 0; s < honor.techStack.length; s++) {
+      stackPills += '<span class="px-2.5 py-1 rounded-lg bg-muted border border-border text-xs font-mono font-medium text-foreground tracking-tight">' + honor.techStack[s] + '</span>';
+    }
+  }
+
+  var modalRoot = document.getElementById("honor-modal-root");
+  if (!modalRoot) return;
+
+  modalRoot.innerHTML =
+    '<div id="honor-lightbox-modal" class="modal-backdrop fixed inset-0 bg-foreground/60 backdrop-blur-md z-[80] flex items-center justify-center p-3 sm:p-6" role="dialog" aria-modal="true" aria-label="' + honor.title + '">' +
+    '<div class="modal-panel relative w-full max-w-4xl max-h-[92vh] bg-card border border-border rounded-3xl shadow-2xl overflow-hidden flex flex-col z-[81]">' +
+    
+    '<!-- Header -->' +
+    '<div class="px-6 py-4 border-b border-border/80 flex items-center justify-between bg-card/90 backdrop-blur-sm">' +
+    '<div class="flex items-center gap-3 min-w-0">' +
+    '<div class="w-8 h-8 rounded-xl bg-accent/15 border border-accent/30 flex items-center justify-center text-accent flex-shrink-0">' + icon("trophy", "w-4 h-4") + '</div>' +
+    '<div class="min-w-0">' +
+    '<div class="flex items-center gap-2">' +
+    '<span class="px-2 py-0.5 rounded bg-accent/15 border border-accent/30 text-[10px] font-mono font-bold text-accent tracking-wider">' + (honor.badge || "VERIFIED AWARD") + '</span>' +
+    '<span class="text-xs font-mono text-muted-foreground">' + (honor.date || "2026") + '</span>' +
+    '</div>' +
+    '<h2 class="text-base sm:text-lg font-bold font-display text-foreground truncate mt-0.5">' + honor.title + ' — <span class="text-accent font-medium">' + honor.event + '</span></h2>' +
+    '</div>' +
+    '</div>' +
+
+    '<div class="flex items-center gap-2 flex-shrink-0">' +
+    (certSrc ? '<a href="' + certSrc + '" target="_blank" rel="noopener noreferrer" class="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-accent text-white text-xs font-semibold hover:bg-accent-hover transition-all shadow-sm">' + icon("externalLink", "w-3.5 h-3.5") + '<span>Verify Certificate</span></a>' : '') +
+    '<button type="button" id="close-honor-modal" aria-label="Close modal" class="p-2 rounded-xl bg-card border border-border hover:border-accent/40 hover:bg-muted text-foreground hover:text-accent transition-all shadow-sm cursor-pointer">' + icon("close", "w-5 h-5") + '</button>' +
+    '</div>' +
+    '</div>' +
+
+    '<!-- Body with High-Resolution Certificate Lightbox Image -->' +
+    '<div class="overflow-y-auto max-h-[calc(92vh-75px)] p-6 space-y-6">' +
+    '<div class="relative w-full flex items-center justify-center bg-muted/30 rounded-2xl border border-border/70 p-3 sm:p-5 overflow-hidden group shadow-inner">' +
+    '<img src="' + certSrc + '" alt="' + honor.title + '" class="max-h-[58vh] w-auto max-w-full object-contain rounded-xl shadow-md transition-transform duration-300" loading="eager" decoding="async" />' +
+    '</div>' +
+
+    '<div class="space-y-4">' +
+    '<div class="space-y-1.5">' +
+    '<div class="text-xs font-mono font-semibold uppercase tracking-wider text-accent">' + (honor.category || "Hackathon Honor") + '</div>' +
+    '<p class="text-sm sm:text-base text-foreground leading-relaxed">' + honor.description + '</p>' +
+    '</div>' +
+
+    (stackPills ? '<div class="space-y-2 pt-2 border-t border-border/60"><div class="text-xs font-mono text-muted-foreground uppercase tracking-wider">Technologies &amp; Architecture:</div><div class="flex flex-wrap gap-2">' + stackPills + '</div></div>' : '') +
+
+    '<div class="flex sm:hidden pt-2">' +
+    (certSrc ? '<a href="' + certSrc + '" target="_blank" rel="noopener noreferrer" class="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-accent text-white text-xs font-semibold shadow-sm">' + icon("externalLink", "w-4 h-4") + '<span>Verify High-Res Certificate</span></a>' : '') +
+    '</div>' +
+    '</div>' +
+
+    '</div>' +
+    '</div>' +
+    '</div>';
 }
 
 /* ══════════════════════════════════════════════════════════
@@ -1133,38 +1255,26 @@ function attachEvents() {
       closeProjectModal();
     }
 
-    // Honors carousel
-    if (event.target.closest("#honor-prev")) {
-      pauseHonorsAutoplay();
-      var honors = (window.portfolioData && window.portfolioData.honors) || [];
-      var honorsLen = honors.length || 1;
-      honorsIndex = (honorsIndex - 1 + honorsLen) % honorsLen;
-      renderHonors();
-      observeReveals();
-      resumeHonorsAutoplayWithDelay(3500);
+    // Honor Lightbox Modal trigger
+    var honorCard = event.target.closest("[data-honor-modal-id]");
+    if (honorCard) {
+      var honorId = honorCard.getAttribute("data-honor-modal-id");
+      openHonorModal(honorId);
     }
-    if (event.target.closest("#honor-next")) {
-      pauseHonorsAutoplay();
-      var honors2 = (window.portfolioData && window.portfolioData.honors) || [];
-      var honorsLen2 = honors2.length || 1;
-      honorsIndex = (honorsIndex + 1) % honorsLen2;
-      renderHonors();
-      observeReveals();
-      resumeHonorsAutoplayWithDelay(3500);
+
+    // Honor Lightbox Modal close
+    if (event.target.id === "honor-lightbox-modal" || event.target.closest("#close-honor-modal")) {
+      closeHonorModal();
     }
+
+    // Honor navigation dots
     var honorDot = event.target.closest("[data-honor-dot]");
     if (honorDot) {
-      pauseHonorsAutoplay();
-      honorsIndex = Number(honorDot.getAttribute("data-honor-dot"));
-      renderHonors();
-      resumeHonorsAutoplayWithDelay(3500);
-    }
-    var honorButton = event.target.closest("[data-honor-index]");
-    if (honorButton) {
-      pauseHonorsAutoplay();
-      var inner = honorButton.querySelector(".flip-inner");
-      if (inner) inner.classList.toggle("flipped");
-      resumeHonorsAutoplayWithDelay(5000);
+      var dotIdx = Number(honorDot.getAttribute("data-honor-dot"));
+      var deck = document.getElementById("honor-deck");
+      if (deck && deck.children[dotIdx]) {
+        deck.children[dotIdx].scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
+      }
     }
 
     // Certifications carousel
@@ -1220,36 +1330,7 @@ function attachEvents() {
     }
   });
 
-  // Touch gesture swipe support for Honors Carousel
-  var honorTouchStartX = 0;
-  var honorTouchStartY = 0;
 
-  document.addEventListener("touchstart", function (event) {
-    var stage = event.target.closest("#honors") || event.target.closest(".honor-track");
-    if (!stage) return;
-    pauseHonorsAutoplay();
-    honorTouchStartX = event.touches[0].clientX;
-    honorTouchStartY = event.touches[0].clientY;
-  }, { passive: true });
-
-  document.addEventListener("touchend", function (event) {
-    var stage = event.target.closest("#honors") || event.target.closest(".honor-track");
-    if (!stage) return;
-    var deltaX = event.changedTouches[0].clientX - honorTouchStartX;
-    var deltaY = event.changedTouches[0].clientY - honorTouchStartY;
-
-    if (Math.abs(deltaX) > 35 && Math.abs(deltaX) > Math.abs(deltaY)) {
-      var honors = (window.portfolioData && window.portfolioData.honors) || [];
-      var honorsLen = honors.length || 1;
-      if (deltaX < 0) {
-        honorsIndex = (honorsIndex + 1) % honorsLen;
-      } else {
-        honorsIndex = (honorsIndex - 1 + honorsLen) % honorsLen;
-      }
-      renderHonors();
-    }
-    resumeHonorsAutoplayWithDelay(3500);
-  }, { passive: true });
 
   // Touch gesture swipe support for Certifications Carousel
   var certTouchStartX = 0;
@@ -1328,7 +1409,9 @@ function attachEvents() {
   // Escape key listener to close modal or assistant
   document.addEventListener("keydown", function (event) {
     if (event.key === "Escape" || event.key === "Esc") {
-      if (document.getElementById("project-modal")) {
+      if (document.getElementById("honor-lightbox-modal")) {
+        closeHonorModal();
+      } else if (document.getElementById("project-modal")) {
         closeProjectModal();
       } else if (assistantIsOpen) {
         closeAssistant();

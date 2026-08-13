@@ -147,29 +147,45 @@ const portfolioData = {
       id: 1,
       CertImgUrl: "https://res.cloudinary.com/doyiqcna9/image/upload/v1786384987/Ideaimpact_Certificate_orka1w.jpg",
       title: "National Finalist",
+      category: "AI Computer Vision",
+      badge: "TOP 0.5% NATIONALLY",
+      date: "Hyderabad 2026",
       event: "Idea2Impact Offline Hackathon (Hyderabad)",
-      description: "Shortlisted among thousands of student builders across India based on Cosmolyze's product architecture, AI skin analysis model, and vision."
+      description: "Shortlisted among thousands of student builders across India based on Cosmolyze's product architecture, AI skin analysis model, and vision.",
+      techStack: ["Python", "Computer Vision", "React", "AI Analysis"]
     },
     {
       id: 2,
       CertImgUrl: "https://res.cloudinary.com/doyiqcna9/image/upload/v1783672981/innovator_hackthon_wrh0cm.jpg",
       title: "National Level Qualifier",
+      category: "GovTech / Anti-Corruption AI",
+      badge: "48H LIVE PRODUCTION",
+      date: "Pune & T-Hub 2026",
       event: "Innovators Hackathon 2026 (NMIET & AIC T-Hub)",
-      description: "Built 'Trinity X', a live AI binary validation system in 48 hours to eliminate public municipal infrastructure corruption."
+      description: "Built 'Trinity X', a live AI binary validation system in 48 hours to eliminate public municipal infrastructure corruption.",
+      techStack: ["Vision AI", "n8n Workflows", "Supabase", "Appsmith"]
     },
     {
       id: 3,
       CertImgUrl: "https://res.cloudinary.com/doyiqcna9/image/upload/v1783672736/ZCWRN38D0K_kvrcoa.png",
       title: "State-Level Qualifier",
+      category: "Agentic AI Automation",
+      badge: "OPENAI X NXTWAVE",
+      date: "State Buildathon",
       event: "OpenAI x NxtWave Buildathon",
-      description: "Developed 'Sparky', an AI Life Coach, pivoting through complex automation failures under immense time pressure using GPT-4o and n8n."
+      description: "Developed 'Sparky', an AI Life Coach, pivoting through complex automation failures under immense time pressure using GPT-4o and n8n.",
+      techStack: ["GPT-4o", "n8n", "Supabase", "Voice AI"]
     },
     {
       id: 4,
       CertImgUrl: "https://res.cloudinary.com/doyiqcna9/image/upload/v1783673057/DSA_wkno87.png",
       title: "Global Rank 27",
+      category: "Algorithms & DSA",
+      badge: "GLOBAL TOP 27",
+      date: "CodeVerse #25",
       event: "DSA CodeVerse Bi-Weekly Contest #25",
-      description: "Proved core logical thinking and algorithmic problem-solving capabilities using Python Data Structures & Algorithms."
+      description: "Proved core logical thinking and algorithmic problem-solving capabilities using Python Data Structures & Algorithms.",
+      techStack: ["Python", "Algorithms", "DSA", "Optimization"]
     }
   ],
 
