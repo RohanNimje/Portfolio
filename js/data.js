@@ -8,7 +8,7 @@ const portfolioData = {
       "AI Systems Architect & Technical Product Lead specializing in Agentic AI, n8n automation pipelines, LLM orchestration, and rapid 0-to-1 product deployment.",
 
     profileImages: [
-      "/public/profile.png"
+      "https://res.cloudinary.com/doyiqcna9/image/upload/v1783672140/rohan_qfsija.jpg"
     ]
   },
 
@@ -60,10 +60,10 @@ const portfolioData = {
   },
 
   metrics: [
-    { label: "Execution Streak", value: "365 Days", description: "Unbroken daily system execution and AI labs on NxtWave Academy" },
-    { label: "DSA Global Rank", value: "Rank 27", description: "CodeVerse Bi-Weekly Contest #25 (Algorithmic Logic)" },
-    { label: "CV Model Latency", value: "< 2s", description: "Sub-2-second Computer Vision & LLM inference time" },
-    { label: "Build Velocity", value: "< 2 Weeks", description: "0-to-1 production MVP shipping speed" }
+    { label: "Execution Consistency", value: "365+ Days", description: "Unbroken daily systems engineering streak" },
+    { label: "0-to-1 Build Velocity", value: "< 2 Weeks", description: "Production MVP design-to-deployment speed" },
+    { label: "National Standing", value: "Finalist", description: "Top ranking across national AI hackathons" },
+    { label: "Database Optimization", value: "35%", description: "Cross-platform cloud sync latency reduction" }
   ],
 
   projects: [
