@@ -616,18 +616,12 @@ function renderAssistant() {
     '<button type="submit" class="assistant-send" aria-label="Send message">' + icon("arrowRight", "w-5 h-5") + "</button>" +
     "</form>" +
     "</section>" +
-    '<button type="button" id="assistant-toggle" class="assistant-toggle" aria-label="Ask Rohan — AI Assistant">' +
-    '<span class="assistant-glow-ring"></span>' +
-    '<div class="flex items-center gap-2 relative z-10">' +
-    '<div class="w-8 h-8 rounded-full bg-white/15 border border-white/25 flex items-center justify-center shadow-inner flex-shrink-0">' +
-    '<svg class="w-4 h-4 text-indigo-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>' +
-    "</div>" +
-    '<div class="flex items-center gap-1.5 pr-1.5">' +
-    '<span class="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_8px_#34d399] tiny-pulse"></span>' +
-    '<span class="text-xs sm:text-sm font-bold tracking-wide text-white whitespace-nowrap">Ask Rohan</span>' +
-    "</div>" +
-    "</div>" +
-    "</button>";
+    '<div id="assistant-toggle" class="assistant-toggle" role="button" aria-label="Ask Rohan AI — Assistant" tabindex="0">' +
+    '<video class="avatar-robot-video" autoplay loop muted playsinline disablepictureinpicture>' +
+    '<source src="/assets/ai-robot-action.webm" type="video/webm" />' +
+    '<source src="/assets/ai-robot-action.mp4" type="video/mp4" />' +
+    '</video>' +
+    '</div>';
 
   document.body.appendChild(shell);
 
@@ -660,13 +654,13 @@ function initDraggableAssistant() {
   var dragThreshold = 6;
 
   // Compute initial position (bottom right)
-  var margin = 20;
-  var bottomMargin = window.innerWidth < 768 ? 85 : 24;
+  var margin = 24;
+  var bottomMargin = window.innerWidth < 768 ? 95 : 32;
   var toggleRect = toggle.getBoundingClientRect();
-  var btnW = toggleRect.width || 135;
-  var btnH = toggleRect.height || 46;
+  var btnW = toggleRect.width || 170;
+  var btnH = toggleRect.height || 54;
 
-  currentLeft = window.innerWidth - btnW - margin;
+  currentLeft = document.documentElement.clientWidth - btnW - margin;
   currentTop = window.innerHeight - btnH - bottomMargin;
   applyPosition(currentLeft, currentTop, false);
 
@@ -702,11 +696,11 @@ function initDraggableAssistant() {
         var newTop = initialTop + deltaY;
 
         var r = toggle.getBoundingClientRect();
-        var maxL = window.innerWidth - r.width - 8;
-        var maxT = window.innerHeight - r.height - 8;
+        var maxL = document.documentElement.clientWidth - r.width - 12;
+        var maxT = window.innerHeight - r.height - 12;
 
-        newLeft = Math.max(8, Math.min(newLeft, maxL));
-        newTop = Math.max(8, Math.min(newTop, maxT));
+        newLeft = Math.max(12, Math.min(newLeft, maxL));
+        newTop = Math.max(12, Math.min(newTop, maxT));
 
         currentLeft = newLeft;
         currentTop = newTop;
@@ -745,21 +739,21 @@ function initDraggableAssistant() {
 
   function snapToEdge() {
     var rect = toggle.getBoundingClientRect();
-    var btnW = rect.width || 135;
-    var btnH = rect.height || 46;
-    var sideMargin = 18;
-    var minTop = 60;
-    var maxBottom = window.innerWidth < 768 ? 85 : 24;
+    var btnW = rect.width || 170;
+    var btnH = rect.height || 54;
+    var sideMargin = 24;
+    var minTop = 80;
+    var maxBottom = window.innerWidth < 768 ? 95 : 32;
     var maxTop = window.innerHeight - btnH - maxBottom;
 
     currentTop = Math.max(minTop, Math.min(currentTop, maxTop));
     var midX = currentLeft + btnW / 2;
 
-    if (midX < window.innerWidth / 2) {
+    if (midX < document.documentElement.clientWidth / 2) {
       currentLeft = sideMargin;
       isDockedOnLeft = true;
     } else {
-      currentLeft = window.innerWidth - btnW - sideMargin;
+      currentLeft = document.documentElement.clientWidth - btnW - sideMargin;
       isDockedOnLeft = false;
     }
 
