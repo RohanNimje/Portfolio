@@ -357,72 +357,75 @@ html.dark .surface-card-hover:hover {
 }
 
 /* ═══════════════════════════════════════════════════
-   HERO PROFILE IMAGE — EDITORIAL FRAME
+   HERO PROFILE IMAGE — TRANSPARENT CUTOUT PORTRAIT
    ════════════════════════════════════════════════════ */
 .editorial-frame {
   position: relative;
-  border-radius: 1.5rem;
-  border: 1px solid var(--border);
   overflow: visible;
-  background: var(--card);
-  box-shadow:
-    var(--glow),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.5);
-  transition: transform 500ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 500ms ease;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 500ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* Clip children manually since overflow is visible for floating nodes */
-.editorial-frame img {
-  border-radius: 1.5rem;
-}
-
-.editorial-frame:hover {
-  transform: scale(1.012) translateY(-2px);
-  box-shadow: var(--glow-hover), 0 0 0 1px rgba(79, 70, 229, 0.12);
-}
-
-html.dark .editorial-frame {
-  box-shadow: var(--glow), inset 0 0 0 1px rgba(255, 255, 255, 0.04);
-}
-
-html.dark .editorial-frame:hover {
-  box-shadow: var(--glow-hover), 0 0 0 1px rgba(99, 102, 241, 0.2);
-}
-
-/* Left-edge gradient bleed — connects image to content */
+/* Ambient Back-Glow (soft blurred accent radial gradient behind subject) */
 .editorial-frame::before {
   content: "";
   position: absolute;
-  inset: 0;
-  left: 0;
-  width: 35%;
-  background: linear-gradient(to right, var(--background) 0%, transparent 100%);
-  z-index: 2;
-  pointer-events: none;
-  opacity: 0;
-  border-radius: 1.5rem 0 0 1.5rem;
-  transition: opacity 500ms ease;
-}
-
-.editorial-frame-bleed::before {
-  opacity: 0.45;
-}
-
-html.dark .editorial-frame-bleed::before {
-  opacity: 0.35;
-}
-
-/* Bottom gradient — subtle fade, no text overlay */
-.editorial-frame-gradient {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 30%;
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.35) 0%, transparent 100%);
-  border-radius: 0 0 1.5rem 1.5rem;
+  top: 5%;
+  left: 5%;
+  right: 5%;
+  bottom: 5%;
+  background: radial-gradient(circle at 50% 45%, rgba(79, 70, 229, 0.28) 0%, rgba(99, 102, 241, 0.1) 45%, transparent 70%);
+  filter: blur(45px);
   z-index: 1;
   pointer-events: none;
+  border-radius: 50%;
+  transition: opacity 500ms ease, transform 500ms ease;
+  will-change: transform, opacity;
+}
+
+html.dark .editorial-frame::before {
+  background: radial-gradient(circle at 50% 45%, rgba(99, 102, 241, 0.38) 0%, rgba(129, 140, 248, 0.14) 50%, transparent 75%);
+  filter: blur(55px);
+}
+
+.editorial-frame:hover::before {
+  transform: scale(1.12);
+  opacity: 1;
+}
+
+/* Transparent PNG cutout portrait image */
+.editorial-frame img {
+  position: relative;
+  z-index: 2;
+  border-radius: 0 !important;
+  object-fit: contain !important;
+  filter: drop-shadow(0 16px 28px rgba(0, 0, 0, 0.12)) drop-shadow(0 0 22px rgba(79, 70, 229, 0.18));
+  transition: transform 500ms cubic-bezier(0.16, 1, 0.3, 1), filter 500ms ease;
+  will-change: transform, filter;
+}
+
+html.dark .editorial-frame img {
+  filter: drop-shadow(0 20px 32px rgba(0, 0, 0, 0.5)) drop-shadow(0 0 28px rgba(99, 102, 241, 0.28));
+}
+
+.editorial-frame:hover img {
+  transform: scale(1.025) translateY(-4px);
+  filter: drop-shadow(0 24px 38px rgba(0, 0, 0, 0.18)) drop-shadow(0 0 34px rgba(79, 70, 229, 0.32));
+}
+
+html.dark .editorial-frame:hover img {
+  filter: drop-shadow(0 28px 44px rgba(0, 0, 0, 0.65)) drop-shadow(0 0 38px rgba(99, 102, 241, 0.45));
+}
+
+.editorial-frame-gradient,
+.editorial-frame-bleed::before {
+  display: none !important;
 }
 
 /* ═══════════════════════════════════════════════════

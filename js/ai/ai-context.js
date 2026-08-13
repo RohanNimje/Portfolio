@@ -16,8 +16,7 @@ window.AI_CONTEXT = {
     summary: "Hey! I'm an AI Systems Architect & Full-Stack Engineer who loves turning complex tech ideas into fast, real-world solutions. Right now, I'm pursuing my BCA in AI & Machine Learning (holding an 8.38 CGPA) while sharpening my full-stack skills with NxtWave's CCBP 4.0 program. I thrive on building things that run fast and smooth—whether that's low-latency cloud systems, smart AI agents, or clean full-stack apps. I bring solid problem-solving skills to the table (Global Rank 27 in DSA CodeVerse) and a strong work ethic backed by a 365-day unbroken coding streak. Big on clean code, rapid execution, and building tech that actually makes an impact!",
     location: "Maharashtra, India",
     profileImages: [
-      "https://res.cloudinary.com/doyiqcna9/image/upload/v1783672197/rohan_nimje_profile_zkmb5q.jpg",
-      "https://res.cloudinary.com/doyiqcna9/image/upload/v1783672140/rohan_qfsija.jpg"
+      "/public/profile.png"
     ]
   },
 

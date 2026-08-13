@@ -8,7 +8,7 @@ const portfolioData = {
       "AI Systems Architect & Technical Product Lead specializing in Agentic AI, n8n automation pipelines, LLM orchestration, and rapid 0-to-1 product deployment.",
 
     profileImages: [
-      "https://res.cloudinary.com/doyiqcna9/image/upload/v1783672140/rohan_qfsija.jpg"
+      "/public/profile.png"
     ]
   },
 
