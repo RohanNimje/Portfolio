@@ -906,53 +906,163 @@ body.overflow-hidden {
   box-shadow: 0 8px 22px rgba(79, 70, 229, 0.35);
 }
 
-.assistant-toggle {
-  position: fixed;
-  bottom: 24px;
-  right: 24px;
-  z-index: 9999;
-  cursor: grab;
-  touch-action: none;
-  user-select: none;
+/* ═══════════════════════════════════════════════════
+   TOP NAVBAR — LINEAR / VERCEL MINIMAL AESTHETIC
+   ════════════════════════════════════════════════════ */
+.nav-enter-top {
+  background-color: color-mix(in srgb, var(--card) 96%, transparent);
+  backdrop-filter: blur(12px) saturate(160%);
+  -webkit-backdrop-filter: blur(12px) saturate(160%);
+  border-bottom: 1px solid var(--border);
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.04);
+  will-change: transform;
+}
+
+html.dark .nav-enter-top {
+  background-color: color-mix(in srgb, var(--card) 92%, transparent);
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.22);
+}
+
+/* Mobile bottom dock — pill-style glassmorphic, docked flush */
+.bottom-nav {
+  padding-bottom: max(10px, env(safe-area-inset-bottom, 10px));
+  padding-top: 6px;
+  background: transparent;
+}
+
+/* ═══════════════════════════════════════════════════
+   AI AGENT WIDGET — SHELL TRANSPARENCY RESET
+   ════════════════════════════════════════════════════ */
+.assistant-shell,
+#portfolio-assistant,
+.assistant-toggle,
+.assistant-toggle:hover,
+.assistant-toggle:focus,
+.assistant-avatar-btn,
+.avatar-video-mask {
   background: transparent !important;
+  background-color: transparent !important;
   border: none !important;
   box-shadow: none !important;
   outline: none !important;
   padding: 0 !important;
-  animation: floatAvatar 4s ease-in-out infinite;
+  margin: 0 !important;
+  border-radius: 0 !important;
+}
+
+/* ═══════════════════════════════════════════════════
+   AI AGENT FLOATING TOGGLE — POSITION & ANIMATION
+   ════════════════════════════════════════════════════ */
+.assistant-toggle {
+  position: fixed;
+  bottom: calc(70px + env(safe-area-inset-bottom, 0px));
+  right: 10px;
+  z-index: 9999;
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* GPU layer — smooth 60fps float + drag */
+  will-change: transform;
+  transform: translateZ(0);
+  animation: floatAvatar 5s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
+}
+
+@media (min-width: 768px) {
+  .assistant-toggle {
+    bottom: 16px;
+    right: 16px;
+    animation-duration: 4.5s;
+  }
+}
+
+@media (min-width: 1280px) {
+  .assistant-toggle {
+    bottom: 20px;
+    right: 20px;
+  }
 }
 
 .assistant-toggle.is-dragging {
   cursor: grabbing;
   animation: none;
+  will-change: left, top;
 }
 
 @keyframes floatAvatar {
-  0%, 100% { transform: translateY(0px); }
-  50%       { transform: translateY(-8px); }
+  0%, 100% {
+    transform: translateZ(0) translateY(0px);
+  }
+  45% {
+    transform: translateZ(0) translateY(-8px);
+  }
+  55% {
+    transform: translateZ(0) translateY(-7px);
+  }
 }
 
-/* Transparent 3D Robot video — native alpha, no bg, no overlay */
+/* ═══════════════════════════════════════════════════
+   AI AGENT VIDEO — FLUID RESPONSIVE SIZING
+   ════════════════════════════════════════════════════ */
 .avatar-robot-video {
-  width: 110px;
-  height: 110px;
+  /*
+   * Fluid scaling strategy (autonomous):
+   *   Mobile  (< 640px):  88px  → 100px  (compact, non-intrusive)
+   *   Tablet  (640–1023): 108px → 124px  (balanced, mid-screen)
+   *   Laptop  (1024–1439):128px → 144px  (prominent, feels native)
+   *   Desktop (≥ 1440px): 140px → 160px  (ultra-crisp, high-density)
+   *
+   * Uses fluid clamp() — no hard breakpoint jumps.
+   * middle arg (viewport unit) drives smooth interpolation between min/max.
+   */
+  width: clamp(88px, 22vw, 100px);
+  height: clamp(88px, 22vw, 100px);
   object-fit: contain;
   pointer-events: none;
   display: block;
   background: transparent !important;
+  background-color: transparent !important;
   border: none !important;
   box-shadow: none !important;
   outline: none !important;
-  mix-blend-mode: normal;
-  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  mix-blend-mode: normal !important;
+  /* GPU compositing — crisp rendering at any DPR */
+  will-change: transform;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@media (min-width: 640px) {
+  .avatar-robot-video {
+    width: clamp(108px, 13vw, 124px);
+    height: clamp(108px, 13vw, 124px);
+  }
+}
+
+@media (min-width: 1024px) {
+  .avatar-robot-video {
+    width: clamp(128px, 10vw, 144px);
+    height: clamp(128px, 10vw, 144px);
+  }
+}
+
+@media (min-width: 1440px) {
+  .avatar-robot-video {
+    width: clamp(140px, 9vw, 160px);
+    height: clamp(140px, 9vw, 160px);
+  }
 }
 
 .assistant-toggle:hover .avatar-robot-video {
-  transform: scale(1.1);
+  transform: translateZ(0) scale(1.08);
 }
 
 .assistant-toggle.is-dragging .avatar-robot-video {
-  transform: scale(1.12);
+  transform: translateZ(0) scale(1.12);
 }
 
 .assistant-toggle.is-hidden {
@@ -967,7 +1077,27 @@ body.overflow-hidden {
    BOTTOM NAV (MOBILE)
    ════════════════════════════════════════════════════ */
 .bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 40;
+  width: 100%;
+  padding-bottom: max(12px, env(safe-area-inset-bottom));
+  padding-top: 8px;
+  padding-left: 16px;
+  padding-right: 16px;
+  background: rgba(245, 244, 240, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-top: 1px solid var(--border);
+  box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.05);
   transition: transform 300ms cubic-bezier(0.16, 1, 0.3, 1), opacity 240ms ease;
+}
+
+html.dark .bottom-nav {
+  background: rgba(12, 12, 11, 0.85);
+  box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.35);
 }
 
 .bottom-nav.nav-hidden {

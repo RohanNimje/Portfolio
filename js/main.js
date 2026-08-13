@@ -136,11 +136,11 @@ function renderNavigation() {
     '</button>';
 
   document.getElementById("navigation").innerHTML =
-    '<nav class="hidden md:flex fixed top-0 left-0 right-0 z-50 w-full bg-card border-b border-border shadow-sm nav-enter-top">' +
+    '<nav class="hidden md:flex fixed top-0 left-0 right-0 z-50 w-full nav-enter-top">' +
     '<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full flex items-center justify-between h-16">' +
-    '<div class="flex-shrink-0 flex items-center gap-2 cursor-pointer transition-transform hover:scale-[1.02]" data-scroll="hero">' +
-    '<div class="w-8 h-8 rounded-lg bg-accent text-white flex items-center justify-center font-display font-bold text-lg">R</div>' +
-    '<span class="font-display font-bold text-foreground">Rohan Nimje</span>' +
+    '<div class="flex-shrink-0 flex items-center gap-2.5 cursor-pointer transition-transform hover:scale-[1.02]" data-scroll="hero">' +
+    '<img src="/public/Logo.png" alt="Rohan Nimje" class="w-8 h-8 rounded-lg object-contain shadow-sm" />' +
+    '<span class="font-display font-bold text-foreground text-base tracking-tight whitespace-nowrap">Rohan Nimje</span>' +
     '</div>' +
     '<div class="hidden md:flex items-center gap-1 absolute left-1/2 -translate-x-1/2">' +
     desktopButtons +
@@ -151,8 +151,8 @@ function renderNavigation() {
     '</div>' +
     '</div>' +
     '</nav>' +
-    '<div id="bottom-nav" class="bottom-nav md:hidden fixed bottom-0 left-0 right-0 z-40 flex justify-center px-4 pb-5 pt-3 w-full bg-card border-t border-border shadow-lg nav-enter-bottom">' +
-    '<div class="rounded-full px-3 py-2 bg-card border border-border flex items-center gap-1.5 max-w-lg w-full justify-center shadow-sm">' +
+    '<div id="bottom-nav" class="bottom-nav md:hidden fixed bottom-0 left-0 right-0 z-40 flex justify-center nav-enter-bottom">' +
+    '<div class="rounded-full px-3 py-1.5 bg-card/90 dark:bg-card/75 border border-border/80 flex items-center gap-1.5 max-w-lg w-full justify-center shadow-sm backdrop-blur-md">' +
     mobileButtons +
     themeToggleBtnMobile +
     "</div>" +
@@ -617,10 +617,7 @@ function renderAssistant() {
     "</form>" +
     "</section>" +
     '<div id="assistant-toggle" class="assistant-toggle" role="button" aria-label="Ask Rohan AI — Assistant" tabindex="0">' +
-    '<video class="avatar-robot-video" autoplay loop muted playsinline disablepictureinpicture>' +
-    '<source src="/assets/ai-robot-action.webm" type="video/webm" />' +
-    '<source src="/assets/ai-robot-action.mp4" type="video/mp4" />' +
-    '</video>' +
+    '<video class="avatar-robot-video" src="/public/ai gif.webm" autoplay loop muted playsinline disablepictureinpicture></video>' +
     '</div>';
 
   document.body.appendChild(shell);
@@ -653,12 +650,17 @@ function initDraggableAssistant() {
   var isDockedOnLeft = false;
   var dragThreshold = 6;
 
-  // Compute initial position (bottom right)
-  var margin = 24;
-  var bottomMargin = window.innerWidth < 768 ? 95 : 32;
+  // Compute initial position — values mirror CSS clamp() midpoints
+  var isMobile = window.innerWidth < 640;
+  var isTablet = window.innerWidth >= 640 && window.innerWidth < 1024;
+  var isDesktop = window.innerWidth >= 1024;
+  var isWide = window.innerWidth >= 1440;
+  var defaultSize = isWide ? 150 : isDesktop ? 136 : isTablet ? 116 : 94;
   var toggleRect = toggle.getBoundingClientRect();
-  var btnW = toggleRect.width || 170;
-  var btnH = toggleRect.height || 54;
+  var btnW = toggleRect.width || defaultSize;
+  var btnH = toggleRect.height || defaultSize;
+  var margin = isMobile ? 10 : isDesktop ? 20 : 16;
+  var bottomMargin = isMobile ? 70 : isDesktop ? 20 : 16;
 
   currentLeft = document.documentElement.clientWidth - btnW - margin;
   currentTop = window.innerHeight - btnH - bottomMargin;
@@ -666,6 +668,11 @@ function initDraggableAssistant() {
 
   toggle.addEventListener("pointerdown", function (e) {
     if (e.button !== 0 && e.pointerType === "mouse") return;
+    
+    // Explicitly block event bleeding to underlying DOM
+    e.stopPropagation();
+    if (e.cancelable) e.preventDefault();
+
     isDragging = true;
     hasMoved = false;
     dragStartX = e.clientX;
@@ -696,11 +703,11 @@ function initDraggableAssistant() {
         var newTop = initialTop + deltaY;
 
         var r = toggle.getBoundingClientRect();
-        var maxL = document.documentElement.clientWidth - r.width - 12;
-        var maxT = window.innerHeight - r.height - 12;
+        var maxL = document.documentElement.clientWidth - r.width - 6;
+        var maxT = window.innerHeight - r.height - 6;
 
-        newLeft = Math.max(12, Math.min(newLeft, maxL));
-        newTop = Math.max(12, Math.min(newTop, maxT));
+        newLeft = Math.max(6, Math.min(newLeft, maxL));
+        newTop = Math.max(6, Math.min(newTop, maxT));
 
         currentLeft = newLeft;
         currentTop = newTop;
@@ -737,13 +744,31 @@ function initDraggableAssistant() {
     window.addEventListener("pointercancel", onPointerUp);
   });
 
+  // Strict pointer isolation: block native click/touchend from bubbling
+  toggle.addEventListener("click", function (e) {
+    e.stopPropagation();
+    e.preventDefault();
+  });
+
+  toggle.addEventListener("touchend", function (e) {
+    e.stopPropagation();
+    // Don't prevent default indiscriminately if we need standard touch behavior,
+    // but here we fully control the element via pointer events, so it's safe.
+    if (e.cancelable) e.preventDefault();
+  });
+
   function snapToEdge() {
     var rect = toggle.getBoundingClientRect();
-    var btnW = rect.width || 170;
-    var btnH = rect.height || 54;
-    var sideMargin = 24;
-    var minTop = 80;
-    var maxBottom = window.innerWidth < 768 ? 95 : 32;
+    var isMobileNow = window.innerWidth < 640;
+    var isTabletNow = window.innerWidth >= 640 && window.innerWidth < 1024;
+    var isDesktopNow = window.innerWidth >= 1024;
+    var isWideNow = window.innerWidth >= 1440;
+    var defaultSizeNow = isWideNow ? 150 : isDesktopNow ? 136 : isTabletNow ? 116 : 94;
+    var btnW = rect.width || defaultSizeNow;
+    var btnH = rect.height || defaultSizeNow;
+    var sideMargin = isMobileNow ? 10 : isDesktopNow ? 20 : 16;
+    var minTop = 60;
+    var maxBottom = isMobileNow ? 70 : isDesktopNow ? 20 : 16;
     var maxTop = window.innerHeight - btnH - maxBottom;
 
     currentTop = Math.max(minTop, Math.min(currentTop, maxTop));
