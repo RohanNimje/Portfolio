@@ -265,11 +265,12 @@ function renderCertifications() {
     var certSrc = cert.CertImgUrl || cert.image || "";
     var position = getRelativePosition(i, certificationsIndex, certs.length);
     if (Math.abs(position) <= 1) {
-      var x = position < 0 ? -220 : position > 0 ? 220 : 0;
-      var scale = position === 0 ? 0.95 : 0.68;
+      var isMobile = typeof window !== "undefined" && window.innerWidth < 640;
+      var x = position < 0 ? (isMobile ? -130 : -220) : position > 0 ? (isMobile ? 130 : 220) : 0;
+      var scale = position === 0 ? 0.95 : (isMobile ? 0.72 : 0.68);
       var opacity = position === 0 ? 1 : 0.35;
       var zIndex = position === 0 ? 50 : 20;
-      var rotate = position < 0 ? 42 : position > 0 ? -42 : 0;
+      var rotate = position < 0 ? (isMobile ? 28 : 42) : position > 0 ? (isMobile ? -28 : -42) : 0;
       cards +=
         '<div data-cert-index="' + i + '" class="coverflow-card absolute cursor-pointer" style="z-index:' + zIndex + ";opacity:" + opacity + ";transform:translateX(" + x + "px) scale(" + scale + ") rotateY(" + rotate + 'deg);">' +
         '<div class="block bg-white rounded-xl border border-slate-200 w-full h-full relative overflow-visible"><img src="' + certSrc + '" alt="' + cert.name + '" draggable="false" loading="lazy" decoding="async" class="block w-full h-full object-contain bg-white rounded-[10px]" style="box-shadow:' + (position === 0 ? "0 12px 40px rgba(67, 56, 202, 0.14)" : "0 4px 16px rgba(15, 23, 42, 0.06)") + ';" /></div>' +
@@ -289,7 +290,7 @@ function renderCertifications() {
     cards +
     "</div>" +
     "</div>" +
-    '<div class="mt-8 md:mt-10 space-y-3 text-center"><div><p class="text-sm sm:text-base md:text-lg font-semibold text-foreground">' + (activeCert ? activeCert.name : "") + '</p><p class="text-xs sm:text-sm text-muted-foreground">' + (activeCert ? activeCert.issuer : "") + '</p></div><div class="flex justify-center items-center gap-3 pt-2"><div class="w-2 h-2 rounded-full bg-accent tiny-pulse"></div><span class="text-xs sm:text-sm font-semibold text-muted-foreground"><span class="text-accent">' + (certificationsIndex + 1) + "</span> / " + certs.length + "</span></div></div>";
+    '<div class="mt-4 sm:mt-6 md:mt-8 space-y-2 text-center"><div><p class="text-sm sm:text-base md:text-lg font-semibold text-foreground">' + (activeCert ? activeCert.name : "") + '</p><p class="text-xs sm:text-sm text-muted-foreground">' + (activeCert ? activeCert.issuer : "") + '</p></div><div class="flex justify-center items-center gap-3 pt-1.5"><div class="w-2 h-2 rounded-full bg-accent tiny-pulse"></div><span class="text-xs sm:text-sm font-semibold text-muted-foreground"><span class="text-accent">' + (certificationsIndex + 1) + "</span> / " + certs.length + "</span></div></div>";
 }
 
 /* ══════════════════════════════════════════════════════════
