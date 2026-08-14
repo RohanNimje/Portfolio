@@ -1321,6 +1321,53 @@ function attachEvents() {
       }
     }
 
+    // Micro-Copy Email Button in Footer
+    var emailCopyBtn = event.target.closest("#footer-copy-email-btn");
+    if (emailCopyBtn) {
+      event.preventDefault();
+      event.stopPropagation();
+      var email = "rohannimje53@gmail.com";
+      var tooltip = document.getElementById("footer-copy-tooltip");
+      var iconEl = document.getElementById("footer-copy-icon");
+
+      function showFeedback() {
+        if (tooltip) {
+          tooltip.classList.remove("opacity-0", "scale-95");
+          tooltip.classList.add("opacity-100", "scale-100");
+        }
+        if (iconEl) {
+          iconEl.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />';
+        }
+        setTimeout(function () {
+          if (tooltip) {
+            tooltip.classList.remove("opacity-100", "scale-100");
+            tooltip.classList.add("opacity-0", "scale-95");
+          }
+          if (iconEl) {
+            iconEl.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />';
+          }
+        }, 2000);
+      }
+
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(email).then(showFeedback).catch(function () {
+          window.location.href = "mailto:" + email;
+        });
+      } else {
+        var tempInput = document.createElement("textarea");
+        tempInput.value = email;
+        document.body.appendChild(tempInput);
+        tempInput.select();
+        try {
+          document.execCommand("copy");
+          showFeedback();
+        } catch (_) {
+          window.location.href = "mailto:" + email;
+        }
+        document.body.removeChild(tempInput);
+      }
+    }
+
     // Quick action chips
     var assistantQuestion = event.target.closest("[data-assistant-question]");
     if (assistantQuestion) {
