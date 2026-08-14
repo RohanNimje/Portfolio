@@ -82,7 +82,7 @@ const portfolioData = {
       title: "Cosmolyze — AI-Powered Skincare Analyzer",
       techStack: ["React", "Python", "Computer Vision AI", "Tailwind CSS", "Vercel"],
       description: "An AI-powered 'Pocket Dermatologist' built to help users make informed skincare choices by cutting through misleading marketing. Scans skin condition in real time to recommend exact active ingredients (Niacinamide, Salicylic Acid) based on barrier needs. Shortlisted as National Finalist for NxtWave's Idea2Impact Hackathon in Hyderabad.",
-      productDemoUrl: "https://res.cloudinary.com/doyiqcna9/video/upload/v1783677832/Untitled_design_exdmtc.mp4",
+      productDemoUrl: "https://res.cloudinary.com/doyiqcna9/video/upload/v1783772817/Infrastruture_Demo_Video_rvobvw.mp4",
       projectCertImgUrl: "https://res.cloudinary.com/doyiqcna9/image/upload/v1786384987/Ideaimpact_Certificate_orka1w.jpg",
       isFeatured: false
     },

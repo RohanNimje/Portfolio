@@ -407,19 +407,19 @@ window.openProjectModal = function (idOrSlug) {
 
 function renderLaptopFrame(videoUrl, title) {
   return (
-    '<div class="space-y-3 reveal">' +
+    '<div class="space-y-3 reveal w-full">' +
     '<h4 class="text-xs font-mono font-semibold uppercase text-muted-foreground tracking-wider letter-spacing-wide">' + (title || "MVP Architecture") + '</h4>' +
-    '<div class="relative rounded-2xl overflow-hidden border border-border shadow-2xl" style="background:#0d0d0d">' +
-    '<div style="background:#1a1a1a;border-bottom:1px solid #2a2a2a" class="px-4 py-2.5 flex items-center justify-between">' +
+    '<div class="laptop-mockup-frame">' +
+    '<div class="laptop-mockup-header">' +
     '<div class="flex gap-1.5">' +
     '<div style="width:10px;height:10px;border-radius:50%;background:#FF5F57"></div>' +
     '<div style="width:10px;height:10px;border-radius:50%;background:#FFBD2E"></div>' +
     '<div style="width:10px;height:10px;border-radius:50%;background:#28C840"></div>' +
     '</div>' +
-    '<span style="font-family:monospace;font-size:11px;color:#666;letter-spacing:0.02em">scanzy-mvp-architecture.mp4</span>' +
+    '<span style="font-family:monospace;font-size:11px;color:#888;letter-spacing:0.02em">scanzy-mvp-architecture.mp4</span>' +
     '<div style="width:50px"></div>' +
     '</div>' +
-    '<video src="' + videoUrl + '" autoplay muted loop playsinline controls preload="auto" class="autoplay-video w-full aspect-video object-cover" style="background:#000;display:block"></video>' +
+    '<video src="' + videoUrl + '" autoplay muted loop playsinline controls preload="auto" class="autoplay-video laptop-mockup-video"></video>' +
     '</div>' +
     '</div>'
   );
@@ -427,12 +427,12 @@ function renderLaptopFrame(videoUrl, title) {
 
 function renderMobileFrame(videoUrl, title) {
   return (
-    '<div class="space-y-3 flex flex-col items-center reveal">' +
-    '<h4 class="text-xs font-mono font-semibold uppercase text-muted-foreground tracking-wider self-start">' + (title || "Product Demo") + '</h4>' +
-    '<div class="relative w-full max-w-[260px] aspect-[9/16] mx-auto overflow-hidden flex-1" style="border-radius:2.5rem;border:6px solid #1a1a1a;background:#000;box-shadow:0 25px 60px rgba(0,0,0,0.35),0 0 0 1px rgba(255,255,255,0.06)">' +
-    '<video src="' + videoUrl + '" autoplay muted loop playsinline controls preload="auto" class="autoplay-video w-full h-full object-cover" style="background:#000;display:block"></video>' +
-    '<div style="position:absolute;top:0;left:50%;transform:translateX(-50%);width:120px;height:20px;background:#1a1a1a;border-radius:0 0 16px 16px;z-index:20;display:flex;align-items:center;justify-content:center">' +
-    '<div style="width:8px;height:8px;border-radius:50%;background:#2a2a2a"></div>' +
+    '<div class="space-y-3 flex flex-col items-center reveal w-full">' +
+    (title ? '<h4 class="text-xs font-mono font-semibold uppercase text-muted-foreground tracking-wider self-start sm:self-center">' + title + '</h4>' : '') +
+    '<div class="phone-mockup-chassis">' +
+    '<div class="phone-mockup-speaker"></div>' +
+    '<div class="phone-mockup-screen">' +
+    '<video src="' + videoUrl + '" autoplay muted loop playsinline controls preload="auto" class="autoplay-video phone-mockup-video"></video>' +
     '</div>' +
     '</div>' +
     '</div>'
@@ -473,11 +473,11 @@ function renderProjects() {
     var videoMockupHtml = "";
 
     if (laptopVideo && mobileVideo) {
-      // Dual layout: Laptop frame (Left) + Mobile frame (Right)
+      // Dual layout: Laptop frame (Left, 7 cols) + Mobile frame (Right, 5 cols)
       videoMockupHtml =
-        '<div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 pt-4">' +
-        renderLaptopFrame(laptopVideo, "MVP Architecture Demo") +
-        renderMobileFrame(mobileVideo, "Product Mobile Showcase") +
+        '<div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center pt-4">' +
+        '<div class="lg:col-span-7">' + renderLaptopFrame(laptopVideo, "MVP Architecture Demo") + '</div>' +
+        '<div class="lg:col-span-5 flex justify-center">' + renderMobileFrame(mobileVideo, "Product Mobile Showcase") + '</div>' +
         '</div>';
     } else if (laptopVideo) {
       // Single laptop frame
@@ -489,7 +489,7 @@ function renderProjects() {
       // Single mobile device frame
       videoMockupHtml =
         '<div class="flex justify-center pt-4">' +
-        renderMobileFrame(mobileVideo, "Product Showcase") +
+        renderMobileFrame(mobileVideo, "Product Mobile Showcase") +
         '</div>';
     }
 
@@ -672,9 +672,13 @@ function renderProjectModal(project) {
   if (toggle) toggle.classList.add("is-hidden");
 
   var media = "";
-  var demoUrl = project.mobileVideoUrl || project.laptopVideoUrl || project.productDemoUrl || project.videourlproduct || project.videoUrlmvp || project.videoUrl;
+  // In project modals, always render the standard 16:9 desktop / system architecture demo video
+  var demoUrl = project.laptopVideoUrl || project.productDemoUrl || project.videoUrlmvp || project.videoUrl || project.videourlproduct || project.mobileVideoUrl;
   if (demoUrl) {
-    media += '<div><h3 class="text-lg font-semibold text-foreground mb-3">Project Demo / Architecture</h3><div class="relative w-full aspect-video rounded-xl overflow-hidden border border-border shadow-sm bg-muted"><video preload="auto" src="' + demoUrl + '" controls class="w-full h-full object-cover"></video></div></div>';
+    media += '<div><h3 class="text-lg font-semibold text-foreground mb-3">System Architecture & Demo</h3>' +
+      '<div class="modal-video-container">' +
+      '<video preload="auto" src="' + demoUrl + '" controls playsinline class="modal-video-player autoplay-video"></video>' +
+      '</div></div>';
   }
   var shotUrl = project.screenshotUrl || project.screenshoturl;
   if (shotUrl) {
@@ -706,6 +710,8 @@ function renderProjectModal(project) {
     "</div>" +
     "</div>" +
     "</div>";
+
+  setupAutoplayVideos();
 }
 
 /* ══════════════════════════════════════════════════════════
@@ -1550,7 +1556,22 @@ function setupAutoplayVideos() {
   }, { threshold: 0.25, rootMargin: "50px" });
 
   for (var j = 0; j < videos.length; j++) {
-    observer.observe(videos[j]);
+    var v = videos[j];
+    observer.observe(v);
+
+    // Dynamic aspect-ratio auto-calibration
+    if (v.readyState >= 1 && v.videoWidth && v.videoHeight) {
+      var scr = v.closest(".phone-mockup-screen");
+      if (scr) scr.style.setProperty("--phone-aspect-ratio", v.videoWidth + " / " + v.videoHeight);
+    } else {
+      v.addEventListener("loadedmetadata", function (e) {
+        var el = e.target;
+        if (el.videoWidth && el.videoHeight) {
+          var screen = el.closest(".phone-mockup-screen");
+          if (screen) screen.style.setProperty("--phone-aspect-ratio", el.videoWidth + " / " + el.videoHeight);
+        }
+      });
+    }
   }
 }
 
