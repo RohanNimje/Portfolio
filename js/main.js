@@ -416,8 +416,6 @@ function renderLaptopFrame(videoUrl, title) {
     '<div style="width:10px;height:10px;border-radius:50%;background:#FFBD2E"></div>' +
     '<div style="width:10px;height:10px;border-radius:50%;background:#28C840"></div>' +
     '</div>' +
-    '<span style="font-family:monospace;font-size:11px;color:#888;letter-spacing:0.02em">scanzy-mvp-architecture.mp4</span>' +
-    '<div style="width:50px"></div>' +
     '</div>' +
     '<video src="' + videoUrl + '" autoplay muted loop playsinline controls preload="auto" class="autoplay-video laptop-mockup-video"></video>' +
     '</div>' +
