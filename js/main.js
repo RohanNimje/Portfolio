@@ -417,7 +417,7 @@ function renderLaptopFrame(videoUrl, title) {
     '<div style="width:10px;height:10px;border-radius:50%;background:#28C840"></div>' +
     '</div>' +
     '</div>' +
-    '<video src="' + videoUrl + '" autoplay muted loop playsinline controls preload="auto" class="autoplay-video laptop-mockup-video"></video>' +
+    '<video src="' + videoUrl + '" muted loop playsinline controls preload="metadata" class="autoplay-video laptop-mockup-video"></video>' +
     '</div>' +
     '</div>'
   );
@@ -430,7 +430,7 @@ function renderMobileFrame(videoUrl, title) {
     '<div class="phone-mockup-chassis">' +
     '<div class="phone-mockup-speaker"></div>' +
     '<div class="phone-mockup-screen">' +
-    '<video src="' + videoUrl + '" autoplay muted loop playsinline controls preload="auto" class="autoplay-video phone-mockup-video"></video>' +
+    '<video src="' + videoUrl + '" muted loop playsinline controls preload="metadata" class="autoplay-video phone-mockup-video"></video>' +
     '</div>' +
     '</div>' +
     '</div>'
@@ -569,7 +569,18 @@ function unlockBodyScroll() {
 
 function closeProjectModal() {
   var modalRoot = document.getElementById("project-modal-root");
-  if (modalRoot) modalRoot.innerHTML = "";
+  if (modalRoot) {
+    var videos = modalRoot.querySelectorAll("video");
+    for (var i = 0; i < videos.length; i++) {
+      try {
+        videos[i].pause();
+        videos[i].currentTime = 0;
+        videos[i].removeAttribute("src");
+        videos[i].load();
+      } catch (e) { }
+    }
+    modalRoot.innerHTML = "";
+  }
   var toggle = document.getElementById("assistant-toggle");
   if (toggle && !assistantIsOpen) toggle.classList.remove("is-hidden");
   unlockBodyScroll();
@@ -675,7 +686,7 @@ function renderProjectModal(project) {
   if (demoUrl) {
     media += '<div><h3 class="text-lg font-semibold text-foreground mb-3">System Architecture & Demo</h3>' +
       '<div class="modal-video-container">' +
-      '<video preload="auto" src="' + demoUrl + '" controls playsinline class="modal-video-player autoplay-video"></video>' +
+      '<video preload="metadata" src="' + demoUrl + '" controls playsinline class="modal-video-player"></video>' +
       '</div></div>';
   }
   var shotUrl = project.screenshotUrl || project.screenshoturl;
@@ -709,7 +720,10 @@ function renderProjectModal(project) {
     "</div>" +
     "</div>";
 
-  setupAutoplayVideos();
+  var modalVideo = document.querySelector("#project-modal-root video");
+  if (modalVideo) {
+    modalVideo.play().catch(function () { });
+  }
 }
 
 /* ══════════════════════════════════════════════════════════
@@ -744,7 +758,7 @@ function renderAssistant() {
     "</form>" +
     "</section>" +
     '<div id="assistant-toggle" class="assistant-toggle" role="button" aria-label="Ask Rohan AI — Assistant" tabindex="0">' +
-    '<video class="avatar-robot-video" src="/public/ai gif.webm" autoplay loop muted playsinline disablepictureinpicture></video>' +
+    '<video class="avatar-robot-video" src="/public/ai gif.webm" autoplay loop muted playsinline preload="metadata" disablepictureinpicture></video>' +
     '</div>';
 
   document.body.appendChild(shell);
@@ -1539,23 +1553,37 @@ function observeReveals() {
 /* ══════════════════════════════════════════════════════════
    VIDEO AUTOPLAY (intersection observer)
 ══════════════════════════════════════════════════════════ */
+var videoObserver = null;
+
 function setupAutoplayVideos() {
+  if (videoObserver) {
+    videoObserver.disconnect();
+    videoObserver = null;
+  }
+
   var videos = document.querySelectorAll(".autoplay-video");
-  var observer = new IntersectionObserver(function (entries) {
+  if (!videos.length) return;
+
+  videoObserver = new IntersectionObserver(function (entries) {
     for (var i = 0; i < entries.length; i++) {
-      var video = entries[i].target;
-      video.muted = true;
-      if (entries[i].isIntersecting) {
-        video.play().catch(function () { });
+      var entry = entries[i];
+      var video = entry.target;
+      if (entry.isIntersecting && entry.intersectionRatio >= 0.25) {
+        video.muted = true;
+        var playPromise = video.play();
+        if (playPromise !== undefined) {
+          playPromise.catch(function () { });
+        }
       } else {
         video.pause();
       }
     }
-  }, { threshold: 0.25, rootMargin: "50px" });
+  }, { threshold: [0, 0.25], rootMargin: "0px" });
 
   for (var j = 0; j < videos.length; j++) {
     var v = videos[j];
-    observer.observe(v);
+    v.muted = true;
+    videoObserver.observe(v);
 
     // Dynamic aspect-ratio auto-calibration
     if (v.readyState >= 1 && v.videoWidth && v.videoHeight) {

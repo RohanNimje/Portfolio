@@ -1723,6 +1723,12 @@ video {
   content-visibility: auto;
 }
 
+video {
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
 .coverflow-card,
 .honor-card-button,
 .surface-card {
