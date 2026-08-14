@@ -211,11 +211,11 @@ function renderHonors() {
   container.innerHTML =
     '<div class="honor-deck-container relative w-full select-none">' +
     '<!-- Dynamic Responsive Grid / Mobile Swipe Track -->' +
-    '<div id="honor-deck" class="honor-deck-track flex md:grid md:grid-cols-2 lg:grid-cols-4 gap-5 overflow-x-auto md:overflow-x-visible pb-2 pt-1 px-1 snap-x snap-mandatory scroll-smooth no-scrollbar">' +
+    '<div id="honor-deck" class="honor-deck-track flex md:grid md:grid-cols-2 lg:grid-cols-4 gap-5 overflow-x-auto md:overflow-x-visible pb-1 pt-1 px-1 snap-x snap-mandatory scroll-smooth no-scrollbar">' +
     cards +
     '</div>' +
     '<!-- Mobile Navigation Indicators (Hidden on desktop) -->' +
-    '<div class="mt-3 flex md:hidden justify-center items-center gap-1.5" id="honor-indicators">' +
+    '<div class="mt-2 flex md:hidden justify-center items-center gap-1.5" id="honor-indicators">' +
     dots +
     '</div>' +
     '</div>';

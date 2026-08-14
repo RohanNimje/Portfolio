@@ -230,6 +230,12 @@ html.dark .coverflow-card img {
   scroll-behavior: smooth;
 }
 
+@media (max-width: 767px) {
+  #honors .fluid-section {
+    padding-bottom: 0.5rem;
+  }
+}
+
 .honor-deck-track::-webkit-scrollbar {
   display: none;
 }
