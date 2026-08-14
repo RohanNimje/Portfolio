@@ -24,10 +24,10 @@
 
 /* ── Constants ─────────────────────────────────────────────── */
 var GEMINI_STREAM_BASE = "https://generativelanguage.googleapis.com/v1beta/models/";
-var GEMINI_BASE        = "https://generativelanguage.googleapis.com/v1beta/models/";
-var GROQ_BASE          = "https://api.groq.com/openai/v1/chat/completions";
-var FETCH_TIMEOUT_MS   = 5000;   // Per-provider attempt timeout (ms)
-var TOTAL_TIMEOUT_MS   = 15000;  // Outer hard deadline for the whole request (ms)
+var GEMINI_BASE = "https://generativelanguage.googleapis.com/v1beta/models/";
+var GROQ_BASE = "https://api.groq.com/openai/v1/chat/completions";
+var FETCH_TIMEOUT_MS = 7000;   // Per-provider attempt timeout (ms)
+var TOTAL_TIMEOUT_MS = 15000;  // Outer hard deadline for the whole request (ms)
 
 /* ── Timeout-aware Fetch ────────────────────────────────────── */
 async function fetchWithTimeout(url, options, timeoutMs) {
@@ -98,14 +98,14 @@ function discoverTargets() {
     var g = groups[prefix];
     if (!g.key) return;
     var provider = detectProvider(g.key, g.provider);
-    var model    = g.model || defaultModel(provider);
-    var baseUrl  = g.baseUrl || (provider === "openai_compatible" ? "https://api.groq.com/openai/v1/chat/completions" : "");
+    var model = g.model || defaultModel(provider);
+    var baseUrl = g.baseUrl || (provider === "openai_compatible" ? "https://api.groq.com/openai/v1/chat/completions" : "");
     targets.push({
-      group:    prefix,
-      key:      g.key,
-      model:    model,
+      group: prefix,
+      key: g.key,
+      model: model,
       provider: provider,
-      baseUrl:  baseUrl,
+      baseUrl: baseUrl,
       priority: ORDINAL_MAP[prefix] || 99
     });
   });
@@ -139,21 +139,21 @@ async function processSSEStream(response, onChunk) {
       try {
         var parsed = JSON.parse(dataStr);
         onChunk(parsed);
-      } catch (e) {}
+      } catch (e) { }
     }
   }
 
   if (buffer.trim().startsWith("data:")) {
     var trailingData = buffer.trim().replace(/^data:\s*/, "");
     if (trailingData !== "[DONE]") {
-      try { onChunk(JSON.parse(trailingData)); } catch (e) {}
+      try { onChunk(JSON.parse(trailingData)); } catch (e) { }
     }
   }
 }
 
 /* ── Dynamic Provider Adapters ──────────────────────────────── */
 var PROVIDER_ADAPTERS = {
-  gemini: async function(target, messages, systemPrompt, onToken) {
+  gemini: async function (target, messages, systemPrompt, onToken) {
     var url = GEMINI_STREAM_BASE + target.model + ":streamGenerateContent?alt=sse&key=" + target.key;
     var body = {
       system_instruction: { parts: [{ text: systemPrompt }] },
@@ -165,17 +165,17 @@ var PROVIDER_ADAPTERS = {
         maxOutputTokens: 2048
       },
       safetySettings: [
-        { category: "HARM_CATEGORY_HARASSMENT",        threshold: "BLOCK_ONLY_HIGH" },
-        { category: "HARM_CATEGORY_HATE_SPEECH",        threshold: "BLOCK_ONLY_HIGH" },
-        { category: "HARM_CATEGORY_SEXUALLY_EXPLICIT",  threshold: "BLOCK_ONLY_HIGH" },
-        { category: "HARM_CATEGORY_DANGEROUS_CONTENT",  threshold: "BLOCK_ONLY_HIGH" }
+        { category: "HARM_CATEGORY_HARASSMENT", threshold: "BLOCK_ONLY_HIGH" },
+        { category: "HARM_CATEGORY_HATE_SPEECH", threshold: "BLOCK_ONLY_HIGH" },
+        { category: "HARM_CATEGORY_SEXUALLY_EXPLICIT", threshold: "BLOCK_ONLY_HIGH" },
+        { category: "HARM_CATEGORY_DANGEROUS_CONTENT", threshold: "BLOCK_ONLY_HIGH" }
       ]
     };
 
     var res = await fetchWithTimeout(url, {
-      method:  "POST",
+      method: "POST",
       headers: { "Content-Type": "application/json" },
-      body:    JSON.stringify(body)
+      body: JSON.stringify(body)
     }, FETCH_TIMEOUT_MS);
 
     if (!res.ok) throw new Error("Gemini HTTP " + res.status + " (" + target.model + ")");
@@ -192,26 +192,26 @@ var PROVIDER_ADAPTERS = {
     });
   },
 
-  openai_compatible: async function(target, messages, systemPrompt, onToken) {
+  openai_compatible: async function (target, messages, systemPrompt, onToken) {
     var oaiMessages = [{ role: "system", content: systemPrompt }];
     messages.forEach(function (turn) {
-      var role    = turn.role === "user" ? "user" : "assistant";
+      var role = turn.role === "user" ? "user" : "assistant";
       var content = (turn.parts && turn.parts[0] && turn.parts[0].text) || "";
       if (content) oaiMessages.push({ role: role, content: content });
     });
 
     var body = {
-      model:       target.model,
-      messages:    oaiMessages,
-      stream:      true,
+      model: target.model,
+      messages: oaiMessages,
+      stream: true,
       temperature: 0.7,
-      max_tokens:  2048
+      max_tokens: 2048
     };
 
     var res = await fetchWithTimeout(target.baseUrl, {
-      method:  "POST",
+      method: "POST",
       headers: {
-        "Content-Type":  "application/json",
+        "Content-Type": "application/json",
         "Authorization": "Bearer " + target.key
       },
       body: JSON.stringify(body)
@@ -241,7 +241,7 @@ async function callWithFailoverStream(messages, systemPrompt, onToken) {
     if (failed[t.key]) continue;
 
     console.log("[api/chat] Trying " + t.provider + " | " + t.model + " (group: " + t.group + ")");
-    
+
     var currentHasYielded = false;
     var currentSystemPrompt = systemPrompt;
     var currentMessages = messages.slice();
@@ -289,7 +289,7 @@ async function callWithFailoverStream(messages, systemPrompt, onToken) {
 
 /* ── CORS Helper ────────────────────────────────────────────── */
 function setCORSHeaders(res) {
-  res.setHeader("Access-Control-Allow-Origin",  "*");
+  res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
 }
@@ -301,7 +301,7 @@ function parseBody(req) {
 
     var raw = "";
     req.on("data", function (chunk) { raw += chunk.toString(); });
-    req.on("end",  function () {
+    req.on("end", function () {
       try { resolve(JSON.parse(raw || "{}")); }
       catch (e) { reject(new Error("Invalid JSON body")); }
     });
@@ -327,16 +327,16 @@ async function handler(req, res) {
   }
 
   try {
-    var body         = await parseBody(req);
-    var messages     = body.messages     || [];
+    var body = await parseBody(req);
+    var messages = body.messages || [];
     var systemPrompt = body.systemPrompt || "You are a helpful assistant.";
-    var isStream     = body.stream !== false; // Default to streaming
+    var isStream = body.stream !== false; // Default to streaming
 
     if (isStream) {
       res.writeHead(200, {
-        "Content-Type":  "text/event-stream; charset=utf-8",
+        "Content-Type": "text/event-stream; charset=utf-8",
         "Cache-Control": "no-cache, no-transform",
-        "Connection":    "keep-alive",
+        "Connection": "keep-alive",
         "X-Accel-Buffering": "no"
       });
 
@@ -347,7 +347,7 @@ async function handler(req, res) {
           try {
             res.write("data: " + JSON.stringify({ error: "TOTAL_TIMEOUT_EXCEEDED" }) + "\n\n");
             res.end();
-          } catch (e) {}
+          } catch (e) { }
         }
       }, TOTAL_TIMEOUT_MS);
 
