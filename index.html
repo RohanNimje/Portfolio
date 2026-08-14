@@ -67,20 +67,20 @@
             </p>
 
             <div class="flex flex-wrap gap-1.5 pt-1">
-              <span class="tech-pill">Next.js</span>
-              <span class="tech-pill">Python &amp; CV</span>
+              <span class="tech-pill">AI Agents</span>
+              <span class="tech-pill">LLM &amp; RAG</span>
+              <span class="tech-pill">FastAPI</span>
               <span class="tech-pill">Supabase</span>
-              <span class="tech-pill">MongoDB</span>
-              <span class="tech-pill">n8n Automation</span>
-              <span class="tech-pill">TypeScript</span>
+              <span class="tech-pill">n8n Workflows</span>
+              <span class="tech-pill">Cloud / CI-CD</span>
             </div>
 
-            <div class="flex flex-wrap items-center gap-3 pt-3">
+            <div class="flex flex-nowrap items-center gap-2 sm:gap-3 pt-3 w-full sm:w-auto">
               <button type="button" id="hero-cta" data-scroll="contact"
-                class="magnetic-button inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl font-semibold text-white bg-indigo-600 hover:bg-indigo-700 shadow-md shadow-indigo-600/20 hover:shadow-lg hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 cursor-pointer">
-                <span class="relative flex items-center gap-2">
+                class="magnetic-button flex-1 sm:flex-none inline-flex items-center justify-center gap-1.5 sm:gap-2 px-2 sm:px-7 py-3 sm:py-3.5 rounded-xl font-semibold text-white bg-indigo-600 hover:bg-indigo-700 shadow-md shadow-indigo-600/20 hover:shadow-lg hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 cursor-pointer text-sm sm:text-base whitespace-nowrap">
+                <span class="relative flex items-center justify-center gap-1.5 sm:gap-2 w-full">
                   Get In Touch
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                       d="M13 7l5 5m0 0l-5 5m5-5H6" />
                   </svg>
@@ -88,9 +88,9 @@
               </button>
 
               <button type="button" data-scroll="projects"
-                class="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl font-semibold text-muted-foreground border border-border hover:border-accent hover:text-accent transition-all duration-200 cursor-pointer">
+                class="flex-1 sm:flex-none inline-flex items-center justify-center gap-1.5 sm:gap-2 px-2 sm:px-6 py-3 sm:py-3.5 rounded-xl font-semibold text-muted-foreground border border-border hover:border-accent hover:text-accent transition-all duration-200 cursor-pointer text-sm sm:text-base whitespace-nowrap">
                 View Work
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                     d="M19 14l-7 7m0 0l-7-7m7 7V3" />
                 </svg>
@@ -102,8 +102,7 @@
           <!-- Right Content: Profile Image Cutout Frame (Column 8-12) -->
           <div class="lg:col-span-5 flex items-center justify-center lg:justify-end reveal reveal-delay-2">
             <div class="editorial-frame w-full max-w-md aspect-[4/5] relative group">
-              <img src="/public/profile.png"
-                alt="Rohan Nimje — AI Systems Architect &amp; Full-Stack Engineer"
+              <img src="/public/profile.png" alt="Rohan Nimje — AI Systems Architect &amp; Full-Stack Engineer"
                 class="w-full h-full object-contain hero-image-animate" loading="eager" fetchpriority="high"
                 decoding="async" />
 
@@ -111,7 +110,8 @@
               <div class="floating-metric metric-top-left">
                 <div class="flex items-center gap-1.5">
                   <span class="relative flex h-2 w-2">
-                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                    <span
+                      class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
                     <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
                   </span>
                   <span class="metric-value">365+ Days</span>
@@ -246,7 +246,8 @@
             <h2 class="section-title">
               National Hackathons &amp; Competition Rank
             </h2>
-            <p class="text-muted-foreground">National-level hackathon victories, algorithmic milestones, and competitive achievements built under high pressure.</p>
+            <p class="text-muted-foreground">National-level hackathon victories, algorithmic milestones, and competitive
+              achievements built under high pressure.</p>
           </div>
 
           <div id="honors-carousel-container"></div>
@@ -269,7 +270,8 @@
             <h2 class="section-title">
               Verified Technical Credentials
             </h2>
-            <p class="text-muted-foreground">Production-ready specializations in AI architecture, cloud automation, and full-stack systems engineering.</p>
+            <p class="text-muted-foreground">Production-ready specializations in AI architecture, cloud automation, and
+              full-stack systems engineering.</p>
           </div>
 
           <div id="certifications-carousel-container"></div>
