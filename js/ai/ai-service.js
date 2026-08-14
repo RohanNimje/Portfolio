@@ -28,16 +28,16 @@
   function getStandbyErrorCard() {
     return (
       '<div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-2.5 my-1">' +
-        '<div class="flex items-center gap-2 text-indigo-700 font-bold text-sm">' +
-          '<span>⚡ Assistant Momentarily Busy</span>' +
-        '</div>' +
-        '<p class="text-xs text-slate-600 leading-relaxed margin-0">' +
-          'Rohan\'s AI representative is currently receiving high inquiry traffic. You can explore his featured projects or connect with him directly below.' +
-        '</p>' +
-        '<div class="pt-1 flex flex-wrap gap-2">' +
-          '<button onclick="document.getElementById(\'contact\').scrollIntoView({behavior: \'smooth\'})" class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-indigo-600 text-white font-medium text-xs rounded-lg shadow-sm hover:bg-indigo-700 transition cursor-pointer">📬 Contact Rohan Directly</button>' +
-          '<button onclick="document.getElementById(\'projects\').scrollIntoView({behavior: \'smooth\'})" class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white text-slate-700 border border-slate-200 font-medium text-xs rounded-lg hover:bg-slate-50 transition cursor-pointer">🚀 View Featured Projects</button>' +
-        '</div>' +
+      '<div class="flex items-center gap-2 text-indigo-700 font-bold text-sm">' +
+      '<span>⚡ Assistant Momentarily Busy</span>' +
+      '</div>' +
+      '<p class="text-xs text-slate-600 leading-relaxed margin-0">' +
+      'Rohan\'s AI representative is currently receiving high inquiry traffic. You can explore his featured projects or connect with him directly below.' +
+      '</p>' +
+      '<div class="pt-1 flex flex-wrap gap-2">' +
+      '<button onclick="document.getElementById(\'contact\').scrollIntoView({behavior: \'smooth\'})" class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-indigo-600 text-white font-medium text-xs rounded-lg shadow-sm hover:bg-indigo-700 transition cursor-pointer">📬 Contact Rohan Directly</button>' +
+      '<button onclick="document.getElementById(\'projects\').scrollIntoView({behavior: \'smooth\'})" class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white text-slate-700 border border-slate-200 font-medium text-xs rounded-lg hover:bg-slate-50 transition cursor-pointer">🚀 View Featured Projects</button>' +
+      '</div>' +
       '</div>'
     );
   }
@@ -263,9 +263,9 @@
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        messages:     conversationHistory,
+        messages: conversationHistory,
         systemPrompt: systemInstruction,
-        stream:       true
+        stream: true
       })
     });
 
@@ -364,9 +364,9 @@
 
     // ── Step 5: Parse bullet/numbered lists line-by-line ────
     var lines = str.split(/\r?\n/);
-    var inList   = false;
+    var inList = false;
     var listType = null;
-    var out      = [];
+    var out = [];
 
     for (var i = 0; i < lines.length; i++) {
       var line = lines[i];
@@ -376,12 +376,12 @@
       if (inList && trimmed === "") continue;
 
       var bulletMatch = line.match(/^\s*[-*\u2022]\s+(.+)$/);
-      var numMatch    = line.match(/^\s*(\d+)[.)]\s+(.+)$/);
+      var numMatch = line.match(/^\s*(\d+)[.)]\s+(.+)$/);
 
       // Check if this line contains block-level elements (cards, buttons, divs, images)
       var hasBlockTag = /<(div|button|img|video|form|iframe|section|article)/i.test(line) ||
-                        /class="inline-flex/i.test(line) ||
-                        /scrollIntoView/i.test(line);
+        /class="inline-flex/i.test(line) ||
+        /scrollIntoView/i.test(line);
 
       // Check if a numbered line is actually a prominent title/heading (e.g. "1. ScanZy Rewards...", "1. As a Software Engineer...")
       var isNumberedTitle = false;
@@ -409,7 +409,7 @@
         if (!inList || listType !== "ul") {
           if (inList) out.push(listType === "ul" ? "</ul>" : "</ol>");
           out.push('<ul class="ai-clean-list">');
-          inList   = true;
+          inList = true;
           listType = "ul";
         }
         var itemContent = bulletMatch[1].trim().replace(/(?:<br\s*\/?>)+$/gi, "");
@@ -419,7 +419,7 @@
         if (!inList || listType !== "ol") {
           if (inList) out.push(listType === "ul" ? "</ul>" : "</ol>");
           out.push('<ol class="ai-clean-list ai-clean-list-decimal">');
-          inList   = true;
+          inList = true;
           listType = "ol";
         }
         var itemContent = numMatch[2].trim().replace(/(?:<br\s*\/?>)+$/gi, "");
@@ -428,7 +428,7 @@
       } else {
         if (inList) {
           out.push(listType === "ul" ? "</ul>" : "</ol>");
-          inList   = false;
+          inList = false;
           listType = null;
         }
         out.push(line);
@@ -532,15 +532,15 @@
           if (partialHtml.length > 0 && !/[.!?]$/.test(partialHtml.trim())) {
             partialHtml += ".";
           }
-          
+
           var actionChips = '<div class="mt-4 flex flex-wrap gap-2">' +
             '<button type="button" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-indigo-600 text-white font-medium text-sm hover:bg-indigo-700 transition-colors cursor-pointer" onclick="sendAIMessage(\'Explore Technical Architecture\', window._aiActiveStreamCallback)">Explore Technical Architecture &rarr;</button>' +
             '<button type="button" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-indigo-50 text-indigo-700 font-medium text-sm hover:bg-indigo-100 transition-colors cursor-pointer" onclick="sendAIMessage(\'Ask About System Implementation\', window._aiActiveStreamCallback)">Ask About System Implementation</button>' +
             '</div>';
-            
+
           var finalHtml = partialHtml + actionChips;
           if (typeof onChunk === "function") {
-             onChunk(finalHtml, true);
+            onChunk(finalHtml, true);
           }
           return finalHtml;
         }

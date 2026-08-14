@@ -184,7 +184,7 @@ function renderHonors() {
 
     cards +=
       '<div class="honor-card flex-shrink-0 snap-center w-[295px] sm:w-[335px] md:w-auto h-[390px] sm:h-[410px] cursor-pointer group select-none flex flex-col rounded-2xl overflow-hidden" data-honor-modal-id="' + honor.id + '" data-honor-index="' + i + '">' +
-      
+
       '<!-- Certificate Hero Image (Occupies ~68% of card height) -->' +
       '<div class="relative w-full h-[68%] bg-muted/25 dark:bg-muted/10 p-3 sm:p-4 flex items-center justify-center border-b border-border/60 overflow-hidden">' +
       '<img src="' + certSrc + '" alt="' + honor.title + '" class="honor-cert-img w-full h-full object-contain rounded-lg" loading="lazy" decoding="async" draggable="false" />' +
@@ -199,7 +199,7 @@ function renderHonors() {
       '</div>' +
       '<p class="text-xs text-muted-foreground font-medium truncate">' + honor.event + '</p>' +
       '</div>' +
-      
+
       (stackHtml ? '<div class="flex flex-wrap gap-1.5 pt-1.5">' + stackHtml + '</div>' : '') +
       '</div>' +
 
@@ -581,7 +581,7 @@ function closeProjectModal() {
 ══════════════════════════════════════════════════════════ */
 function openHonorModal(honorId) {
   var honors = (window.portfolioData && window.portfolioData.honors) || [];
-  var honor = honors.find(function(h) { return h.id === Number(honorId); });
+  var honor = honors.find(function (h) { return h.id === Number(honorId); });
   if (honor) {
     renderHonorModal(honor);
   }
@@ -616,7 +616,7 @@ function renderHonorModal(honor) {
   modalRoot.innerHTML =
     '<div id="honor-lightbox-modal" class="modal-backdrop fixed inset-0 bg-foreground/60 backdrop-blur-md z-[80] flex items-center justify-center p-3 sm:p-6" role="dialog" aria-modal="true" aria-label="' + honor.title + '">' +
     '<div class="modal-panel relative w-full max-w-4xl max-h-[92vh] bg-card border border-border rounded-3xl shadow-2xl overflow-hidden flex flex-col z-[81]">' +
-    
+
     '<!-- Header -->' +
     '<div class="px-6 py-4 border-b border-border/80 flex items-center justify-between bg-card/90 backdrop-blur-sm">' +
     '<div class="flex items-center gap-3 min-w-0">' +
@@ -790,7 +790,7 @@ function initDraggableAssistant() {
 
   toggle.addEventListener("pointerdown", function (e) {
     if (e.button !== 0 && e.pointerType === "mouse") return;
-    
+
     // Explicitly block event bleeding to underlying DOM
     e.stopPropagation();
     if (e.cancelable) e.preventDefault();
@@ -1135,6 +1135,7 @@ function closeAssistant() {
   if (bottomNav) bottomNav.classList.remove("nav-hidden");
   unlockBodyScroll();
 }
+window.closeAssistant = closeAssistant;
 
 function addAssistantMessage(sender, htmlOrText) {
   var msg = { sender: sender };
@@ -1307,6 +1308,16 @@ function attachEvents() {
     // AI Assistant close button
     if (event.target.closest("#assistant-close")) {
       closeAssistant();
+    }
+
+    // AI Assistant response action button clicks (Mobile-only auto close)
+    var messageActionBtn = event.target.closest("#assistant-messages button, #assistant-messages a");
+    if (messageActionBtn) {
+      var onclickAttr = messageActionBtn.getAttribute("onclick") || "";
+      var isAskFollowUp = messageActionBtn.hasAttribute("data-assistant-question") || onclickAttr.indexOf("sendAIMessage") !== -1;
+      if (!isAskFollowUp && window.innerWidth < 768) {
+        closeAssistant();
+      }
     }
 
     // Quick action chips
