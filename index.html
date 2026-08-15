@@ -25,11 +25,10 @@
     href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;1,400&display=swap"
     rel="stylesheet">
 
-  <!-- Preconnect for Cloudinary media -->
+  <!-- Preconnect for Cloudinary media & fonts -->
   <link rel="preconnect" href="https://res.cloudinary.com" crossorigin="anonymous" />
   <link rel="dns-prefetch" href="https://res.cloudinary.com" />
-  <link rel="preload" as="image" href="https://res.cloudinary.com/doyiqcna9/image/upload/v1783672140/rohan_qfsija.jpg"
-    fetchpriority="high" />
+  <link rel="preload" as="image" href="/public/profile.png" fetchpriority="high" />
 
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="/css/style.css" />
@@ -509,13 +508,13 @@
   </main><!-- /#app -->
 
   <!-- ═══════════════════════════════════════════════════
-         SCRIPTS — Exact load order required
+         SCRIPTS — Deferred execution for sub-second load
     ════════════════════════════════════════════════════ -->
-  <script src="/js/data.js"></script>
-  <script src="/js/ai/ai-context.js"></script>
-  <script src="/js/ai/config.js"></script>
-  <script src="/js/ai/ai-service.js"></script>
-  <script src="/js/main.js"></script>
+  <script defer src="/js/data.js"></script>
+  <script defer src="/js/ai/ai-context.js"></script>
+  <script defer src="/js/ai/config.js"></script>
+  <script defer src="/js/ai/ai-service.js"></script>
+  <script defer src="/js/main.js"></script>
 </body>
 
 </html>

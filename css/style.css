@@ -77,6 +77,19 @@ body {
 }
 
 /* ═══════════════════════════════════════════════════
+   GPU SCROLL & LAYOUT CONTAINMENT OPTIMIZATION
+   ════════════════════════════════════════════════════ */
+#projects,
+#experience,
+#honors,
+#certifications,
+#education,
+#contact {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 650px;
+}
+
+/* ═══════════════════════════════════════════════════
    SCROLL PROGRESS BAR
    ════════════════════════════════════════════════════ */
 #scroll-progress {
@@ -87,7 +100,9 @@ body {
   width: 0%;
   background: linear-gradient(90deg, var(--accent), var(--accent-hover));
   z-index: 100;
-  transition: width 80ms linear;
+  transform: translateZ(0);
+  will-change: width;
+  transition: width 60ms linear;
   pointer-events: none;
 }
 

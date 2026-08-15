@@ -305,7 +305,7 @@ function renderCertifications() {
       cards +=
         '<div data-cert-index="' + i + '" class="coverflow-card absolute cursor-pointer" style="z-index:' + zIndex + ";opacity:" + opacity + ";transform:translateX(" + x + "px) scale(" + scale + ") rotateY(" + rotate + 'deg) translateZ(0);">' +
         '<div class="block bg-white rounded-xl border border-slate-200 w-full h-full relative overflow-visible shadow-sm hover:shadow-md transition-shadow">' +
-        '<img src="' + certSrc + '" alt="' + cert.name + '" draggable="false" loading="eager" decoding="async" class="block w-full h-full object-contain bg-white rounded-[10px] cert-preview-img" style="box-shadow:' + (position === 0 ? "0 12px 40px rgba(67, 56, 202, 0.14)" : "0 4px 16px rgba(15, 23, 42, 0.06)") + ';" />' +
+        '<img src="' + certSrc + '" alt="' + cert.name + '" draggable="false" loading="lazy" decoding="async" class="block w-full h-full object-contain bg-white rounded-[10px] cert-preview-img" style="box-shadow:' + (position === 0 ? "0 12px 40px rgba(67, 56, 202, 0.14)" : "0 4px 16px rgba(15, 23, 42, 0.06)") + ';" />' +
         '</div>' +
         "</div>";
     }
@@ -461,7 +461,7 @@ function renderLaptopFrame(videoUrl, title) {
     '<div style="width:10px;height:10px;border-radius:50%;background:#28C840"></div>' +
     '</div>' +
     '</div>' +
-    '<video src="' + streamUrl + '" muted loop playsinline controls preload="metadata" class="autoplay-video laptop-mockup-video"></video>' +
+    '<video src="' + streamUrl + '" muted loop playsinline controls preload="none" class="autoplay-video laptop-mockup-video"></video>' +
     '</div>' +
     '</div>'
   );
@@ -475,7 +475,7 @@ function renderMobileFrame(videoUrl, title) {
     '<div class="phone-mockup-chassis">' +
     '<div class="phone-mockup-speaker"></div>' +
     '<div class="phone-mockup-screen">' +
-    '<video src="' + streamUrl + '" muted loop playsinline controls preload="metadata" class="autoplay-video phone-mockup-video"></video>' +
+    '<video src="' + streamUrl + '" muted loop playsinline controls preload="none" class="autoplay-video phone-mockup-video"></video>' +
     '</div>' +
     '</div>' +
     '</div>'
@@ -1611,34 +1611,38 @@ function attachEvents() {
     sendAssistantMessage(val);
   });
 
-  // Magnetic button effect
+  // Magnetic button effect (RAF throttled & passive)
+  var magneticRaf = null;
   document.addEventListener("mousemove", function (event) {
-    var button = event.target.closest(".magnetic-button");
+    var button = event.target.closest && event.target.closest(".magnetic-button");
     if (!button) return;
-    var rect = button.getBoundingClientRect();
-    var x = ((event.clientX - (rect.left + rect.width / 2)) / 50) * 4;
-    var y = ((event.clientY - (rect.top + rect.height / 2)) / 50) * 4;
-    button.style.transform = "translate(" + x + "px, " + y + "px)";
-  });
+    if (magneticRaf) cancelAnimationFrame(magneticRaf);
+    magneticRaf = requestAnimationFrame(function () {
+      var rect = button.getBoundingClientRect();
+      var x = ((event.clientX - (rect.left + rect.width / 2)) / 50) * 4;
+      var y = ((event.clientY - (rect.top + rect.height / 2)) / 50) * 4;
+      button.style.transform = "translate(" + x + "px, " + y + "px)";
+    });
+  }, { passive: true });
 
   document.addEventListener("mouseleave", function (event) {
     var button = event.target.closest && event.target.closest(".magnetic-button");
     if (button) button.style.transform = "translate(0, 0)";
   }, true);
 
-  // Scroll nav update
-  window.addEventListener("scroll", updateActiveNavigation);
-
-  // Scroll progress bar updater
-  var progressBar = document.getElementById("scroll-progress");
-  if (progressBar) {
-    window.addEventListener("scroll", function () {
-      var scrollTop = window.scrollY || document.documentElement.scrollTop;
-      var docHeight = document.documentElement.scrollHeight - window.innerHeight;
-      var progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
-      progressBar.style.width = Math.min(progress, 100) + "%";
-    }, { passive: true });
+  // Unified High-Performance 60 FPS RAF Scroll Dispatcher
+  var scrollTicking = false;
+  function handleScroll() {
+    if (!scrollTicking) {
+      requestAnimationFrame(function () {
+        updateActiveNavigation();
+        updateProgressBar();
+        scrollTicking = false;
+      });
+      scrollTicking = true;
+    }
   }
+  window.addEventListener("scroll", handleScroll, { passive: true });
 
   // Escape key listener to close modal or assistant
   document.addEventListener("keydown", function (event) {
@@ -1832,7 +1836,19 @@ function resumeHonorsAutoplayWithDelay(delayMs) {
 }
 
 /* ══════════════════════════════════════════════════════════
-   INIT
+   SCROLL PROGRESS BAR UPDATER
+══════════════════════════════════════════════════════════ */
+function updateProgressBar() {
+  var progressBar = document.getElementById("scroll-progress");
+  if (!progressBar) return;
+  var scrollTop = window.scrollY || document.documentElement.scrollTop || 0;
+  var docHeight = (document.documentElement.scrollHeight || 1) - window.innerHeight;
+  var progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+  progressBar.style.width = Math.min(progress, 100) + "%";
+}
+
+/* ══════════════════════════════════════════════════════════
+   INIT (Fast Initial Paint & Non-Critical Deferral)
 ══════════════════════════════════════════════════════════ */
 function renderPage() {
   applyTheme(currentTheme);
@@ -1840,13 +1856,22 @@ function renderPage() {
   renderProjects();
   renderHonors();
   renderCertifications();
-  renderAssistant();
   attachEvents();
   observeReveals();
   setupAutoplayVideos();
-  setupStreakCounter();
-  startCertAutoplay();
-  startHonorsAutoplay();
+  updateProgressBar();
+
+  // Defer non-critical widgets & background timers to idle cycles to hit <1.5s TTI/LCP
+  var scheduleNonCritical = (typeof window !== "undefined" && window.requestIdleCallback)
+    ? window.requestIdleCallback
+    : function (cb) { setTimeout(cb, 100); };
+
+  scheduleNonCritical(function () {
+    renderAssistant();
+    setupStreakCounter();
+    startCertAutoplay();
+    startHonorsAutoplay();
+  });
 }
 
 document.addEventListener("DOMContentLoaded", renderPage);
