@@ -315,7 +315,7 @@ function renderCertifications() {
   if (!container) return;
 
   container.innerHTML =
-    '<div class="group/carousel relative w-full max-w-4xl mx-auto">' +
+    '<div class="group/carousel relative w-full max-w-4xl mx-auto my-2 sm:my-4">' +
     '<div class="coverflow-stage relative w-full flex items-center justify-center touch-pan-y cursor-grab active:cursor-grabbing">' +
     '<button type="button" aria-label="Previous certification" id="cert-prev" class="absolute left-0 top-1/2 z-40 -translate-y-1/2 w-12 sm:w-16 md:w-20 flex items-center justify-start pl-2 sm:pl-3 opacity-0 hover:opacity-100 group-hover/carousel:opacity-60 transition-opacity duration-300"><span class="flex items-center justify-center w-9 h-9 rounded-full bg-card border border-border backdrop-blur-sm text-muted-foreground hover:text-accent hover:border-accent transition-all duration-200 shadow-sm">' + icon("chevronLeft", "w-5 h-5") + "</span></button>" +
     '<button type="button" aria-label="Next certification" id="cert-next" class="absolute right-0 top-1/2 z-40 -translate-y-1/2 w-12 sm:w-16 md:w-20 flex items-center justify-end pr-2 sm:pr-3 opacity-0 hover:opacity-100 group-hover/carousel:opacity-60 transition-opacity duration-300"><span class="flex items-center justify-center w-9 h-9 rounded-full bg-card border border-border backdrop-blur-sm text-muted-foreground hover:text-accent hover:border-accent transition-all duration-200 shadow-sm">' + icon("chevronRight", "w-5 h-5") + "</span></button>" +
@@ -323,10 +323,17 @@ function renderCertifications() {
     cards +
     "</div>" +
     "</div>" +
-    '<div class="mt-4 sm:mt-6 md:mt-8 space-y-2 text-center">' +
-    '<div><p class="text-sm sm:text-base md:text-lg font-semibold text-foreground">' + (activeCert ? activeCert.name : "") + '</p>' +
-    '<p class="text-xs sm:text-sm text-muted-foreground">' + (activeCert ? activeCert.issuer : "") + '</p></div>' +
-    '<div class="flex justify-center items-center gap-3 pt-1.5"><div class="w-2 h-2 rounded-full bg-accent tiny-pulse"></div><span class="text-xs sm:text-sm font-semibold text-muted-foreground"><span class="text-accent">' + (certificationsIndex + 1) + "</span> / " + certs.length + "</span></div></div>";
+
+    '<!-- Perfectly Centered Meta Info Container -->' +
+    '<div class="w-full max-w-2xl mx-auto mt-6 sm:mt-8 md:mt-10 flex flex-col items-center text-center space-y-2 px-4">' +
+    '<div class="w-full text-center space-y-0.5">' +
+    '<h3 class="text-base sm:text-lg md:text-xl font-sans font-semibold text-foreground tracking-tight leading-snug max-w-xl mx-auto">' + (activeCert ? activeCert.name : "") + '</h3>' +
+    '<p class="text-xs sm:text-sm font-sans font-normal text-muted-foreground tracking-tight">' + (activeCert ? activeCert.issuer : "") + '</p>' +
+    '</div>' +
+    '<div class="inline-flex items-center justify-center text-center px-4 py-1 rounded-full bg-card border border-border/80 text-xs sm:text-sm font-mono font-medium text-muted-foreground shadow-sm">' +
+    '<span><strong class="text-accent font-semibold">' + (certificationsIndex + 1) + '</strong> / ' + certs.length + '</span>' +
+    '</div>' +
+    '</div>';
 }
 
 /* ══════════════════════════════════════════════════════════

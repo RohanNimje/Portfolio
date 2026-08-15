@@ -956,20 +956,26 @@ body.overflow-hidden {
   -webkit-perspective: 1000px;
 }
 
+@media (min-width: 480px) {
+  .coverflow-stage {
+    height: 285px;
+  }
+}
+
 @media (min-width: 640px) {
   .coverflow-stage {
-    height: 280px;
+    height: 330px;
   }
 }
 
 @media (min-width: 768px) {
   .coverflow-stage {
-    height: 350px;
+    height: 360px;
   }
 }
 
 .coverflow-card {
-  width: clamp(230px, 75vw, 460px);
+  width: clamp(220px, 72vw, 460px);
   aspect-ratio: 1.41;
   transform-style: preserve-3d;
   transition: transform 550ms cubic-bezier(0.16, 1, 0.3, 1), opacity 550ms ease;
