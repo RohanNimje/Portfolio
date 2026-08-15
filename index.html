@@ -169,8 +169,6 @@
           </div><!-- /projects-grid-wrap -->
 
         </div>
-        <!-- Project modal mount point -->
-        <div id="project-modal-root"></div>
       </div>
     </section>
 
@@ -409,17 +407,23 @@
           <div class="grid md:grid-cols-12 gap-8 md:gap-10 pt-8 border-t border-border text-sm reveal">
             <!-- Col 1: Bio & Interactive Brand Signature (Scroll-To-Top) -->
             <div class="md:col-span-5 space-y-3.5">
-              <div class="flex items-center gap-2.5 cursor-pointer transition-transform hover:scale-[1.02] w-fit group" data-scroll="hero" title="Scroll to Top">
-                <img src="/public/Logo.png" alt="Rohan Nimje" class="w-8 h-8 rounded-lg object-contain shadow-sm group-hover:rotate-6 transition-transform duration-300" />
+              <div class="flex items-center gap-2.5 cursor-pointer transition-transform hover:scale-[1.02] w-fit group"
+                data-scroll="hero" title="Scroll to Top">
+                <img src="/public/Logo.png" alt="Rohan Nimje"
+                  class="w-8 h-8 rounded-lg object-contain shadow-sm group-hover:rotate-6 transition-transform duration-300" />
                 <div>
-                  <span class="font-display font-bold text-foreground text-base tracking-tight block leading-tight group-hover:text-accent transition-colors">Rohan Nimje</span>
-                  <span class="text-xs font-mono text-muted-foreground block font-medium">AI Systems Engineer &amp; Full-Stack Architect</span>
+                  <span
+                    class="font-display font-bold text-foreground text-base tracking-tight block leading-tight group-hover:text-accent transition-colors">Rohan
+                    Nimje</span>
+                  <span class="text-xs font-mono text-muted-foreground block font-medium">AI Systems Engineer &amp;
+                    Full-Stack Architect</span>
                 </div>
               </div>
               <p class="text-muted-foreground leading-relaxed max-w-sm text-xs sm:text-sm">
                 Dedicated to low-latency performance, clean architecture, and real-world impact.
               </p>
-              <p class="text-[11px] font-mono font-semibold tracking-wider text-muted-foreground/80">LOGIC :: CODE :: AUTOMATION :: IMPACT</p>
+              <p class="text-[11px] font-mono font-semibold tracking-wider text-muted-foreground/80">LOGIC :: CODE ::
+                AUTOMATION :: IMPACT</p>
             </div>
 
             <!-- Col 2: Navigation -->
@@ -451,7 +455,8 @@
 
             <!-- Col 3: Direct Connect -->
             <div class="md:col-span-4 space-y-3">
-              <p class="font-mono text-xs font-semibold uppercase tracking-wider text-muted-foreground">Connect Directly</p>
+              <p class="font-mono text-xs font-semibold uppercase tracking-wider text-muted-foreground">Connect Directly
+              </p>
               <div class="space-y-3">
                 <!-- Dual-Action Email: Clickable mailto + Sleek Tactile Micro-Copy Button -->
                 <div class="flex items-center gap-2">
@@ -459,10 +464,13 @@
                     class="text-foreground font-semibold hover:text-accent transition-colors truncate text-sm sm:text-base">
                     rohannimje53@gmail.com
                   </a>
-                  <button type="button" id="footer-copy-email-btn" aria-label="Copy email address" title="Copy email address"
+                  <button type="button" id="footer-copy-email-btn" aria-label="Copy email address"
+                    title="Copy email address"
                     class="relative p-1.5 rounded-lg border border-border/80 bg-card hover:bg-muted text-muted-foreground hover:text-accent hover:border-accent/60 transition-all duration-200 hover:scale-105 active:scale-95 shadow-sm cursor-pointer flex items-center justify-center shrink-0">
-                    <svg id="footer-copy-icon" class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                    <svg id="footer-copy-icon" class="w-3.5 h-3.5" fill="none" stroke="currentColor"
+                      viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
                     </svg>
                     <span id="footer-copy-tooltip"
                       class="pointer-events-none absolute -top-8 left-1/2 -translate-x-1/2 px-2 py-0.5 rounded-md bg-foreground text-background text-[10px] font-mono font-medium shadow-md transition-all duration-200 opacity-0 scale-95 whitespace-nowrap">
@@ -506,6 +514,9 @@
     </section>
 
   </main><!-- /#app -->
+
+  <!-- Project modal mount point -->
+  <div id="project-modal-root"></div>
 
   <!-- ═══════════════════════════════════════════════════
          SCRIPTS — Deferred execution for sub-second load
