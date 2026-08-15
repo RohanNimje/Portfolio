@@ -694,7 +694,7 @@ function renderProjectModal(project) {
   // In project modals, always render the standard 16:9 desktop / system architecture demo video
   var demoUrl = project.laptopVideoUrl || project.productDemoUrl || project.videoUrlmvp || project.videoUrl || project.videourlproduct || project.mobileVideoUrl;
   if (demoUrl) {
-    media += '<div><h3 class="text-lg font-semibold text-foreground mb-3">System Architecture & Demo</h3>' +
+    media += '<div><h3 class="text-lg font-semibold text-foreground mb-3">Working Demo</h3>' +
       '<div class="modal-video-container">' +
       '<video preload="metadata" src="' + demoUrl + '" controls playsinline class="modal-video-player"></video>' +
       '</div></div>';
