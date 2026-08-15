@@ -222,6 +222,23 @@ html.dark .coverflow-card img {
 }
 
 /* ═══════════════════════════════════════════════════
+   NATURAL HD CERTIFICATE RENDERING (Smooth Bicubic)
+   ════════════════════════════════════════════════════ */
+.coverflow-card img,
+.honor-cert-img,
+.honor-card img,
+.cert-preview-img,
+#honor-lightbox-modal img,
+#cert-lightbox-modal img {
+  image-rendering: auto;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  transform: translateZ(0);
+  -webkit-font-smoothing: antialiased;
+  object-fit: contain;
+}
+
+/* ═══════════════════════════════════════════════════
    HONORS & RECOGNITION (Editorial Certificate Showcase)
    ════════════════════════════════════════════════════ */
 .honor-deck-track {
@@ -264,10 +281,9 @@ html.dark .honor-card:hover {
   box-shadow: 0 12px 36px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(99, 102, 241, 0.12);
 }
 
-/* High-DPI Crisp Certificate Image Rendering */
+/* High-DPI Smooth Certificate Image Rendering */
 .honor-cert-img {
-  image-rendering: -webkit-optimize-contrast;
-  image-rendering: crisp-edges;
+  image-rendering: auto;
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
   transition: transform 350ms cubic-bezier(0.16, 1, 0.3, 1);
@@ -957,6 +973,9 @@ body.overflow-hidden {
   aspect-ratio: 1.41;
   transform-style: preserve-3d;
   transition: transform 550ms cubic-bezier(0.16, 1, 0.3, 1), opacity 550ms ease;
+  will-change: transform, opacity;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
 }
 
 /* ═══════════════════════════════════════════════════

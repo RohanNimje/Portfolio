@@ -60,8 +60,8 @@ window.AI_CONTEXT = {
       techStack: ["Lovable.dev", "React", "Supabase", "Cursor IDE", "n8n", "Leonardo AI"],
       description: "A full-stack QR-based gamified loyalty platform designed to eliminate offline retail customer churn. Converts one-time shoppers into repeat buyers via physical QR cards given at checkout that unlock store-specific Spin & Win rewards when scanned at home.",
       isFeatured: true,
-      videoUrlmvp: "https://res.cloudinary.com/doyiqcna9/video/upload/v1786780323/scanzy_mvp_record_ygaiin.mp4",
-      productDemoUrl: "https://res.cloudinary.com/doyiqcna9/video/upload/v1783677832/Untitled_design_exdmtc.mp4",
+      videoUrlmvp: "https://res.cloudinary.com/doyiqcna9/video/upload/f_auto,q_auto:good,vc_auto/v1786780323/scanzy_mvp_record_ygaiin.mp4",
+      productDemoUrl: "https://res.cloudinary.com/doyiqcna9/video/upload/f_auto,q_auto:good,vc_auto/v1783677832/Untitled_design_exdmtc.mp4",
       projectCertImgUrl: "https://res.cloudinary.com/doyiqcna9/image/upload/v1783666876/mvp_certification_k5sedb.png",
       highlights: [
         "QR-based gamified loyalty system for offline retail customer retention",
@@ -77,7 +77,7 @@ window.AI_CONTEXT = {
       techStack: ["React", "Python", "Computer Vision AI", "Tailwind CSS", "Vercel"],
       description: "An AI-powered 'Pocket Dermatologist' built to help users make informed skincare choices by cutting through misleading marketing. Scans skin condition in real time to recommend exact active ingredients (Niacinamide, Salicylic Acid) based on barrier needs. Shortlisted as National Finalist for NxtWave's Idea2Impact Hackathon in Hyderabad.",
       isFeatured: false,
-      productDemoUrl: "https://res.cloudinary.com/doyiqcna9/video/upload/v1786779857/cosmolyze_record_jnkdx4.mkv",
+      productDemoUrl: "https://res.cloudinary.com/doyiqcna9/video/upload/f_auto,q_auto:good,vc_auto/v1786779857/cosmolyze_record_jnkdx4.mkv",
       projectCertImgUrl: "https://res.cloudinary.com/doyiqcna9/image/upload/v1786384987/Ideaimpact_Certificate_orka1w.jpg",
       highlights: [
         "AI skin condition analyzer acting as a digital dermatologist",
@@ -93,7 +93,7 @@ window.AI_CONTEXT = {
       techStack: ["Vision AI", "n8n Workflows", "Supabase", "Appsmith"],
       description: "An autonomous AI validation engine built to eliminate corruption in municipal infrastructure projects. Analyzes contractor Before & After photos automatically to detect fake repairs and visual anomalies. National Finalist at Innovators Hackathon 2026 (NMIET Pune & AIC T-Hub).",
       isFeatured: false,
-      videoUrl: "https://res.cloudinary.com/doyiqcna9/video/upload/v1783772817/Infrastruture_Demo_Video_rvobvw.mp4",
+      videoUrl: "https://res.cloudinary.com/doyiqcna9/video/upload/f_auto,q_auto:good,vc_auto/v1783772817/Infrastruture_Demo_Video_rvobvw.mp4",
       highlights: [
         "Live binary validation system built in 48 hours",
         "Before & After AI image comparison for public infrastructure fraud detection",
@@ -108,7 +108,7 @@ window.AI_CONTEXT = {
       techStack: ["OpenAI API (GPT-4o)", "n8n Workflows", "Google Sheets", "Notion API"],
       description: "An autonomous daily productivity coach that processes student habit goals via automated n8n trigger pipelines and dispatches tailored daily action steps and motivational guidance. Won State-Level Qualifier at OpenAI x NxtWave Buildathon.",
       isFeatured: false,
-      videoUrl: "https://res.cloudinary.com/doyiqcna9/video/upload/v1783673286/Ai_Daily_Coach_automation_qzojiw.mp4",
+      videoUrl: "https://res.cloudinary.com/doyiqcna9/video/upload/f_auto,q_auto:good,vc_auto/v1783673286/Ai_Daily_Coach_automation_qzojiw.mp4",
       projectCertImgUrl: "https://res.cloudinary.com/doyiqcna9/image/upload/v1783667795/AI_Agent_Development_fnkuyw.png",
       highlights: [
         "Automated daily productivity coach powered by GPT-4o and n8n",
@@ -140,7 +140,7 @@ window.AI_CONTEXT = {
       techStack: ["Automation Anywhere A360", "DOMXPath", "RPA"],
       description: "An intelligent RPA bot utilizing Automation Anywhere A360 with dynamic DOMXPath scraping to extract and compile real-time hackathon data from Google's AI Overview.",
       isFeatured: false,
-      videoUrl: "https://res.cloudinary.com/doyiqcna9/video/upload/v1783668274/Automation_Anywhere_Project_-_Hackathon_Finder_1_ez6s0w.mp4",
+      videoUrl: "https://res.cloudinary.com/doyiqcna9/video/upload/f_auto,q_auto:good,vc_auto/v1783668274/Automation_Anywhere_Project_-_Hackathon_Finder_1_ez6s0w.mp4",
       projectCertImgUrl: "https://res.cloudinary.com/doyiqcna9/image/upload/v1783667845/Automation_Anywhere_complete_jowcjy.png",
       highlights: [
         "RPA bot with dynamic DOMXPath scraping",

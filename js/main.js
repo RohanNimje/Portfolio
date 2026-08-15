@@ -42,6 +42,34 @@ function toggleTheme() {
   renderNavigation();
 }
 
+/* ── Cloudinary Media Auto-Enhancer & Fast Stream ───────── */
+function optimizeCloudinaryVideoUrl(url) {
+  if (!url || typeof url !== "string") return url || "";
+  if (url.indexOf("res.cloudinary.com") === -1 || url.indexOf("/video/upload") === -1) {
+    return url;
+  }
+  if (url.indexOf("f_auto") !== -1 || url.indexOf("q_auto") !== -1 || url.indexOf("vc_auto") !== -1) {
+    return url;
+  }
+  return url.replace("/video/upload/", "/video/upload/f_auto,q_auto:good,vc_auto/");
+}
+
+function optimizeCloudinaryImageUrl(url) {
+  if (!url || typeof url !== "string") return url || "";
+  if (url.indexOf("res.cloudinary.com") === -1 || url.indexOf("/image/upload") === -1) {
+    return url;
+  }
+  if (url.indexOf("f_auto") !== -1 || url.indexOf("q_auto") !== -1 || url.indexOf("dpr_") !== -1) {
+    return url;
+  }
+  return url.replace("/image/upload/", "/image/upload/f_auto,q_auto:best,dpr_2.0/");
+}
+
+if (typeof window !== "undefined") {
+  window.optimizeCloudinaryVideoUrl = optimizeCloudinaryVideoUrl;
+  window.optimizeCloudinaryImageUrl = optimizeCloudinaryImageUrl;
+}
+
 /* ── Style Tokens ──────────────────────────────────────── */
 var GRADIENT_HEADING = "font-display font-bold text-foreground";
 var ELEVATED_CARD = "surface-card";
@@ -275,8 +303,10 @@ function renderCertifications() {
       var zIndex = position === 0 ? 50 : 20;
       var rotate = position < 0 ? (isMobile ? 28 : 42) : position > 0 ? (isMobile ? -28 : -42) : 0;
       cards +=
-        '<div data-cert-index="' + i + '" class="coverflow-card absolute cursor-pointer" style="z-index:' + zIndex + ";opacity:" + opacity + ";transform:translateX(" + x + "px) scale(" + scale + ") rotateY(" + rotate + 'deg);">' +
-        '<div class="block bg-white rounded-xl border border-slate-200 w-full h-full relative overflow-visible"><img src="' + certSrc + '" alt="' + cert.name + '" draggable="false" loading="lazy" decoding="async" class="block w-full h-full object-contain bg-white rounded-[10px]" style="box-shadow:' + (position === 0 ? "0 12px 40px rgba(67, 56, 202, 0.14)" : "0 4px 16px rgba(15, 23, 42, 0.06)") + ';" /></div>' +
+        '<div data-cert-index="' + i + '" class="coverflow-card absolute cursor-pointer" style="z-index:' + zIndex + ";opacity:" + opacity + ";transform:translateX(" + x + "px) scale(" + scale + ") rotateY(" + rotate + 'deg) translateZ(0);">' +
+        '<div class="block bg-white rounded-xl border border-slate-200 w-full h-full relative overflow-visible shadow-sm hover:shadow-md transition-shadow">' +
+        '<img src="' + certSrc + '" alt="' + cert.name + '" draggable="false" loading="eager" decoding="async" class="block w-full h-full object-contain bg-white rounded-[10px] cert-preview-img" style="box-shadow:' + (position === 0 ? "0 12px 40px rgba(67, 56, 202, 0.14)" : "0 4px 16px rgba(15, 23, 42, 0.06)") + ';" />' +
+        '</div>' +
         "</div>";
     }
   }
@@ -293,7 +323,10 @@ function renderCertifications() {
     cards +
     "</div>" +
     "</div>" +
-    '<div class="mt-4 sm:mt-6 md:mt-8 space-y-2 text-center"><div><p class="text-sm sm:text-base md:text-lg font-semibold text-foreground">' + (activeCert ? activeCert.name : "") + '</p><p class="text-xs sm:text-sm text-muted-foreground">' + (activeCert ? activeCert.issuer : "") + '</p></div><div class="flex justify-center items-center gap-3 pt-1.5"><div class="w-2 h-2 rounded-full bg-accent tiny-pulse"></div><span class="text-xs sm:text-sm font-semibold text-muted-foreground"><span class="text-accent">' + (certificationsIndex + 1) + "</span> / " + certs.length + "</span></div></div>";
+    '<div class="mt-4 sm:mt-6 md:mt-8 space-y-2 text-center">' +
+    '<div><p class="text-sm sm:text-base md:text-lg font-semibold text-foreground">' + (activeCert ? activeCert.name : "") + '</p>' +
+    '<p class="text-xs sm:text-sm text-muted-foreground">' + (activeCert ? activeCert.issuer : "") + '</p></div>' +
+    '<div class="flex justify-center items-center gap-3 pt-1.5"><div class="w-2 h-2 rounded-full bg-accent tiny-pulse"></div><span class="text-xs sm:text-sm font-semibold text-muted-foreground"><span class="text-accent">' + (certificationsIndex + 1) + "</span> / " + certs.length + "</span></div></div>";
 }
 
 /* ══════════════════════════════════════════════════════════
@@ -409,6 +442,7 @@ window.openProjectModal = function (idOrSlug) {
 };
 
 function renderLaptopFrame(videoUrl, title) {
+  var streamUrl = optimizeCloudinaryVideoUrl(videoUrl);
   return (
     '<div class="space-y-3 reveal w-full">' +
     '<h4 class="text-xs font-mono font-semibold uppercase text-muted-foreground tracking-wider letter-spacing-wide">' + (title || "MVP Architecture") + '</h4>' +
@@ -420,20 +454,21 @@ function renderLaptopFrame(videoUrl, title) {
     '<div style="width:10px;height:10px;border-radius:50%;background:#28C840"></div>' +
     '</div>' +
     '</div>' +
-    '<video src="' + videoUrl + '" muted loop playsinline controls preload="metadata" class="autoplay-video laptop-mockup-video"></video>' +
+    '<video src="' + streamUrl + '" muted loop playsinline controls preload="metadata" class="autoplay-video laptop-mockup-video"></video>' +
     '</div>' +
     '</div>'
   );
 }
 
 function renderMobileFrame(videoUrl, title) {
+  var streamUrl = optimizeCloudinaryVideoUrl(videoUrl);
   return (
     '<div class="space-y-3 flex flex-col items-center reveal w-full">' +
     (title ? '<h4 class="text-xs font-mono font-semibold uppercase text-muted-foreground tracking-wider self-start sm:self-center">' + title + '</h4>' : '') +
     '<div class="phone-mockup-chassis">' +
     '<div class="phone-mockup-speaker"></div>' +
     '<div class="phone-mockup-screen">' +
-    '<video src="' + videoUrl + '" muted loop playsinline controls preload="metadata" class="autoplay-video phone-mockup-video"></video>' +
+    '<video src="' + streamUrl + '" muted loop playsinline controls preload="metadata" class="autoplay-video phone-mockup-video"></video>' +
     '</div>' +
     '</div>' +
     '</div>'
@@ -564,7 +599,7 @@ function lockBodyScroll() {
 }
 
 function unlockBodyScroll() {
-  var modalOpen = document.getElementById("project-modal") || document.getElementById("honor-lightbox-modal");
+  var modalOpen = document.getElementById("project-modal") || document.getElementById("honor-lightbox-modal") || document.getElementById("cert-lightbox-modal");
   if (!modalOpen && !assistantIsOpen) {
     document.body.classList.remove("overflow-hidden");
   }
@@ -684,6 +719,64 @@ function renderHonorModal(honor) {
 }
 
 /* ══════════════════════════════════════════════════════════
+   TECHNICAL CREDENTIALS / CERTIFICATIONS LIGHTBOX MODAL
+══════════════════════════════════════════════════════════ */
+function openCertModal(certIndexOrId) {
+  var certs = (window.portfolioData && window.portfolioData.certifications) || [];
+  var cert = null;
+  if (typeof certIndexOrId === "number" && certIndexOrId < certs.length) {
+    cert = certs[certIndexOrId];
+  } else {
+    cert = certs.find(function (c) { return c.id === Number(certIndexOrId); });
+  }
+  if (cert) {
+    renderCertModal(cert);
+  }
+}
+window.openCertModal = openCertModal;
+
+function closeCertModal() {
+  var modalRoot = document.getElementById("cert-modal-root");
+  if (modalRoot) modalRoot.innerHTML = "";
+  var toggle = document.getElementById("assistant-toggle");
+  if (toggle && !assistantIsOpen) {
+    if (typeof window.resetAssistantTogglePosition === "function") {
+      window.resetAssistantTogglePosition(false);
+    }
+    toggle.classList.remove("is-hidden");
+  }
+  unlockBodyScroll();
+}
+window.closeCertModal = closeCertModal;
+
+function renderCertModal(cert) {
+  if (!cert) return;
+  lockBodyScroll();
+
+  var toggle = document.getElementById("assistant-toggle");
+  if (toggle) toggle.classList.add("is-hidden");
+
+  var certSrc = cert.CertImgUrl || cert.image || "";
+  var modalRoot = document.getElementById("cert-modal-root");
+  if (!modalRoot) return;
+
+  modalRoot.innerHTML =
+    '<div id="cert-lightbox-modal" class="modal-backdrop fixed inset-0 bg-black/75 backdrop-blur-md z-[80] flex items-center justify-center p-4 sm:p-8 cursor-pointer" role="dialog" aria-modal="true" aria-label="' + cert.name + '">' +
+
+    '<!-- Screen Viewport Floating Close Button (Top-Right) -->' +
+    '<button type="button" id="close-cert-modal" aria-label="Close certificate modal" class="fixed top-4 right-4 sm:top-6 sm:right-6 z-[85] p-3 rounded-full bg-black/60 hover:bg-black/90 text-white border border-white/20 backdrop-blur-md transition-all shadow-2xl cursor-pointer hover:scale-105 active:scale-95 flex items-center justify-center">' +
+    icon("close", "w-5 h-5") +
+    '</button>' +
+
+    '<!-- Pure Floating High-Resolution Certificate Image -->' +
+    '<div class="relative max-w-4xl max-h-[85vh] z-[81] flex items-center justify-center cursor-default" onclick="event.stopPropagation()">' +
+    '<img src="' + certSrc + '" alt="' + cert.name + '" class="max-h-[85vh] w-auto max-w-full object-contain rounded-2xl shadow-2xl border border-white/10 cert-preview-img" loading="eager" decoding="async" />' +
+    '</div>' +
+
+    '</div>';
+}
+
+/* ══════════════════════════════════════════════════════════
    PROJECT MODAL
 ══════════════════════════════════════════════════════════ */
 function renderProjectModal(project) {
@@ -697,9 +790,10 @@ function renderProjectModal(project) {
   // In project modals, always render the standard 16:9 desktop / system architecture demo video
   var demoUrl = project.laptopVideoUrl || project.productDemoUrl || project.videoUrlmvp || project.videoUrl || project.videourlproduct || project.mobileVideoUrl;
   if (demoUrl) {
+    var streamDemoUrl = optimizeCloudinaryVideoUrl(demoUrl);
     media += '<div><h3 class="text-lg font-semibold text-foreground mb-3">Working Demo</h3>' +
       '<div class="modal-video-container">' +
-      '<video preload="metadata" src="' + demoUrl + '" controls playsinline class="modal-video-player"></video>' +
+      '<video preload="metadata" src="' + streamDemoUrl + '" controls playsinline class="modal-video-player"></video>' +
       '</div></div>';
   }
   var shotUrl = project.screenshotUrl || project.screenshoturl;
@@ -1343,6 +1437,11 @@ function attachEvents() {
       }
     }
 
+    // Cert Lightbox Modal close
+    if (event.target.id === "cert-lightbox-modal" || event.target.closest("#close-cert-modal")) {
+      closeCertModal();
+    }
+
     // Certifications carousel
     if (event.target.closest("#cert-prev")) {
       pauseCertAutoplay();
@@ -1361,8 +1460,13 @@ function attachEvents() {
     var certCard = event.target.closest("[data-cert-index]");
     if (certCard) {
       pauseCertAutoplay();
-      certificationsIndex = Number(certCard.getAttribute("data-cert-index"));
-      renderCertifications();
+      var clickedIdx = Number(certCard.getAttribute("data-cert-index"));
+      if (clickedIdx === certificationsIndex) {
+        openCertModal(clickedIdx);
+      } else {
+        certificationsIndex = clickedIdx;
+        renderCertifications();
+      }
     }
 
     // Theme Toggle Handler
@@ -1532,7 +1636,9 @@ function attachEvents() {
   // Escape key listener to close modal or assistant
   document.addEventListener("keydown", function (event) {
     if (event.key === "Escape" || event.key === "Esc") {
-      if (document.getElementById("honor-lightbox-modal")) {
+      if (document.getElementById("cert-lightbox-modal")) {
+        closeCertModal();
+      } else if (document.getElementById("honor-lightbox-modal")) {
         closeHonorModal();
       } else if (document.getElementById("project-modal")) {
         closeProjectModal();
