@@ -582,7 +582,12 @@ function closeProjectModal() {
     modalRoot.innerHTML = "";
   }
   var toggle = document.getElementById("assistant-toggle");
-  if (toggle && !assistantIsOpen) toggle.classList.remove("is-hidden");
+  if (toggle && !assistantIsOpen) {
+    if (typeof window.resetAssistantTogglePosition === "function") {
+      window.resetAssistantTogglePosition(false);
+    }
+    toggle.classList.remove("is-hidden");
+  }
   unlockBodyScroll();
 }
 
@@ -601,7 +606,12 @@ function closeHonorModal() {
   var modalRoot = document.getElementById("honor-modal-root");
   if (modalRoot) modalRoot.innerHTML = "";
   var toggle = document.getElementById("assistant-toggle");
-  if (toggle && !assistantIsOpen) toggle.classList.remove("is-hidden");
+  if (toggle && !assistantIsOpen) {
+    if (typeof window.resetAssistantTogglePosition === "function") {
+      window.resetAssistantTogglePosition(false);
+    }
+    toggle.classList.remove("is-hidden");
+  }
   unlockBodyScroll();
 }
 
@@ -791,21 +801,45 @@ function initDraggableAssistant() {
   var isDockedOnLeft = false;
   var dragThreshold = 6;
 
-  // Compute initial position — values mirror CSS clamp() midpoints
-  var isMobile = window.innerWidth < 640;
-  var isTablet = window.innerWidth >= 640 && window.innerWidth < 1024;
-  var isDesktop = window.innerWidth >= 1024;
-  var isWide = window.innerWidth >= 1440;
-  var defaultSize = isWide ? 150 : isDesktop ? 136 : isTablet ? 116 : 94;
-  var toggleRect = toggle.getBoundingClientRect();
-  var btnW = toggleRect.width || defaultSize;
-  var btnH = toggleRect.height || defaultSize;
-  var margin = isMobile ? 10 : isDesktop ? 20 : 16;
-  var bottomMargin = isMobile ? 70 : isDesktop ? 20 : 16;
+  function computeInitialPosition() {
+    var isMobileNow = window.innerWidth < 640;
+    var isTabletNow = window.innerWidth >= 640 && window.innerWidth < 1024;
+    var isDesktopNow = window.innerWidth >= 1024 && window.innerWidth < 1440;
+    var isWideNow = window.innerWidth >= 1440;
 
-  currentLeft = document.documentElement.clientWidth - btnW - margin;
-  currentTop = window.innerHeight - btnH - bottomMargin;
-  applyPosition(currentLeft, currentTop, false);
+    var defaultSizeNow = isWideNow ? 150 : isDesktopNow ? 136 : isTabletNow ? 116 : 94;
+    var toggleRect = toggle.getBoundingClientRect();
+    var btnW = (toggleRect && toggleRect.width > 0) ? toggleRect.width : defaultSizeNow;
+    var btnH = (toggleRect && toggleRect.height > 0) ? toggleRect.height : defaultSizeNow;
+
+    var sideMargin = isMobileNow ? 10 : (isDesktopNow || isWideNow) ? 20 : 16;
+    var maxBottom = isMobileNow ? 70 : (isDesktopNow || isWideNow) ? 20 : 16;
+
+    currentLeft = document.documentElement.clientWidth - btnW - sideMargin;
+    currentTop = window.innerHeight - btnH - maxBottom;
+    isDockedOnLeft = false;
+
+    return { left: currentLeft, top: currentTop };
+  }
+
+  function resetAssistantTogglePosition(animate) {
+    var pos = computeInitialPosition();
+    applyPosition(pos.left, pos.top, animate !== false);
+  }
+
+  window.resetAssistantTogglePosition = resetAssistantTogglePosition;
+
+  // Set initial position matching first page load metrics
+  resetAssistantTogglePosition(false);
+
+  var videoEl = toggle.querySelector(".avatar-robot-video");
+  if (videoEl) {
+    videoEl.addEventListener("loadedmetadata", function () {
+      if (!isDragging && !assistantIsOpen) {
+        resetAssistantTogglePosition(false);
+      }
+    });
+  }
 
   toggle.addEventListener("pointerdown", function (e) {
     if (e.button !== 0 && e.pointerType === "mouse") return;
@@ -927,7 +961,7 @@ function initDraggableAssistant() {
   }
 
   function applyPosition(left, top, animate) {
-    toggle.style.transition = animate ? "left 0.32s cubic-bezier(0.2, 0.8, 0.2, 1), top 0.32s cubic-bezier(0.2, 0.8, 0.2, 1), transform 0.2s ease" : "none";
+    toggle.style.transition = animate ? "left 0.32s cubic-bezier(0.2, 0.8, 0.2, 1), top 0.32s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.22s ease, transform 0.22s ease" : "none";
     toggle.style.left = left + "px";
     toggle.style.top = top + "px";
     toggle.style.right = "auto";
@@ -1052,7 +1086,11 @@ function initDraggableAssistant() {
   }
 
   window.addEventListener("resize", function () {
-    snapToEdge();
+    if (!assistantIsOpen) {
+      resetAssistantTogglePosition(false);
+    } else {
+      alignPanelAnchor();
+    }
   });
 }
 
@@ -1150,7 +1188,12 @@ function closeAssistant() {
   var bottomNav = document.getElementById("bottom-nav");
   var modalOpen = document.getElementById("project-modal");
   if (panel) panel.classList.add("is-hidden");
-  if (toggle && !modalOpen) toggle.classList.remove("is-hidden");
+  if (toggle && !modalOpen) {
+    if (typeof window.resetAssistantTogglePosition === "function") {
+      window.resetAssistantTogglePosition(true);
+    }
+    toggle.classList.remove("is-hidden");
+  }
   if (bottomNav) bottomNav.classList.remove("nav-hidden");
   unlockBodyScroll();
 }

@@ -1179,7 +1179,7 @@ html.dark .nav-enter-top {
 }
 
 /* ═══════════════════════════════════════════════════
-   AI AGENT WIDGET — SHELL TRANSPARENCY RESET
+   AI AGENT WIDGET — SHELL TRANSPARENCY & OVERFLOW RESET
    ════════════════════════════════════════════════════ */
 .assistant-shell,
 #portfolio-assistant,
@@ -1196,6 +1196,7 @@ html.dark .nav-enter-top {
   padding: 0 !important;
   margin: 0 !important;
   border-radius: 0 !important;
+  overflow: visible !important;
 }
 
 /* ═══════════════════════════════════════════════════
@@ -1212,10 +1213,12 @@ html.dark .nav-enter-top {
   display: flex;
   align-items: center;
   justify-content: center;
+  overflow: visible !important;
   /* GPU layer — smooth 60fps float + drag */
-  will-change: transform;
+  will-change: transform, left, top, opacity;
   transform: translateZ(0);
   animation: floatAvatar 5s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
+  transition: opacity 220ms cubic-bezier(0.16, 1, 0.3, 1), transform 220ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 /* Ambient Radial Glow Aura directly behind the bot image */
@@ -1320,6 +1323,7 @@ html.dark .assistant-toggle::before {
   box-shadow: none !important;
   outline: none !important;
   mix-blend-mode: normal !important;
+  overflow: visible !important;
   /* Realistic Depth Shadow & Subtle Ambient Lighting */
   filter: drop-shadow(0 8px 18px rgba(0, 0, 0, 0.16)) drop-shadow(0 3px 8px rgba(14, 165, 233, 0.12));
   -webkit-filter: drop-shadow(0 8px 18px rgba(0, 0, 0, 0.16)) drop-shadow(0 3px 8px rgba(14, 165, 233, 0.12));
@@ -1383,8 +1387,9 @@ html.dark .assistant-toggle.is-dragging .avatar-robot-video {
   opacity: 0 !important;
   visibility: hidden !important;
   pointer-events: none !important;
-  transform: scale(0.75) !important;
-  transition: opacity 220ms ease, transform 220ms ease, visibility 220ms ease !important;
+  transform: translateZ(0) scale(0.85) !important;
+  animation-play-state: paused !important;
+  transition: opacity 220ms cubic-bezier(0.16, 1, 0.3, 1), transform 220ms cubic-bezier(0.16, 1, 0.3, 1), visibility 220ms ease !important;
 }
 
 /* ═══════════════════════════════════════════════════
