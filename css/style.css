@@ -74,6 +74,46 @@ body {
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
   transition: background-color 300ms ease, color 300ms ease;
+  -webkit-touch-callout: none;
+}
+
+/* Prevent accidental text selection and Touch to Search popups on mobile UI/interactive elements */
+h1, h2, h3, h4, h5, h6,
+.section-tag,
+.section-title,
+.hero-identity-tag,
+.tech-pill,
+.floating-metric,
+nav,
+.navbar,
+.bottom-nav,
+.coverflow-stage,
+.coverflow-card,
+.honor-card,
+.experience-card,
+.assistant-toggle,
+.assistant-shell,
+.magnetic-button,
+a,
+button {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* Ensure copyable text blocks and inputs remain selectable */
+p,
+code,
+pre,
+input,
+textarea,
+span.selectable-text,
+#assistant-messages p {
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  user-select: text;
 }
 
 /* ═══════════════════════════════════════════════════
