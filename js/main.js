@@ -109,24 +109,24 @@ function renderNavigation() {
 
   var desktopButtons = "";
   var mobileButtons = "";
-  var GHOST_BUTTON = "inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold text-muted-foreground hover:text-foreground hover:bg-muted transition-all duration-200";
+  var GHOST_BUTTON = "inline-flex items-center justify-center gap-1.5 sm:gap-2 px-2 sm:px-2.5 lg:px-3.5 py-1.5 sm:py-2 rounded-xl text-xs sm:text-sm font-semibold text-muted-foreground hover:text-foreground hover:bg-muted transition-all duration-200";
 
   for (var i = 0; i < navItems.length; i++) {
     var item = navItems[i];
     var isActive = activeNavId === item.id;
     var desktopClass = isActive
-      ? "relative px-3.5 py-2 text-sm font-semibold transition-all duration-300 flex items-center gap-2 rounded-xl text-accent bg-muted border border-border"
-      : "relative " + GHOST_BUTTON + " !px-3.5 !py-2";
+      ? "relative px-2 sm:px-2.5 lg:px-3.5 py-1.5 sm:py-2 text-xs sm:text-sm font-semibold transition-all duration-300 flex items-center gap-1.5 sm:gap-2 rounded-xl text-accent bg-muted border border-border flex-shrink-0"
+      : "relative " + GHOST_BUTTON + " flex-shrink-0";
     var mobileClass = isActive
       ? "relative w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300 bg-muted text-accent border border-border"
       : "relative w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300 text-muted-foreground hover:bg-muted hover:text-foreground";
 
-    desktopButtons += '<button type="button" data-scroll="' + item.id + '" class="' + desktopClass + '">' + icon(item.icon, "w-4 h-4") + item.label + "</button>";
+    desktopButtons += '<button type="button" data-scroll="' + item.id + '" class="' + desktopClass + '">' + icon(item.icon, "w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0") + '<span class="whitespace-nowrap">' + item.label + "</span></button>";
     mobileButtons += '<button type="button" aria-label="' + item.label + '" data-scroll="' + item.id + '" class="' + mobileClass + '">' + icon(item.icon, "w-[18px] h-[18px]") + "</button>";
   }
 
   var themeToggleBtnDesktop =
-    '<button type="button" id="theme-toggle-btn" aria-label="Toggle light and dark theme" class="p-2.5 rounded-xl border border-border bg-card hover:bg-muted text-foreground hover:text-accent transition-all duration-200 flex items-center justify-center cursor-pointer shadow-sm ml-2">' +
+    '<button type="button" id="theme-toggle-btn" aria-label="Toggle light and dark theme" class="p-2 sm:p-2.5 rounded-xl border border-border bg-card hover:bg-muted text-foreground hover:text-accent transition-all duration-200 flex items-center justify-center cursor-pointer shadow-sm flex-shrink-0">' +
     icon(currentTheme === "dark" ? "sun" : "moon", "w-4 h-4 text-accent") +
     '</button>';
 
@@ -137,26 +137,29 @@ function renderNavigation() {
 
   document.getElementById("navigation").innerHTML =
     '<nav class="hidden md:flex fixed top-0 left-0 right-0 z-50 w-full nav-enter-top">' +
-    '<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full flex items-center justify-between h-16">' +
-    '<div class="flex-shrink-0 flex items-center gap-2.5 cursor-pointer transition-transform hover:scale-[1.02]" data-scroll="hero">' +
-    '<img src="/public/Logo.png" alt="Rohan Nimje" class="w-8 h-8 rounded-lg object-contain shadow-sm" />' +
-    '<span class="font-display font-bold text-foreground text-base tracking-tight whitespace-nowrap">Rohan Nimje</span>' +
+    '<div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 w-full flex items-center justify-between h-16 relative gap-2 sm:gap-4">' +
+    '<div class="flex-shrink-0 flex items-center gap-2 sm:gap-2.5 cursor-pointer transition-transform hover:scale-[1.02] z-10" data-scroll="hero">' +
+    '<img src="/public/Logo.png" alt="Rohan Nimje" class="w-8 h-8 rounded-lg object-contain shadow-sm flex-shrink-0" />' +
+    '<span class="font-display font-bold text-foreground text-sm sm:text-base tracking-tight whitespace-nowrap hidden min-[800px]:inline">Rohan Nimje</span>' +
     '</div>' +
-    '<div class="hidden md:flex items-center gap-1 absolute left-1/2 -translate-x-1/2">' +
+    '<div class="hidden md:flex items-center justify-center gap-0.5 sm:gap-1 lg:gap-1.5 flex-1 min-w-0 mx-1 lg:mx-4 xl:absolute xl:left-1/2 xl:-translate-x-1/2 xl:mx-0">' +
     desktopButtons +
     '</div>' +
-    '<div class="flex items-center gap-2">' +
+    '<div class="flex-shrink-0 flex items-center gap-1.5 sm:gap-2 z-10">' +
     themeToggleBtnDesktop +
-    '<button type="button" data-scroll="contact" class="' + PRIMARY_BUTTON + ' !px-5 !py-2 text-sm">' + icon("mail", "w-4 h-4") + "Get In Touch</button>" +
+    '<button type="button" data-scroll="contact" class="' + PRIMARY_BUTTON + ' !px-3 sm:!px-4 lg:!px-5 !py-2 text-xs sm:text-sm whitespace-nowrap">' +
+    icon("mail", "w-4 h-4 flex-shrink-0") +
+    '<span class="hidden min-[860px]:inline">Get In Touch</span><span class="inline min-[860px]:hidden">Contact</span>' +
+    '</button>' +
     '</div>' +
     '</div>' +
     '</nav>' +
-    '<div id="bottom-nav" class="bottom-nav md:hidden fixed bottom-0 left-0 right-0 z-40 flex justify-center nav-enter-bottom">' +
-    '<div class="rounded-full px-3 py-1.5 bg-card/90 dark:bg-card/75 border border-border/80 flex items-center gap-1.5 max-w-lg w-full justify-center shadow-sm backdrop-blur-md">' +
+    '<div id="bottom-nav" class="bottom-nav md:hidden fixed bottom-0 left-0 right-0 z-40 flex justify-center nav-enter-bottom pointer-events-none">' +
+    '<div class="rounded-full px-3 py-1.5 bg-card border border-border/80 flex items-center gap-1.5 max-w-lg w-auto justify-center shadow-md backdrop-blur-md pointer-events-auto">' +
     mobileButtons +
     themeToggleBtnMobile +
-    "</div>" +
-    "</div>";
+    '</div>' +
+    '</div>';
 }
 
 /* ══════════════════════════════════════════════════════════

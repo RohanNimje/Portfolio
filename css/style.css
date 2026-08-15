@@ -1164,6 +1164,8 @@ body.overflow-hidden {
   border-bottom: 1px solid var(--border);
   box-shadow: 0 1px 0 rgba(0, 0, 0, 0.04);
   will-change: transform;
+  padding-left: env(safe-area-inset-left, 0px);
+  padding-right: env(safe-area-inset-right, 0px);
 }
 
 html.dark .nav-enter-top {
@@ -1402,21 +1404,26 @@ html.dark .assistant-toggle.is-dragging .avatar-robot-video {
   right: 0;
   z-index: 40;
   width: 100%;
-  padding-bottom: max(12px, env(safe-area-inset-bottom));
+  padding-bottom: max(12px, env(safe-area-inset-bottom, 12px));
   padding-top: 8px;
-  padding-left: 16px;
-  padding-right: 16px;
-  background: rgba(245, 244, 240, 0.85);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border-top: 1px solid var(--border);
-  box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.05);
+  padding-left: max(16px, env(safe-area-inset-left, 16px));
+  padding-right: max(16px, env(safe-area-inset-right, 16px));
+  background: transparent;
+  pointer-events: none;
   transition: transform 300ms cubic-bezier(0.16, 1, 0.3, 1), opacity 240ms ease;
 }
 
-html.dark .bottom-nav {
-  background: rgba(12, 12, 11, 0.85);
-  box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.35);
+.bottom-nav > div {
+  background: var(--card) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  border: 1px solid var(--border);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+html.dark .bottom-nav > div {
+  background: var(--card) !important;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
 }
 
 .bottom-nav.nav-hidden {
