@@ -53,12 +53,8 @@ app.listen(PORT, function () {
   console.log("└─────────────────────────────────────────────┘");
   console.log("");
 
-  var targets = [
-    process.env.first_KEY  ? "✓ first_KEY  (" + (process.env.first_PROVIDER  || "auto") + ")" : "✗ first_KEY  (not set)",
-    process.env.second_KEY ? "✓ second_KEY (" + (process.env.second_PROVIDER || "auto") + ")" : "✗ second_KEY (not set)",
-    process.env.third_KEY  ? "✓ third_KEY  (" + (process.env.third_PROVIDER  || "auto") + ")" : "✗ third_KEY  (not set)"
-  ];
+  var target = process.env.GEMINI_API_KEY ? "✓ GEMINI_API_KEY (Set)" : "✗ GEMINI_API_KEY (not set)";
   console.log("  API Targets:");
-  targets.forEach(function (t) { console.log("    " + t); });
+  console.log("    " + target);
   console.log("");
 });
