@@ -28,7 +28,7 @@
   function getStandbyErrorCard() {
     return (
       '<div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-2.5 my-1">' +
-      '<div class="flex items-center gap-2 text-indigo-700 font-bold text-sm">' +
+      '<div class="flex items-center gap-2 font-bold text-sm text-slate-800 dark:text-slate-100">' +
       '<span>⚡ Assistant Momentarily Busy</span>' +
       '</div>' +
       '<p class="text-xs text-slate-600 leading-relaxed margin-0">' +
@@ -62,7 +62,7 @@
     if (/go to projects|scroll to projects|take me to projects|show projects section|view all projects/i.test(raw)) {
       scrollToSection("projects");
       return (
-        "Scrolling you directly to <strong class=\"font-semibold text-indigo-700\">Featured Projects</strong> section in the portfolio!" +
+        "Scrolling you directly to <strong class=\"font-semibold\">Featured Projects</strong> section in the portfolio!" +
         '<div class="ai-action-container">' + SCROLL_BUTTONS.projects + '</div>'
       );
     }
@@ -70,7 +70,7 @@
     if (/go to cert|scroll to cert|take me to cert|show cert|view all cert|certifications section/i.test(raw)) {
       scrollToSection("certifications");
       return (
-        "Navigating to the <strong class=\"font-semibold text-indigo-700\">Certifications</strong> section!" +
+        "Navigating to the <strong class=\"font-semibold\">Certifications</strong> section!" +
         '<div class="ai-action-container">' + SCROLL_BUTTONS.certifications + '</div>'
       );
     }
@@ -78,7 +78,7 @@
     if (/go to experience|scroll to experience|take me to experience|show experience|full experience|experience section/i.test(raw)) {
       scrollToSection("experience");
       return (
-        "Scrolling to the <strong class=\"font-semibold text-indigo-700\">Experience</strong> section!" +
+        "Scrolling to the <strong class=\"font-semibold\">Experience</strong> section!" +
         '<div class="ai-action-container">' + SCROLL_BUTTONS.experience + '</div>'
       );
     }
@@ -86,7 +86,7 @@
     if (/go to honors|scroll to honors|take me to honors|show honors|view honors|ranks section|achievements section/i.test(raw)) {
       scrollToSection("honors");
       return (
-        "Navigating to <strong class=\"font-semibold text-indigo-700\">Honors & Achievements</strong>!" +
+        "Navigating to <strong class=\"font-semibold\">Honors & Achievements</strong>!" +
         '<div class="ai-action-container">' + SCROLL_BUTTONS.honors + '</div>'
       );
     }
@@ -94,7 +94,7 @@
     if (/go to contact|scroll to contact|take me to contact|show contact|get in touch/i.test(raw)) {
       scrollToSection("contact");
       return (
-        "Navigating to the <strong class=\"font-semibold text-indigo-700\">Contact & Connect</strong> section!" +
+        "Navigating to the <strong class=\"font-semibold\">Contact & Connect</strong> section!" +
         '<div class="ai-action-container">' + SCROLL_BUTTONS.contact + '</div>'
       );
     }
@@ -102,19 +102,27 @@
     // Basic greetings
     if (/^(hi|hello|hey|namaste|hola|good morning|good afternoon|good evening|whats up|what is up)$/.test(lower)) {
       return (
-        "Hello! I am <strong class=\"font-semibold text-indigo-700\">Rohan Nimje's Personal AI Representative</strong>. " +
+        "Hello! I am <strong class=\"font-semibold\">Rohan Nimje's Personal AI Representative</strong>. " +
         "How can I help you today? You can ask about his projects, skills, certifications, experience, or how to get in touch!"
+      );
+    }
+
+    // Math & arithmetic queries (Token Protection: Zero-Explanation & Immediate Pivot)
+    if (/^(what\s+is\s+|calculate\s+|solve\s+)?\s*\d+\s*[\+\-\*\/\^%]\s*\d+[\s\d\+\-\*\/\^%]*\??$/i.test(raw)) {
+      return (
+        "I'm exclusively dedicated to discussing Rohan's engineering work and systems. Would you like to explore his AI skincare analyzer Cosmolyze, or check out his GovTech fraud detector Trinity X?" +
+        '<div class="ai-action-container">' + SCROLL_BUTTONS.projects + '</div>'
       );
     }
 
     // Quick links / Contact
     if (/^(contact|contact rohan|show links|links|email|linkedin|github|reach rohan|how to reach rohan)$/.test(lower)) {
       return (
-        "Here are the best ways to reach and connect with <strong class=\"font-semibold text-indigo-700\">Rohan Nimje</strong>:<br>" +
+        "Here are the best ways to reach and connect with <strong class=\"font-semibold\">Rohan Nimje</strong>:<br>" +
         "<ul class=\"list-disc pl-4 space-y-1 text-sm my-1\">" +
-        "<li><strong class=\"font-semibold text-indigo-700\">Email:</strong> <a href=\"mailto:" + (contact.email || "rohannimje53@gmail.com") + "\" class=\"text-indigo-600 font-semibold underline\">" + (contact.email || "rohannimje53@gmail.com") + "</a></li>" +
-        "<li><strong class=\"font-semibold text-indigo-700\">LinkedIn:</strong> <a href=\"" + (contact.linkedin || "https://www.linkedin.com/in/rohannimje/") + "\" target=\"_blank\" rel=\"noopener\" class=\"text-indigo-600 font-semibold underline\">linkedin.com/in/rohannimje</a></li>" +
-        "<li><strong class=\"font-semibold text-indigo-700\">GitHub:</strong> <a href=\"" + (contact.github || "https://github.com/RohanNimje") + "\" target=\"_blank\" rel=\"noopener\" class=\"text-indigo-600 font-semibold underline\">github.com/RohanNimje</a></li>" +
+        "<li><strong class=\"font-semibold\">Email:</strong> <a href=\"mailto:" + (contact.email || "rohannimje53@gmail.com") + "\" class=\"text-indigo-600 font-semibold underline\">" + (contact.email || "rohannimje53@gmail.com") + "</a></li>" +
+        "<li><strong class=\"font-semibold\">LinkedIn:</strong> <a href=\"" + (contact.linkedin || "https://www.linkedin.com/in/rohannimje/") + "\" target=\"_blank\" rel=\"noopener\" class=\"text-indigo-600 font-semibold underline\">linkedin.com/in/rohannimje</a></li>" +
+        "<li><strong class=\"font-semibold\">GitHub:</strong> <a href=\"" + (contact.github || "https://github.com/RohanNimje") + "\" target=\"_blank\" rel=\"noopener\" class=\"text-indigo-600 font-semibold underline\">github.com/RohanNimje</a></li>" +
         "</ul>" +
         '<div class="ai-action-container">' + SCROLL_BUTTONS.contact + '</div>'
       );
@@ -140,113 +148,135 @@
     if (!ctx) return "You are a helpful AI assistant.";
 
     var p = ctx.personal || {};
-    var contact = ctx.contact || {};
+    var behavior = ctx.agentBehavior || {};
     var query = String(userQuery || "").toLowerCase();
 
-    var wantsProjects = /project|build|app|scanzy|trinity|cosmolyze|agent|bot|automation|demo|video|watch|code|system|mcp|portfolio|work|product|mvp|screenshot/i.test(query);
-    var wantsCerts = /certificat|credential|course|nxtwave|aws|salesforce|microsoft|python|sql|html|css|boostrap|flexbox|xpm|learning/i.test(query);
-    var wantsHonors = /honor|achievement|hackathon|award|rank|codeverse|qualifier|contest|competition|streak|winner|innovators|buildathon|sparky/i.test(query);
+    var wantsProjects = /project|build|app|scanzy|trinity|cosmolyze|sparky|agent|bot|automation|demo|video|watch|code|system|mcp|portfolio|work|product|mvp|screenshot|loyalty|skincare|infrastructure|fraud|qr|reward/i.test(query);
+    var wantsCerts = /certificat|credential|course|nxtwave|aws|salesforce|microsoft|python|sql|html|css|bootstrap|flexbox|xpm|learning/i.test(query);
+    var wantsHonors = /honor|achievement|hackathon|award|rank|codeverse|qualifier|contest|competition|streak|winner|innovators|buildathon|finalist/i.test(query);
     var wantsExp = /experience|work|job|role|trainee|company|nxtwave|career|employment|position/i.test(query);
     var wantsEdu = /education|college|university|degree|bca|cgpa|grade|study|studying|school|sgbau|shivaji/i.test(query);
-    var wantsSkills = /skill|tech|stack|language|framework|python|javascript|react|node|sql|mongodb|supabase|n8n|tool|expert|capability|capabilities/i.test(query);
-    var wantsPitches = /hire|why|role|apm|product manager|sde|software engineer|architect|position|opportunity|recruitment|value|strengths/i.test(query);
+    var wantsSkills = /skill|tech|stack|language|framework|python|javascript|react|node|sql|mongodb|supabase|n8n|tool|expert|capabilit/i.test(query);
+    var wantsContact = /contact|email|linkedin|github|reach|connect|hire|message/i.test(query);
+    var wantsMetrics = /metric|streak|365|week|latency|speed|performance|stat|number/i.test(query);
 
-    var isGeneral = !wantsProjects && !wantsCerts && !wantsHonors && !wantsExp && !wantsEdu && !wantsSkills && !wantsPitches;
+    var isGeneral = !wantsProjects && !wantsCerts && !wantsHonors && !wantsExp && !wantsEdu && !wantsSkills && !wantsContact;
 
     var promptParts = [];
 
+    // ── Core system identity & guardrails block ──
     promptParts.push(
-      "You are the Personal AI Representative of " + p.name + " — acting as his professional advocate on his portfolio website.\n\n" +
-      "IDENTITY & PERSONA RULES:\n" +
-      "- Adopt an articulate, senior engineer tone matching enterprise AI assistants (Gemini, Claude). Blend a substantive introductory paragraph with structured, bold-anchored highlights where relevant, ensuring depth without being overly brief or dryly bulleted.\n" +
-      "- Always speak AS Rohan's representative — warm, confident, professional.\n" +
-      "- Refer to Rohan in third person ('Rohan', 'he', 'him', 'his').\n" +
-      "- NEVER invent facts not listed in this knowledge base.\n" +
-      "- NEVER output raw Markdown syntax like **bold** or *italic* or ```code``` or # headings. Use clean HTML formatting: <strong class=\"font-semibold text-indigo-700\">, <ul class=\"list-disc pl-4 space-y-1 my-1\">, <li>, <br>, <a href=\"...\" target=\"_blank\" rel=\"noopener\" class=\"text-indigo-600 font-semibold underline\">.\n" +
-      "- Detect the language of the user's message AUTOMATICALLY and reply in the EXACT SAME language (English, Hindi, Marathi, Hinglish, etc.).\n" +
-      "- When asked for project videos/demos, ALWAYS output clickable HTML links:\n" +
-      "  <a href=\"[URL]\" target=\"_blank\" rel=\"noopener\" class=\"ai-action-chip\">🎬 Watch Demo Video</a>\n" +
-      "- When asked for certificates, output image cards:\n" +
-      "  <div class=\"mt-2\"><img src=\"[CertImgUrl]\" alt=\"[name]\" class=\"w-full max-w-xs rounded-xl border border-slate-200 shadow-sm\" loading=\"lazy\" /><p class=\"text-xs text-slate-500 mt-1\">[name] — [issuer]</p></div>\n" +
-      "- PROJECT MODAL ACTION TRIGGER:\n" +
-      "  When the user asks to see, view, open, or watch project demos/videos/modals (e.g. ScanZy Rewards, Cosmolyze, Trinity X, Sparky, etc.), append [[ACTION:openProjectModal:ID]] with the matching project ID (e.g. [[ACTION:openProjectModal:1]] for ScanZy Rewards, [[ACTION:openProjectModal:2]] for Cosmolyze, [[ACTION:openProjectModal:3]] for Trinity X, [[ACTION:openProjectModal:4]] for Sparky, [[ACTION:openProjectModal:5]] for Automation Engine, [[ACTION:openProjectModal:6]] for Hackathon Bot).\n" +
-      "- AUTO-SCROLL BUTTON INSTRUCTIONS:\n" +
-      "  When answering inquiries about projects, append: " + SCROLL_BUTTONS.projects + "\n" +
-      "  When answering inquiries about certifications, append: " + SCROLL_BUTTONS.certifications + "\n" +
-      "  When answering inquiries about experience, append: " + SCROLL_BUTTONS.experience + "\n" +
-      "  When answering inquiries about honors/ranks, append: " + SCROLL_BUTTONS.honors + "\n" +
-      "  When answering inquiries about contact, append: " + SCROLL_BUTTONS.contact + "\n\n" +
-      "BASICS:\n" +
-      "Name: " + p.name + " | Location: " + (p.location || "Maharashtra, India") + "\n" +
-      "Tagline: " + p.tagline + "\n" +
-      "Summary: " + p.summary + "\n" +
-      "Email: " + (contact.email || "rohannimje53@gmail.com") + "\n" +
-      "LinkedIn: " + (contact.linkedin || "https://www.linkedin.com/in/rohannimje/") + "\n" +
-      "GitHub: " + (contact.github || "https://github.com/RohanNimje")
+      "CRITICAL GUARDRAIL (ZERO-EXPLANATION & IMMEDIATE PIVOT FOR TOKEN PROTECTION):\n" +
+      "If the user asks ANY off-topic or generic query (such as math like '2+2', tech/concept tutorials or definitions like 'What is LangGraph', movies, trivia, weather, or general coding help unrelated to Rohan):\n" +
+      "- Strictly DO NOT explain, define, solve, or teach the concept. Zero tutorials.\n" +
+      "- Politely decline in exactly ONE single sentence stating your exclusive focus on Rohan's engineering work and systems.\n" +
+      "- Immediately follow up in that same single response with an engaging question inviting the user to explore Rohan's work (e.g. \"I'm exclusively dedicated to discussing Rohan's engineering work and systems. Would you like to explore his AI skincare analyzer Cosmolyze, or check out his GovTech fraud detector Trinity X?\").\n\n" +
+      "SUBTLE & EXECUTIVE HIGHLIGHTING RULE:\n" +
+      "- Do NOT over-color or bold every piece of text, tool name, or buzzword.\n" +
+      "- Keep typography clean, understated, and executive.\n" +
+      "- Normal narrative sentences must stay regular font weight.\n" +
+      "- Use <strong class=\"font-semibold\"> ONLY for primary section anchors/titles or key standalone metrics (e.g., '365+ Days', 'Top 0.5%'). Never apply color classes to strong tags.\n\n" +
+      "IDENTITY: " + (behavior.identity || "You are Rohan Nimje's personal AI assistant.") + "\n" +
+      "PERSONA: " + (behavior.persona || "Professional, warm, confident, minimalist executive tone.") + "\n" +
+      "LANGUAGE RULE: " + (behavior.languageRule || "Match user's language automatically.") + "\n" +
+      "CONVERSATION RULE: " + (behavior.conversationRule || "After on-topic responses, end with one smart follow-up question.") + "\n" +
+      "OFF-TOPIC RULE: " + (behavior.offTopicRule || "Politely decline off-topic queries in 1 sentence and pivot immediately to Rohan's work.") + "\n" +
+      "FORMAT RULE: " + (behavior.formatRule || "Mix short paragraphs with bullet points. Keep vertical spacing compact.") + "\n" +
+      "HTML RULE: " + (behavior.htmlRule || "Use clean HTML formatting only, no markdown asterisks.") + "\n" +
+      "HONESTY: " + (behavior.honesty || "Never fabricate facts.") + "\n\n" +
+      "PROJECT MODAL TRIGGER — When user asks to see/open/watch a project, append the action tag:\n" +
+      "  ScanZy Rewards: [[ACTION:openProjectModal:1]]\n" +
+      "  Cosmolyze: [[ACTION:openProjectModal:2]]\n" +
+      "  Trinity X: [[ACTION:openProjectModal:3]]\n" +
+      "  Sparky: [[ACTION:openProjectModal:4]]\n" +
+      "  Business Workflow Engine: [[ACTION:openProjectModal:5]]\n" +
+      "  Smart Hackathon Bot: [[ACTION:openProjectModal:6]]\n\n" +
+      "AUTO-SCROLL BUTTONS — Append these when relevant:\n" +
+      "  Projects section: " + SCROLL_BUTTONS.projects + "\n" +
+      "  Certifications section: " + SCROLL_BUTTONS.certifications + "\n" +
+      "  Experience section: " + SCROLL_BUTTONS.experience + "\n" +
+      "  Honors section: " + SCROLL_BUTTONS.honors + "\n" +
+      "  Contact section: " + SCROLL_BUTTONS.contact + "\n\n" +
+      "ROHAN'S PROFILE:\n" +
+      "Name: " + p.fullName + "\n" +
+      "Location: " + (p.location || "Maharashtra, India") + "\n" +
+      "Tagline: " + (p.tagline || "") + "\n" +
+      "Summary: " + (p.summary || "") + "\n" +
+      "Email: " + (p.email || "rohannimje53@gmail.com") + "\n" +
+      "LinkedIn: " + (p.linkedin || "https://www.linkedin.com/in/rohannimje/") + "\n" +
+      "GitHub: " + (p.github || "https://github.com/RohanNimje")
     );
 
     if (wantsProjects || isGeneral) {
       var projectsList = (ctx.projects || []).map(function (proj) {
-        var details = [];
-        details.push("ID: " + proj.id);
-        details.push("Title: " + proj.title);
-        details.push("Tech Stack: " + (proj.techStack || []).join(", "));
-        details.push("Description: " + proj.description);
-        if (proj.laptopVideoUrl || proj.videoUrl || proj.videoUrlmvp) details.push("Video Demo URL: " + (proj.laptopVideoUrl || proj.videoUrlmvp || proj.videoUrl));
-        if (proj.mobileVideoUrl || proj.productDemoUrl) details.push("Product Demo URL: " + (proj.mobileVideoUrl || proj.productDemoUrl));
-        if (proj.projectCertImgUrl) details.push("Certificate Image URL: " + proj.projectCertImgUrl);
-        if (proj.screenshotUrl) details.push("Screenshot URL: " + proj.screenshotUrl);
-        if (proj.highlights && proj.highlights.length) details.push("Highlights: " + proj.highlights.join("; "));
-        return details.join("\n  ");
+        var d = [];
+        d.push("ID: " + proj.id + " | Name: " + (proj.title || proj.name));
+        d.push("Role: " + (proj.role || "Builder"));
+        d.push("Domain: " + (proj.domain || ""));
+        d.push("Tech Stack: " + (proj.techStack || []).join(", "));
+        if (proj.badge) d.push("Badge: " + proj.badge);
+        if (proj.problem) d.push("Problem Solved: " + proj.problem);
+        if (proj.whyExistingFail) d.push("Why Existing Solutions Failed: " + proj.whyExistingFail);
+        if (proj.solution) d.push("Solution: " + proj.solution);
+        if (proj.howItWorks) d.push("How It Works: " + proj.howItWorks);
+        if (proj.coreInnovation) d.push("Core Innovation: " + proj.coreInnovation);
+        if (proj.description) d.push("Description: " + proj.description);
+        if (proj.architecture && proj.architecture.length) d.push("Architecture: " + proj.architecture.join(" | "));
+        if (proj.businessImpact && proj.businessImpact.length) d.push("Business Impact: " + proj.businessImpact.join(" | "));
+        if (proj.achievement) d.push("Achievement: " + proj.achievement);
+        if (proj.laptopVideoUrl || proj.videoUrl || proj.videoUrlMvp) d.push("Video Demo URL: " + (proj.laptopVideoUrl || proj.videoUrlMvp || proj.videoUrl));
+        if (proj.mobileVideoUrl || proj.productDemoUrl) d.push("Product Demo URL: " + (proj.mobileVideoUrl || proj.productDemoUrl));
+        if (proj.projectCertImgUrl) d.push("Certificate Image: " + proj.projectCertImgUrl);
+        if (proj.screenshotUrl) d.push("Screenshot: " + proj.screenshotUrl);
+        return d.join("\n  ");
       }).join("\n\n");
-      promptParts.push("ALL PROJECTS DATA (EXHAUSTIVE):\n" + projectsList);
+      promptParts.push("PROJECTS KNOWLEDGE BASE:\n" + projectsList);
     }
 
     if (wantsCerts || isGeneral) {
       var certsList = (ctx.certifications || []).map(function (c) {
         return "- " + c.name + " | Issuer: " + c.issuer + " | CertImgUrl: " + c.CertImgUrl;
       }).join("\n");
-      promptParts.push("ALL CERTIFICATIONS DATA:\n" + certsList);
+      promptParts.push("CERTIFICATIONS:\n" + certsList);
     }
 
-    if (wantsHonors || isGeneral) {
-      var honorsList = (ctx.honors || []).map(function (h) {
-        return "- " + h.title + " | Event: " + h.event + " | Description: " + h.description + " | CertImgUrl: " + h.CertImgUrl;
-      }).join("\n");
+    if (wantsHonors || wantsMetrics || isGeneral) {
       var metricsList = (ctx.metrics || []).map(function (m) {
-        return "- " + m.label + ": " + m.value + " (" + m.description + ")";
+        return "- " + m.label + ": " + m.value + " — " + m.detail;
       }).join("\n");
-      promptParts.push("HONORS & METRICS DATA:\nMetrics:\n" + metricsList + "\nHonors:\n" + honorsList);
+      var honorsList = (ctx.honors || []).map(function (h) {
+        return "- " + h.title + " | Event: " + h.event + " | Standing: " + (h.standing || "") + " | Description: " + (h.description || "") + " | CertImgUrl: " + h.CertImgUrl;
+      }).join("\n");
+      promptParts.push("KEY METRICS:\n" + metricsList + "\n\nHONORS & ACHIEVEMENTS:\n" + honorsList);
     }
 
     if (wantsExp || isGeneral) {
       var expList = (ctx.experience || []).map(function (e) {
-        return "- Role: " + e.role + " | Company: " + e.company + " | Duration: " + e.duration + " | Location: " + e.location + " | Details: " + e.description;
+        return "- Role: " + e.role + " | Company: " + e.company + " | Duration: " + e.duration + " | Location: " + e.location + " | Details: " + (e.description || "");
       }).join("\n");
-      promptParts.push("EXPERIENCE DATA:\n" + expList);
+      promptParts.push("EXPERIENCE:\n" + expList);
     }
 
     if (wantsEdu || isGeneral) {
       var eduList = (ctx.education || []).map(function (e) {
-        return "- Degree: " + e.degree + " | Specialization: " + e.specialization + " | Institution: " + e.institution + " | CGPA: " + e.grade + " | Duration: " + e.duration + " | Description: " + e.description;
+        return "- Degree: " + e.degree + " | Specialization: " + e.specialization + " | Institution: " + e.institution + (e.grade ? " | CGPA: " + e.grade : "") + " | Duration: " + e.duration + " | Details: " + (e.description || "");
       }).join("\n");
-      promptParts.push("EDUCATION DATA:\n" + eduList);
+      promptParts.push("EDUCATION:\n" + eduList);
     }
 
     if (wantsSkills || isGeneral) {
       var skillsList = Object.keys(ctx.skills || {}).map(function (cat) {
         return cat + ": " + (ctx.skills[cat] || []).join(", ");
       }).join("\n");
-      promptParts.push("SKILLS DATA:\n" + skillsList);
+      promptParts.push("SKILLS:\n" + skillsList);
     }
 
-    if (wantsPitches) {
-      var pitches = ctx.rolePitches || {};
-      var pitchBlocks = Object.keys(pitches).map(function (role) {
-        var rp = pitches[role];
-        return "[" + rp.title + "]\nPitch: " + rp.pitch + "\nHighlights: " + (rp.highlights || []).join(" | ");
-      }).join("\n\n");
-      promptParts.push("ROLE PITCHES DATA:\n" + pitchBlocks);
+    if (wantsContact) {
+      promptParts.push(
+        "CONTACT:\nEmail: " + (p.email || "rohannimje53@gmail.com") +
+        "\nLinkedIn: " + (p.linkedin || "https://www.linkedin.com/in/rohannimje/") +
+        "\nGitHub: " + (p.github || "https://github.com/RohanNimje")
+      );
     }
 
     return promptParts.join("\n\n");
@@ -347,7 +377,7 @@
     var str = text.replace(/\[\[ACTION:openProjectModal:[^\]]+\]\]/g, "").trim();
 
     // ── Step 1: Headers (### → styled paragraph) ───────────
-    str = str.replace(/^#{1,6}\s+(.*?)$/gm, '<p class="font-bold text-slate-800 mt-2.5 mb-1">$1</p>');
+    str = str.replace(/^#{1,6}\s+(.*?)$/gm, '<p class="font-bold mt-1.5 mb-1">$1</p>');
 
     // ── Step 2: Markdown links [label](url) → HTML anchors ──
     str = str.replace(/\[([^\]]+)\]\((https?:\/\/[^)]+)\)/g, function (match, label, url) {
@@ -358,7 +388,7 @@
     });
 
     // ── Step 3: Inline bold (**text** → <strong>) ───────────
-    str = str.replace(/\*\*(.*?)\*\*/g, '<strong class="font-semibold text-indigo-700">$1</strong>');
+    str = str.replace(/\*\*(.*?)\*\*/g, '<strong class="font-semibold">$1</strong>');
 
     // ── Step 4: Inline code (`code`) ────────────────────────
     str = str.replace(/`([^`]+)`/g, '<code class="ai-code">$1</code>');
@@ -402,7 +432,7 @@
         }
 
         if (isNumberedTitle) {
-          out.push('<p class="font-bold text-slate-800 mt-2.5 mb-1">' + numMatch[1] + '. ' + numMatch[2] + '</p>');
+          out.push('<p class="font-bold mt-1.5 mb-1">' + numMatch[1] + '. ' + numMatch[2] + '</p>');
         } else {
           out.push(line);
         }
@@ -464,7 +494,7 @@
     str = str.replace(/(<br\s*\/?>\s*){2,}/gi, "<br>");
 
     // ── Step 11: Wrap consecutive action chips in a container ──
-    str = str.replace(/(?:<(?:button|a)[^>]*class="[^"]*ai-action-chip[^"]*"[^>]*>[\s\S]*?<\/(?:button|a)>(?:\s|<br\s*\/?>)*)+/gi, function(match) {
+    str = str.replace(/(?:<(?:button|a)[^>]*class="[^"]*ai-action-chip[^"]*"[^>]*>[\s\S]*?<\/(?:button|a)>(?:\s|<br\s*\/?>)*)+/gi, function (match) {
       var cleanMatch = match.replace(/<br\s*\/?>/gi, '').trim();
       return '<div class="ai-action-container">' + cleanMatch + '</div>';
     });
@@ -540,9 +570,9 @@
             partialHtml += ".";
           }
 
-          var actionChips = '<div class="mt-4 flex flex-wrap gap-2">' +
-            '<button type="button" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-indigo-600 text-white font-medium text-sm hover:bg-indigo-700 transition-colors cursor-pointer" onclick="sendAIMessage(\'Explore Technical Architecture\', window._aiActiveStreamCallback)">Explore Technical Architecture &rarr;</button>' +
-            '<button type="button" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-indigo-50 text-indigo-700 font-medium text-sm hover:bg-indigo-100 transition-colors cursor-pointer" onclick="sendAIMessage(\'Ask About System Implementation\', window._aiActiveStreamCallback)">Ask About System Implementation</button>' +
+          var actionChips = '<div class="ai-action-container">' +
+            '<button type="button" class="ai-action-chip" onclick="sendAIMessage(\'Explore Technical Architecture\', window._aiActiveStreamCallback)">Explore Technical Architecture &rarr;</button>' +
+            '<button type="button" class="ai-action-chip" onclick="sendAIMessage(\'Ask About System Implementation\', window._aiActiveStreamCallback)">Ask About System Implementation</button>' +
             '</div>';
 
           var finalHtml = partialHtml + actionChips;

@@ -1120,7 +1120,7 @@ body.overflow-hidden {
 }
 
 .assistant-message p {
-  margin: 0.5rem 0;
+  margin: 0.38rem 0;
 }
 
 .assistant-message p:first-child {
@@ -1132,17 +1132,97 @@ body.overflow-hidden {
 }
 
 .assistant-message.bot p.font-bold {
-  margin-top: 1rem;
+  margin-top: 0.42rem;
   margin-bottom: 0.35rem;
 }
 
+/* Compact spacing for lists in assistant messages (~0.35rem - 0.45rem) */
+.assistant-message ul,
+.assistant-message ol,
+.assistant-message .ai-clean-list {
+  margin: 0.38rem 0;
+  padding-left: 1.25rem;
+  list-style-position: outside;
+}
+
+.assistant-message ul:first-child,
+.assistant-message ol:first-child,
+.assistant-message .ai-clean-list:first-child {
+  margin-top: 0;
+}
+
+.assistant-message ul:last-child,
+.assistant-message ol:last-child,
+.assistant-message .ai-clean-list:last-child {
+  margin-bottom: 0;
+}
+
+.assistant-message li {
+  margin: 0.2rem 0;
+  line-height: 1.48;
+}
+
+.assistant-message li:first-child {
+  margin-top: 0;
+}
+
+.assistant-message li:last-child {
+  margin-bottom: 0;
+}
+
+/* Compact spacing around .ai-action-container (~0.35rem - 0.45rem) */
 .ai-action-container {
-  margin-top: 0.75rem;
+  margin-top: 0.4rem;
+  margin-bottom: 0.35rem;
   display: flex;
   flex-wrap: wrap;
-  gap: 0.45rem;
+  gap: 0.4rem;
   justify-content: flex-start;
   width: 100%;
+}
+
+.ai-action-container:first-child {
+  margin-top: 0;
+}
+
+.ai-action-container:last-child {
+  margin-bottom: 0;
+}
+
+/* Subtle & Executive Highlighting — Clean bold weight, no over-coloring */
+.assistant-message strong,
+.assistant-message b {
+  font-weight: 600;
+  color: inherit;
+}
+
+.assistant-message strong.text-indigo-700,
+.assistant-message .font-semibold.text-indigo-700 {
+  color: inherit !important;
+  font-weight: 600;
+}
+
+html.dark .assistant-message strong,
+html.dark .assistant-message b,
+html.dark .assistant-message strong.text-indigo-700,
+html.dark .assistant-message .font-semibold.text-indigo-700 {
+  color: #f8fafc !important;
+}
+
+.assistant-message .ai-code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.82em;
+  padding: 0.12rem 0.35rem;
+  border-radius: 0.35rem;
+  background: rgba(100, 116, 139, 0.08);
+  border: 1px solid rgba(100, 116, 139, 0.16);
+  color: inherit;
+}
+
+html.dark .assistant-message .ai-code {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.14);
+  color: #e2e8f0;
 }
 
 .ai-action-chip {

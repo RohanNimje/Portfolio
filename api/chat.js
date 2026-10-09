@@ -198,7 +198,7 @@ async function handler(req, res) {
   try {
     var body = await parseBody(req);
     var messages = body.messages || [];
-    var systemPrompt = body.systemPrompt || "You are a helpful assistant.";
+    var systemPrompt = body.systemPrompt || "You are Rohan Nimje's personal AI assistant. Strictly discuss Rohan's engineering work and systems. For any off-topic queries (math, tutorials, trivia), strictly do not explain; politely decline in 1 sentence and pivot immediately to his work.";
     var isStream = body.stream !== false; // Default to streaming
 
     if (isStream) {

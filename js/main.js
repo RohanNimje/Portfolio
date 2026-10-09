@@ -880,7 +880,7 @@ function renderAssistant() {
   assistantMessages = [
     {
       sender: "bot",
-      html: "Hi! I'm <strong class=\"font-semibold text-indigo-700\">Rohan's personal AI assistant</strong>. Ask me about his background, projects, skills, achievements, or how to get in touch — in any language! 🌍"
+      html: "Hi! I'm <strong class=\"font-semibold\">Rohan's personal AI assistant</strong>. Ask me about his background, projects, skills, achievements, or how to get in touch — in any language! 🌍"
     }
   ];
 
