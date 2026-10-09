@@ -16,11 +16,11 @@
   /* ── Universal Auto-Scroll Buttons ─────────────────────── */
 
   var SCROLL_BUTTONS = {
-    projects: '<button onclick="document.getElementById(\'projects\').scrollIntoView({behavior: \'smooth\'})" class="mt-2 inline-flex items-center gap-1.5 px-3 py-1.5 bg-indigo-50 text-indigo-700 font-medium text-xs rounded-lg border border-indigo-200 hover:bg-indigo-100 transition cursor-pointer">🚀 View All Projects in Portfolio</button>',
-    certifications: '<button onclick="document.getElementById(\'certifications\').scrollIntoView({behavior: \'smooth\'})" class="mt-2 inline-flex items-center gap-1.5 px-3 py-1.5 bg-indigo-50 text-indigo-700 font-medium text-xs rounded-lg border border-indigo-200 hover:bg-indigo-100 transition cursor-pointer">📜 View All Certifications</button>',
-    experience: '<button onclick="document.getElementById(\'experience\').scrollIntoView({behavior: \'smooth\'})" class="mt-2 inline-flex items-center gap-1.5 px-3 py-1.5 bg-indigo-50 text-indigo-700 font-medium text-xs rounded-lg border border-indigo-200 hover:bg-indigo-100 transition cursor-pointer">💼 View Full Experience</button>',
-    honors: '<button onclick="document.getElementById(\'honors\').scrollIntoView({behavior: \'smooth\'})" class="mt-2 inline-flex items-center gap-1.5 px-3 py-1.5 bg-indigo-50 text-indigo-700 font-medium text-xs rounded-lg border border-indigo-200 hover:bg-indigo-100 transition cursor-pointer">🏆 View All Honors & Ranks</button>',
-    contact: '<button onclick="document.getElementById(\'contact\').scrollIntoView({behavior: \'smooth\'})" class="mt-2 inline-flex items-center gap-1.5 px-3 py-1.5 bg-indigo-50 text-indigo-700 font-medium text-xs rounded-lg border border-indigo-200 hover:bg-indigo-100 transition cursor-pointer">📬 Get in Touch</button>'
+    projects: '<button onclick="document.getElementById(\'projects\').scrollIntoView({behavior: \'smooth\'})" class="ai-action-chip">🚀 View All Projects</button>',
+    certifications: '<button onclick="document.getElementById(\'certifications\').scrollIntoView({behavior: \'smooth\'})" class="ai-action-chip">📜 View All Certifications</button>',
+    experience: '<button onclick="document.getElementById(\'experience\').scrollIntoView({behavior: \'smooth\'})" class="ai-action-chip">💼 View Full Experience</button>',
+    honors: '<button onclick="document.getElementById(\'honors\').scrollIntoView({behavior: \'smooth\'})" class="ai-action-chip">🏆 View All Honors & Ranks</button>',
+    contact: '<button onclick="document.getElementById(\'contact\').scrollIntoView({behavior: \'smooth\'})" class="ai-action-chip">📬 Get in Touch</button>'
   };
 
   /* ── Executive Standby Error Card (No Raw Errors) ────── */
@@ -34,9 +34,9 @@
       '<p class="text-xs text-slate-600 leading-relaxed margin-0">' +
       'Rohan\'s AI representative is currently receiving high inquiry traffic. You can explore his featured projects or connect with him directly below.' +
       '</p>' +
-      '<div class="pt-1 flex flex-wrap gap-2">' +
-      '<button onclick="document.getElementById(\'contact\').scrollIntoView({behavior: \'smooth\'})" class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-indigo-600 text-white font-medium text-xs rounded-lg shadow-sm hover:bg-indigo-700 transition cursor-pointer">📬 Contact Rohan Directly</button>' +
-      '<button onclick="document.getElementById(\'projects\').scrollIntoView({behavior: \'smooth\'})" class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white text-slate-700 border border-slate-200 font-medium text-xs rounded-lg hover:bg-slate-50 transition cursor-pointer">🚀 View Featured Projects</button>' +
+      '<div class="ai-action-container">' +
+      '<button onclick="document.getElementById(\'contact\').scrollIntoView({behavior: \'smooth\'})" class="ai-action-chip">📬 Contact Rohan Directly</button>' +
+      '<button onclick="document.getElementById(\'projects\').scrollIntoView({behavior: \'smooth\'})" class="ai-action-chip">🚀 View Featured Projects</button>' +
       '</div>' +
       '</div>'
     );
@@ -62,40 +62,40 @@
     if (/go to projects|scroll to projects|take me to projects|show projects section|view all projects/i.test(raw)) {
       scrollToSection("projects");
       return (
-        "Scrolling you directly to <strong class=\"font-semibold text-indigo-700\">Featured Projects</strong> section in the portfolio!<br>" +
-        SCROLL_BUTTONS.projects
+        "Scrolling you directly to <strong class=\"font-semibold text-indigo-700\">Featured Projects</strong> section in the portfolio!" +
+        '<div class="ai-action-container">' + SCROLL_BUTTONS.projects + '</div>'
       );
     }
 
     if (/go to cert|scroll to cert|take me to cert|show cert|view all cert|certifications section/i.test(raw)) {
       scrollToSection("certifications");
       return (
-        "Navigating to the <strong class=\"font-semibold text-indigo-700\">Certifications</strong> section!<br>" +
-        SCROLL_BUTTONS.certifications
+        "Navigating to the <strong class=\"font-semibold text-indigo-700\">Certifications</strong> section!" +
+        '<div class="ai-action-container">' + SCROLL_BUTTONS.certifications + '</div>'
       );
     }
 
     if (/go to experience|scroll to experience|take me to experience|show experience|full experience|experience section/i.test(raw)) {
       scrollToSection("experience");
       return (
-        "Scrolling to the <strong class=\"font-semibold text-indigo-700\">Experience</strong> section!<br>" +
-        SCROLL_BUTTONS.experience
+        "Scrolling to the <strong class=\"font-semibold text-indigo-700\">Experience</strong> section!" +
+        '<div class="ai-action-container">' + SCROLL_BUTTONS.experience + '</div>'
       );
     }
 
     if (/go to honors|scroll to honors|take me to honors|show honors|view honors|ranks section|achievements section/i.test(raw)) {
       scrollToSection("honors");
       return (
-        "Navigating to <strong class=\"font-semibold text-indigo-700\">Honors & Achievements</strong>!<br>" +
-        SCROLL_BUTTONS.honors
+        "Navigating to <strong class=\"font-semibold text-indigo-700\">Honors & Achievements</strong>!" +
+        '<div class="ai-action-container">' + SCROLL_BUTTONS.honors + '</div>'
       );
     }
 
     if (/go to contact|scroll to contact|take me to contact|show contact|get in touch/i.test(raw)) {
       scrollToSection("contact");
       return (
-        "Navigating to the <strong class=\"font-semibold text-indigo-700\">Contact & Connect</strong> section!<br>" +
-        SCROLL_BUTTONS.contact
+        "Navigating to the <strong class=\"font-semibold text-indigo-700\">Contact & Connect</strong> section!" +
+        '<div class="ai-action-container">' + SCROLL_BUTTONS.contact + '</div>'
       );
     }
 
@@ -116,7 +116,7 @@
         "<li><strong class=\"font-semibold text-indigo-700\">LinkedIn:</strong> <a href=\"" + (contact.linkedin || "https://www.linkedin.com/in/rohannimje/") + "\" target=\"_blank\" rel=\"noopener\" class=\"text-indigo-600 font-semibold underline\">linkedin.com/in/rohannimje</a></li>" +
         "<li><strong class=\"font-semibold text-indigo-700\">GitHub:</strong> <a href=\"" + (contact.github || "https://github.com/RohanNimje") + "\" target=\"_blank\" rel=\"noopener\" class=\"text-indigo-600 font-semibold underline\">github.com/RohanNimje</a></li>" +
         "</ul>" +
-        SCROLL_BUTTONS.contact
+        '<div class="ai-action-container">' + SCROLL_BUTTONS.contact + '</div>'
       );
     }
 
@@ -158,13 +158,14 @@
     promptParts.push(
       "You are the Personal AI Representative of " + p.name + " — acting as his professional advocate on his portfolio website.\n\n" +
       "IDENTITY & PERSONA RULES:\n" +
+      "- Adopt an articulate, senior engineer tone matching enterprise AI assistants (Gemini, Claude). Blend a substantive introductory paragraph with structured, bold-anchored highlights where relevant, ensuring depth without being overly brief or dryly bulleted.\n" +
       "- Always speak AS Rohan's representative — warm, confident, professional.\n" +
       "- Refer to Rohan in third person ('Rohan', 'he', 'him', 'his').\n" +
       "- NEVER invent facts not listed in this knowledge base.\n" +
       "- NEVER output raw Markdown syntax like **bold** or *italic* or ```code``` or # headings. Use clean HTML formatting: <strong class=\"font-semibold text-indigo-700\">, <ul class=\"list-disc pl-4 space-y-1 my-1\">, <li>, <br>, <a href=\"...\" target=\"_blank\" rel=\"noopener\" class=\"text-indigo-600 font-semibold underline\">.\n" +
       "- Detect the language of the user's message AUTOMATICALLY and reply in the EXACT SAME language (English, Hindi, Marathi, Hinglish, etc.).\n" +
       "- When asked for project videos/demos, ALWAYS output clickable HTML links:\n" +
-      "  <a href=\"[URL]\" target=\"_blank\" rel=\"noopener\" class=\"inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-indigo-50 border border-indigo-200 text-indigo-700 font-semibold text-sm hover:bg-indigo-100 transition-colors\">🎬 Watch Demo Video</a>\n" +
+      "  <a href=\"[URL]\" target=\"_blank\" rel=\"noopener\" class=\"ai-action-chip\">🎬 Watch Demo Video</a>\n" +
       "- When asked for certificates, output image cards:\n" +
       "  <div class=\"mt-2\"><img src=\"[CertImgUrl]\" alt=\"[name]\" class=\"w-full max-w-xs rounded-xl border border-slate-200 shadow-sm\" loading=\"lazy\" /><p class=\"text-xs text-slate-500 mt-1\">[name] — [issuer]</p></div>\n" +
       "- PROJECT MODAL ACTION TRIGGER:\n" +
@@ -351,7 +352,7 @@
     // ── Step 2: Markdown links [label](url) → HTML anchors ──
     str = str.replace(/\[([^\]]+)\]\((https?:\/\/[^)]+)\)/g, function (match, label, url) {
       if (/watch demo|demo video|product demo|video/i.test(label)) {
-        return '<a href="' + url + '" target="_blank" rel="noopener" class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-indigo-50 border border-indigo-200 text-indigo-700 font-semibold text-sm hover:bg-indigo-100 transition-colors my-1">🎬 ' + label + '</a>';
+        return '<a href="' + url + '" target="_blank" rel="noopener" class="ai-action-chip">🎬 ' + label + '</a>';
       }
       return '<a href="' + url + '" target="_blank" rel="noopener" class="text-indigo-600 font-semibold underline">' + label + '</a>';
     });
@@ -461,6 +462,12 @@
 
     // ── Step 10: Collapse multiple consecutive <br> ───────────
     str = str.replace(/(<br\s*\/?>\s*){2,}/gi, "<br>");
+
+    // ── Step 11: Wrap consecutive action chips in a container ──
+    str = str.replace(/(?:<(?:button|a)[^>]*class="[^"]*ai-action-chip[^"]*"[^>]*>[\s\S]*?<\/(?:button|a)>(?:\s|<br\s*\/?>)*)+/gi, function(match) {
+      var cleanMatch = match.replace(/<br\s*\/?>/gi, '').trim();
+      return '<div class="ai-action-container">' + cleanMatch + '</div>';
+    });
 
     return str.trim();
   }
